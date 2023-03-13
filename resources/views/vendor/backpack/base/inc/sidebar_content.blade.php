@@ -83,11 +83,8 @@
 </li>
 
 <li class="nav-item nav-dropdown">
-    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-gears"></i> Tweaks</a>
+    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-id-card"></i> Authorizations</a>
     <ul class="nav-dropdown-items">
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('setting') }}'>
-                <i class='nav-icon la la-cog'></i>Settings</a>
-        </li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('user') }}">
                 <i class="nav-icon la la-user"></i>
                 <span>Users</span></a></li>
@@ -95,7 +92,25 @@
                     class="nav-icon la la-id-badge"></i> <span>Roles</span></a></li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('permission') }}"><i
                     class="nav-icon la la-key"></i> <span>Permissions</span></a></li>
+    </ul>
+</li>
+
+<li class="nav-item nav-dropdown">
+    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-gears"></i> Tweaks</a>
+    <ul class="nav-dropdown-items">
+        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('setting') }}'>
+                <i class='nav-icon la la-cog'></i>Settings</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('country') }}"><i
+                    class="nav-icon la la-map"></i> Countries</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('state') }}"><i
+                    class="nav-icon la la-landmark"></i> States</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('city') }}"><i
+                    class="nav-icon la la-map-pin"></i> Cities</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('translation') }}"><i
+                    class="nav-icon la la-language"></i> Translations</a></li>
         <li class='nav-item'><a class='nav-link' href='{{ backpack_url('log') }}'><i
                     class='nav-icon la la-terminal'></i> Logs</a></li>
     </ul>
 </li>
+
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('banner') }}"><i class="nav-icon la la-question"></i> Banners</a></li>

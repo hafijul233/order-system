@@ -32,4 +32,9 @@ Route::group([
     Route::crud('email', 'EmailCrudController');
     Route::crud('template', 'TemplateCrudController');
     Route::crud('task', 'TaskCrudController');
+    Route::crud('country', 'CountryCrudController');
+    Route::crud('state', 'StateCrudController');
+    Route::crud('city', 'CityCrudController');
+    Route::crud('translation', 'TranslationCrudController');
+    Route::crud('banner', 'BannerCrudController');
 }); // this should be the absolute last line of this file

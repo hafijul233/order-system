@@ -21,6 +21,9 @@
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-business-time"></i> Business</a>
     <ul class="nav-dropdown-items">
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('product') }}">
+                <i class="nav-icon la la-box"></i> Products</a>
+        </li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('order') }}">
                 <i class="nav-icon la la-file-invoice"></i> Orders</a>
         </li>
@@ -39,9 +42,8 @@
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('tag') }}">
                 <i class="nav-icon la la-tags"></i> Tags</a>
         </li>
-
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('product') }}">
-                <i class="nav-icon la la-box"></i> Products</a>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('stock') }}">
+                <i class="nav-icon la la-pie-chart"></i> Stocks</a>
         </li>
     </ul>
 </li>

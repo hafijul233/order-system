@@ -24,14 +24,14 @@ return [
     // ----
 
     // Project name. Shown in the window title.
-    'project_name' => 'Backpack Admin Panel',
+    'project_name' => 'Food Ordering System',
 
     // When clicking on the admin panel's top-left logo/name,
     // where should the user be redirected?
     // The string below will be passed through the url() helper.
     // - default: '' (project root)
     // - alternative: 'admin' (the admin's dashboard)
-    'home_link' => '',
+    'home_link' => '/',
 
     // Content of the HTML meta robots tag to prevent indexing and link following
     'meta_robots_content' => 'noindex, nofollow',
@@ -49,8 +49,10 @@ return [
 
     // CSS files that are loaded in all pages, using Laravel's asset() helper
     'styles' => [
-        'packages/backpack/base/css/bundle.css', // has primary color electric purple (backpack default)
-        // 'packages/backpack/base/css/blue-bundle.css', // has primary color blue
+        //'packages/backpack/base/css/bundle.css', // has primary color electric purple (backpack default)
+        //'packages/backpack/base/css/blue-bundle.css', // has primary color blue
+        'packages/backpack/base/css/orange-bundle.css', // has primary color blue
+
 
         // Here's what's inside the bundle:
         // 'packages/@digitallyhappy/backstrap/css/style.min.css',

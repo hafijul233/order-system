@@ -49,8 +49,11 @@
 </li>
 
 <li class="nav-item nav-dropdown">
-    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-bell"></i> Promotions</a>
+    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-bullseye"></i> Promotions</a>
     <ul class="nav-dropdown-items">
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('email') }}">
+                <i class="nav-icon la la-envelope"></i> Emails</a>
+        </li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('newsletter') }}">
                 <i class="nav-icon la la-newspaper"></i> Newsletters</a>
         </li>
@@ -59,6 +62,22 @@
         </li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('coupon') }}">
                 <i class="nav-icon la la-percent"></i> Coupons</a>
+        </li>
+    </ul>
+</li>
+
+<li class="nav-item nav-dropdown">
+    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-bell"></i> Notifications</a>
+    <ul class="nav-dropdown-items">
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('event') }}">
+                <i class="nav-icon la la-calendar-day"></i> Events</a>
+        </li>
+
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('template') }}">
+                <i class="nav-icon la la-paperclip"></i> Templates</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('task') }}">
+                <i class="nav-icon la la-tasks"></i> Tasks</a>
         </li>
     </ul>
 </li>

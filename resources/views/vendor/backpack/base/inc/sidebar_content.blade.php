@@ -19,6 +19,18 @@
 </li>
 
 <li class="nav-item nav-dropdown">
+    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-business-time"></i> Business</a>
+    <ul class="nav-dropdown-items">
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('order') }}">
+                <i class="nav-icon la la-file-invoice"></i> Orders</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('payment') }}">
+                <i class="nav-icon la la-usd"></i> Payments</a>
+        </li>
+    </ul>
+</li>
+
+<li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-boxes"></i> Inventory</a>
     <ul class="nav-dropdown-items">
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('category') }}">
@@ -66,5 +78,3 @@
                     class='nav-icon la la-terminal'></i> Logs</a></li>
     </ul>
 </li>
-
-

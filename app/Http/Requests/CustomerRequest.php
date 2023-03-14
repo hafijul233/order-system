@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Customer;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class CustomerRequest extends FormRequest
 {
@@ -24,32 +28,29 @@ class CustomerRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            // 'name' => 'required|min:5|max:255'
-        ];
+
+        $rules['name'] = ['min:3', 'max:255', 'string'];
+        $rules['email'] = ['min:5', 'max:255', 'email:rfs,dns','nullable',
+            Rule::unique('customers', 'email')->ignore(request()->route('id')),];
+        $rules['phone'] = ['min:10', 'max:255', 'string', 'nullable'];
+        $rules['type'] = [Rule::in(array_keys(Customer::TYPES))];
+        $rules['status'] = [Rule::in(array_keys(Customer::STATUSES))];
+        $rules['email_verified_at'] = ['nullable', 'date', 'before:' . now()];
+        $rules['phone_verified_at'] = ['nullable', 'date', 'before:' . now()];
+
+        $rules['password'] = ($this->method() == 'POST')
+            ? ['required', 'min:5', 'max:255', 'confirmed', Password::default()]
+            : ['nullable', 'min:5', 'max:255', 'confirmed'];
+
+        return $rules;
     }
 
-    /**
-     * Get the validation attributes that apply to the request.
-     *
-     * @return array
-     */
-    public function attributes()
+    protected function prepareForValidation()
     {
-        return [
-            //
-        ];
-    }
-
-    /**
-     * Get the validation messages that apply to the request.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            //
-        ];
+        if ($this->method() == 'PUT') {
+            if ($this->input('password') == null) {
+                $this->offsetUnset('password');
+            }
+        }
     }
 }

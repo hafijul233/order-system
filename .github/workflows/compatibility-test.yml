@@ -13,14 +13,14 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest, windows-latest]
-        php: [7.4, 8.0, 8.1]
-        laravel: [8.*, 9.*]
+        php: [7.4, 8.0]
+        laravel: [9.*]
         stability: [prefer-lowest, prefer-stable]
         include:
           - laravel: 9.*
             testbench: 7.*
-            
-    name: PHP${{ matrix.php }} - Laravel${{ matrix.laravel }} - OS${{ matrix.os }} - ${{ matrix.stability }}
+
+    name: PHP(${{ matrix.php }}) - Laravel (${{ matrix.laravel }}) - OS(${{ matrix.os }})
 
     steps:
       - name: Checkout code

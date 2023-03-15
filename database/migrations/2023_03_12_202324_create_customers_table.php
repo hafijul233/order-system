@@ -23,6 +23,7 @@ return new class extends Migration
             $table->enum('status', ['active', 'suspended', 'banned'])->default('active')->nullable();
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
+            $table->boolean('newsletter_subscribed')->default(false);
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

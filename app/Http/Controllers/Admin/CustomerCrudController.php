@@ -73,8 +73,8 @@ class CustomerCrudController extends CrudController
                 'type' => 'custom_html',
                 'value' => function ($customer) {
                     return match ($customer->type) {
-                        'online' => "<span class='text-info'><i class='la la-globe-asia'></i> " . Customer::TYPES[$customer->type] . "</span>",
-                        'offline' => "<span class='text-success'><i class='la la-building'></i> " . Customer::TYPES[$customer->type] . "</span>",
+                        'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . Customer::TYPES[$customer->type] . "</span>",
+                        'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . Customer::TYPES[$customer->type] . "</span>",
                         default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
                     };
                 }
@@ -175,6 +175,12 @@ class CustomerCrudController extends CrudController
                 'label' => 'Notes',
                 'type' => 'textarea',
                 'tab' => 'Profile'
+            ],
+            [
+                'name' => 'newsletter_subscribed',
+                'label' => 'Newsletter Subscribed?',
+                'type' => 'boolean',
+                'tab' => 'Promotion'
             ],
         ]);
         /**

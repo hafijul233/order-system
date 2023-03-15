@@ -42,8 +42,11 @@ class CustomerCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-
         CRUD::addColumns([
+            [
+                'name' => 'id',
+                'label' => '#',
+            ],
             [
                 'name' => 'name',
                 'label' => 'Name',
@@ -87,15 +90,8 @@ class CustomerCrudController extends CrudController
                         'banned' => "<span class='text-danger'><i class='la la-times'></i> " . Customer::STATUSES[$customer->status] . "</span>",
                     };
                 }
-            ],
-
+            ]
         ]);
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
-         */
     }
 
     /**
@@ -134,14 +130,6 @@ class CustomerCrudController extends CrudController
                 'allows_null' => false,
                 'tab' => 'Basic'
             ],
-            [
-                'name' => 'status',
-                'label' => 'Status',
-                'type' => 'select_from_array',
-                'options' => Customer::STATUSES,
-                'allows_null' => false,
-                'tab' => 'Basic'
-            ],
             //Authentication Tab
             [
                 'name' => 'password',
@@ -166,6 +154,27 @@ class CustomerCrudController extends CrudController
                 'label' => 'Phone Verified At',
                 'type' => 'datetime',
                 'tab' => 'Authentication'
+            ],
+            //Profile
+            [
+                'name' => 'status',
+                'label' => 'Status',
+                'type' => 'select_from_array',
+                'options' => Customer::STATUSES,
+                'allows_null' => false,
+                'tab' => 'Profile'
+            ],
+            [
+                'name' => 'block_reason',
+                'label' => 'Suspend/Banned Reason',
+                'type' => 'textarea',
+                'tab' => 'Profile'
+            ],
+            [
+                'name' => 'note',
+                'label' => 'Notes',
+                'type' => 'textarea',
+                'tab' => 'Profile'
             ],
 
         ]);

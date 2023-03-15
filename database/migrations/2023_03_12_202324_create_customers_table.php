@@ -21,6 +21,8 @@ return new class extends Migration
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('password');
             $table->enum('status', ['active', 'suspended', 'banned'])->default('active')->nullable();
+            $table->text('block_reason')->nullable();
+            $table->text('note')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

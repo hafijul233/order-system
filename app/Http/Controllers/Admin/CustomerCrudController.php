@@ -200,4 +200,86 @@ class CustomerCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+
+    /**
+     * Define what happens when the List operation is loaded.
+     *
+     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::addColumns([
+            [
+                'name' => 'id',
+                'label' => 'ID',
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Name',
+            ],
+            [
+                'name' => 'email',
+                'label' => 'Email',
+                'type' => 'email'
+            ],
+            [
+                'name' => 'phone',
+                'label' => 'Phone',
+                'type' => 'custom_html',
+                'value' => function ($customer) {
+                    return "<a href='tel:{$customer->phone}'>{$customer->phone}</a>";
+                }
+            ],
+            [
+                'name' => 'type',
+                'label' => 'Type',
+                'type' => 'custom_html',
+                'value' => function ($customer) {
+                    return match ($customer->type) {
+                        'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . Customer::TYPES[$customer->type] . "</span>",
+                        'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . Customer::TYPES[$customer->type] . "</span>",
+                        default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
+                    };
+                }
+            ],
+            [
+                'name' => 'email_verified_at',
+                'label' => 'Email Verified At',
+                'type' => 'datetime',
+            ],
+            [
+                'name' => 'phone_verified_at',
+                'label' => 'Phone Verified At',
+                'type' => 'datetime',
+            ],
+            [
+                'name' => 'status',
+                'label' => 'Status',
+                'type' => 'custom_html',
+                'value' => function ($customer) {
+                    return match ($customer->status) {
+                        'active' => "<span class='text-success'><i class='la la-check'></i> " . Customer::STATUSES[$customer->status] . "</span>",
+                        'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . Customer::STATUSES[$customer->status] . "</span>",
+                        'banned' => "<span class='text-danger'><i class='la la-times'></i> " . Customer::STATUSES[$customer->status] . "</span>",
+                    };
+                }
+            ],
+            [
+                'name' => 'block_reason',
+                'label' => 'Suspend/Banned Reason',
+                'type' => 'textarea'
+            ],
+            [
+                'name' => 'note',
+                'label' => 'Notes',
+                'type' => 'textarea'
+            ],
+            [
+                'name' => 'newsletter_subscribed',
+                'label' => 'Newsletter Subscribed?',
+                'type' => 'boolean'
+            ]
+        ]);
+    }
 }

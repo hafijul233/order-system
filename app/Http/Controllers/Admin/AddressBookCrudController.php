@@ -56,16 +56,9 @@ class AddressBookCrudController extends CrudController
                 'name' => 'type',
                 'label' => 'Type',
                 'type' => 'custom_html',
-                'value' => function ($addressBook) {
-                    return match ($addressBook->type) {
-                        'home' => "<span class='text-info'><i class='la la-home'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
-                        'ship' => "<span class='text-info'><i class='la la-shipping-fast'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
-                        'bill' => "<span class='text-info'><i class='la la-file-invoice-dollar'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
-                        'work' => "<span class='text-info'><i class='la la-user-graduate'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
-                        'other' => "<span class='text-info'><i class='la la-exclamation'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
-                        default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
-                    };
-                }
+                function ($addressBook) {
+                    return $this->addressBookType($addressBook);
+                },
             ],
             [
                 'name' => 'phone',
@@ -79,12 +72,8 @@ class AddressBookCrudController extends CrudController
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return match ($customer->status) {
-                        'active' => "<span class='text-success'><i class='la la-check'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                        'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                        'banned' => "<span class='text-danger'><i class='la la-times'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                    };
+                'value' => function ($addressBook) {
+                    return $this->addressBookStatus($addressBook);
                 }
             ],
 
@@ -113,6 +102,7 @@ class AddressBookCrudController extends CrudController
                 'label' => 'Customer',
                 'type' => 'select_from_array',
                 'options' => $customers,
+                'allows_null' => false,
                 'tab' => 'Basic',
             ],
             [
@@ -120,6 +110,7 @@ class AddressBookCrudController extends CrudController
                 'label' => 'Type',
                 'type' => 'select_from_array',
                 'options' => AddressBook::TYPES,
+                'allows_null' => false,
                 'tab' => 'Basic',
             ],
             [
@@ -191,5 +182,104 @@ class AddressBookCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    /**
+     * Define what happens when the List operation is loaded.
+     *
+     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::addColumns([
+            [
+                'name' => 'id',
+                'label' => 'ID',
+            ],
+            [
+                'name' => 'customer',
+                'label' => 'Customer'
+            ],
+            [
+                'name' => 'type',
+                'label' => 'Type',
+                'type' => 'custom_html',
+                'value' => function ($addressBook) {
+                    return $this->addressBookType($addressBook);
+                },
+            ],
+            [
+                'name' => 'street_address',
+                'label' => 'Street Address',
+                'type' => 'textarea',
+            ],
+            [
+                'name' => 'city',
+                'label' => 'City',
+                'type' => 'text'
+            ],
+            [
+                'name' => 'state',
+                'label' => 'State',
+                'type' => 'text',
+                'tab' => 'Basic',
+            ],
+            [
+                'name' => 'zip_code',
+                'label' => 'Zip Code',
+                'type' => 'number'
+            ],
+            [
+                'name' => 'phone',
+                'label' => 'Phone',
+            ],
+            //Recognition Tab
+            [
+                'name' => 'landmark',
+                'label' => 'Land Mark',
+                'type' => 'text'
+            ],
+            [
+                'name' => 'status',
+                'label' => 'Status',
+                'type' => 'custom_html',
+                'value' => function ($addressBook) {
+                    return $this->addressBookStatus($addressBook);
+                }
+            ],
+            [
+                'name' => 'block_reason',
+                'label' => 'Suspend/Banned Reason',
+                'type' => 'textarea'
+            ],
+            [
+                'name' => 'note',
+                'label' => 'Notes',
+                'type' => 'textarea'
+            ],
+
+        ]);
+    }
+
+    private function addressBookType(AddressBook $addressBook)
+    {
+        return match ($addressBook->type) {
+            'home' => "<span class='text-info'><i class='la la-home'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
+            'ship' => "<span class='text-info'><i class='la la-shipping-fast'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
+            'bill' => "<span class='text-info'><i class='la la-file-invoice-dollar'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
+            'work' => "<span class='text-info'><i class='la la-user-graduate'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
+            'other' => "<span class='text-info'><i class='la la-exclamation'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
+            default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
+        };
+    }
+
+    private function addressBookStatus($addressBook)
+    {
+        return match ($addressBook->status) {
+            'active' => "<span class='text-success'><i class='la la-check'></i> " . AddressBook::STATUSES[$addressBook->status] . "</span>",
+            'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . AddressBook::STATUSES[$addressBook->status] . "</span>",
+            'banned' => "<span class='text-danger'><i class='la la-times'></i> " . AddressBook::STATUSES[$addressBook->status] . "</span>",
+        };
     }
 }

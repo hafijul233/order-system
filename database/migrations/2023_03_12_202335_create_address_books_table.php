@@ -13,10 +13,18 @@ return new class extends Migration {
         Schema::create('address_books', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->nullable()->constrained('customers');
-            $table->string('type')->default('home');
-            $table->text('address')->nullable();
-            $table->string('contact')->nullable();
+            $table->enum('type', array_keys(\App\Models\AddressBook::TYPES))->default('home');
+            $table->text('street_address')->nullable();
+            $table->string('landmark')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip_code')->nullable();
+            $table->string('phone')->nullable();
+            $table->enum('status', array_keys(\App\Models\AddressBook::STATUSES))->default('active')->nullable();
+            $table->text('block_reason')->nullable();
+            $table->text('note')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

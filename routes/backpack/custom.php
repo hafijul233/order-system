@@ -37,4 +37,6 @@ Route::group([
     Route::crud('city', 'CityCrudController');
     Route::crud('translation', 'TranslationCrudController');
     Route::crud('banner', 'BannerCrudController');
+    Route::crud('widget', 'WidgetCrudController');
+    Route::crud('page', 'PageCrudController');
 }); // this should be the absolute last line of this file

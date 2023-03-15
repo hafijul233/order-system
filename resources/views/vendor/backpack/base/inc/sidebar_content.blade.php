@@ -67,6 +67,21 @@
 </li>
 
 <li class="nav-item nav-dropdown">
+    <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-globe"></i> Web Site</a>
+    <ul class="nav-dropdown-items">
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('banner') }}">
+                <i class="nav-icon la la-question"></i> Banners</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('widget') }}">
+                <i class="nav-icon la la-question"></i> Widgets</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('page') }}">
+                <i class="nav-icon la la-question"></i> Pages</a>
+        </li>
+    </ul>
+</li>
+
+<li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-bell"></i> Notifications</a>
     <ul class="nav-dropdown-items">
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('event') }}">
@@ -112,5 +127,3 @@
                     class='nav-icon la la-terminal'></i> Logs</a></li>
     </ul>
 </li>
-
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('banner') }}"><i class="nav-icon la la-question"></i> Banners</a></li>

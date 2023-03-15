@@ -176,7 +176,6 @@ class CustomerCrudController extends CrudController
                 'type' => 'textarea',
                 'tab' => 'Profile'
             ],
-
         ]);
         /**
          * Fields can be defined using the fluent syntax or array syntax:

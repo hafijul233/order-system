@@ -30,14 +30,15 @@ class CustomerRequest extends FormRequest
     {
 
         $rules['name'] = ['min:3', 'max:255', 'string'];
-        $rules['email'] = ['min:5', 'max:255', 'email:rfs,dns','nullable',
+        $rules['email'] = ['min:5', 'max:255', 'email:rfs,dns', 'nullable',
             Rule::unique('customers', 'email')->ignore(request()->route('id')),];
         $rules['phone'] = ['min:10', 'max:255', 'string', 'nullable'];
         $rules['type'] = [Rule::in(array_keys(Customer::TYPES))];
         $rules['status'] = [Rule::in(array_keys(Customer::STATUSES))];
         $rules['email_verified_at'] = ['nullable', 'date', 'before:' . now()];
         $rules['phone_verified_at'] = ['nullable', 'date', 'before:' . now()];
-
+        $rules['block_reason'] = ['nullable', 'min:3', 'max:255', 'string'];
+        $rules['note'] = ['nullable', 'min:3', 'max:255', 'string'];
         $rules['password'] = ($this->method() == 'POST')
             ? ['required', 'min:5', 'max:255', 'confirmed', Password::default()]
             : ['nullable', 'min:5', 'max:255', 'confirmed'];

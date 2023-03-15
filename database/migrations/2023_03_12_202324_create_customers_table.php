@@ -16,11 +16,14 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->nullable()->unique();
             $table->string('phone')->nullable();
-            $table->enum('type', ['offline', 'online'])->default('offline')->nullable();
+            $table->enum('type', array_keys(\App\Models\Customer::TYPES))->default('offline')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('password');
-            $table->enum('status', ['active', 'suspended', 'banned'])->default('active')->nullable();
+            $table->enum('status', array_keys(\App\Models\Customer::STATUSES))->default('active')->nullable();
+            $table->text('block_reason')->nullable();
+            $table->text('note')->nullable();
+            $table->boolean('newsletter_subscribed')->default(false);
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

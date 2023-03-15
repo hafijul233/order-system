@@ -42,8 +42,11 @@ class CustomerCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-
         CRUD::addColumns([
+            [
+                'name' => 'id',
+                'label' => '#',
+            ],
             [
                 'name' => 'name',
                 'label' => 'Name',
@@ -70,8 +73,8 @@ class CustomerCrudController extends CrudController
                 'type' => 'custom_html',
                 'value' => function ($customer) {
                     return match ($customer->type) {
-                        'online' => "<span class='text-info'><i class='la la-globe-asia'></i> " . Customer::TYPES[$customer->type] . "</span>",
-                        'offline' => "<span class='text-success'><i class='la la-building'></i> " . Customer::TYPES[$customer->type] . "</span>",
+                        'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . Customer::TYPES[$customer->type] . "</span>",
+                        'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . Customer::TYPES[$customer->type] . "</span>",
                         default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
                     };
                 }
@@ -87,15 +90,8 @@ class CustomerCrudController extends CrudController
                         'banned' => "<span class='text-danger'><i class='la la-times'></i> " . Customer::STATUSES[$customer->status] . "</span>",
                     };
                 }
-            ],
-
+            ]
         ]);
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
-         */
     }
 
     /**
@@ -134,14 +130,6 @@ class CustomerCrudController extends CrudController
                 'allows_null' => false,
                 'tab' => 'Basic'
             ],
-            [
-                'name' => 'status',
-                'label' => 'Status',
-                'type' => 'select_from_array',
-                'options' => Customer::STATUSES,
-                'allows_null' => false,
-                'tab' => 'Basic'
-            ],
             //Authentication Tab
             [
                 'name' => 'password',
@@ -167,7 +155,33 @@ class CustomerCrudController extends CrudController
                 'type' => 'datetime',
                 'tab' => 'Authentication'
             ],
-
+            //Profile
+            [
+                'name' => 'status',
+                'label' => 'Status',
+                'type' => 'select_from_array',
+                'options' => Customer::STATUSES,
+                'allows_null' => false,
+                'tab' => 'Profile'
+            ],
+            [
+                'name' => 'block_reason',
+                'label' => 'Suspend/Banned Reason',
+                'type' => 'textarea',
+                'tab' => 'Profile'
+            ],
+            [
+                'name' => 'note',
+                'label' => 'Notes',
+                'type' => 'textarea',
+                'tab' => 'Profile'
+            ],
+            [
+                'name' => 'newsletter_subscribed',
+                'label' => 'Newsletter Subscribed?',
+                'type' => 'boolean',
+                'tab' => 'Promotion'
+            ],
         ]);
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -185,5 +199,87 @@ class CustomerCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    /**
+     * Define what happens when the List operation is loaded.
+     *
+     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::addColumns([
+            [
+                'name' => 'id',
+                'label' => 'ID',
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Name',
+            ],
+            [
+                'name' => 'email',
+                'label' => 'Email',
+                'type' => 'email'
+            ],
+            [
+                'name' => 'phone',
+                'label' => 'Phone',
+                'type' => 'custom_html',
+                'value' => function ($customer) {
+                    return "<a href='tel:{$customer->phone}'>{$customer->phone}</a>";
+                }
+            ],
+            [
+                'name' => 'type',
+                'label' => 'Type',
+                'type' => 'custom_html',
+                'value' => function ($customer) {
+                    return match ($customer->type) {
+                        'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . Customer::TYPES[$customer->type] . "</span>",
+                        'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . Customer::TYPES[$customer->type] . "</span>",
+                        default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
+                    };
+                }
+            ],
+            [
+                'name' => 'email_verified_at',
+                'label' => 'Email Verified At',
+                'type' => 'datetime',
+            ],
+            [
+                'name' => 'phone_verified_at',
+                'label' => 'Phone Verified At',
+                'type' => 'datetime',
+            ],
+            [
+                'name' => 'status',
+                'label' => 'Status',
+                'type' => 'custom_html',
+                'value' => function ($customer) {
+                    return match ($customer->status) {
+                        'active' => "<span class='text-success'><i class='la la-check'></i> " . Customer::STATUSES[$customer->status] . "</span>",
+                        'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . Customer::STATUSES[$customer->status] . "</span>",
+                        'banned' => "<span class='text-danger'><i class='la la-times'></i> " . Customer::STATUSES[$customer->status] . "</span>",
+                    };
+                }
+            ],
+            [
+                'name' => 'block_reason',
+                'label' => 'Suspend/Banned Reason',
+                'type' => 'textarea'
+            ],
+            [
+                'name' => 'note',
+                'label' => 'Notes',
+                'type' => 'textarea'
+            ],
+            [
+                'name' => 'newsletter_subscribed',
+                'label' => 'Newsletter Subscribed?',
+                'type' => 'boolean'
+            ]
+        ]);
     }
 }

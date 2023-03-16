@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('address_books', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->nullable()->constrained('customers');
+            $table->morphs('addressable');
             $table->enum('type', array_keys(\App\Models\AddressBook::TYPES))->default('home');
             $table->text('street_address')->nullable();
             $table->string('landmark')->nullable();

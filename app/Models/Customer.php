@@ -5,6 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Customer extends Model
 {
@@ -50,7 +51,10 @@ class Customer extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
+    public function address(): MorphMany
+    {
+        return $this->morphMany(AddressBook::class, 'addressable');
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

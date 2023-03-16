@@ -3,7 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CompanyRequest;
+use App\Models\Company;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
@@ -13,15 +19,11 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  */
 class CompanyCrudController extends CrudController
 {
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation, ShowOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -33,24 +35,59 @@ class CompanyCrudController extends CrudController
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
     protected function setupListOperation()
     {
-        
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
-         */
+        CRUD::addColumns([
+            [
+                'name' => 'id',
+                'label' => '#',
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Name',
+            ],
+            [
+                'name' => 'representative',
+                'label' => 'Representative'
+            ],
+            [
+                'name' => 'email',
+                'label' => 'Email',
+                'type' => 'custom_html',
+                'value' => function ($company) {
+                    return "<a class='text-dark' href='maiilto:{$company->email}'>{$company->email} " . (($company->email_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>";
+                }
+            ],
+            [
+                'name' => 'phone',
+                'label' => 'Phone',
+                'type' => 'custom_html',
+                'value' => function ($company) {
+                    return "<a class='text-dark' href='tel:{$company->phone}'>{$company->phone} " . (($company->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>";
+                }
+            ],
+            [
+                'name' => 'status',
+                'label' => 'Status',
+                'type' => 'custom_html',
+                'value' => function ($company) {
+                    return match ($company->status) {
+                        'active' => "<span class='text-success'><i class='la la-check'></i> " . Company::STATUSES[$company->status] . "</span>",
+                        'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . Company::STATUSES[$company->status] . "</span>",
+                        'banned' => "<span class='text-danger'><i class='la la-times'></i> " . Company::STATUSES[$company->status] . "</span>",
+                    };
+                }
+            ]
+        ]);
     }
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -58,18 +95,59 @@ class CompanyCrudController extends CrudController
     {
         CRUD::setValidation(CompanyRequest::class);
 
-        
-
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
-         */
+        CRUD::addFields([
+            [
+                'name' => 'name',
+                'label' => 'Name',
+                'tab' => 'Basic',
+            ],
+            [
+                'name' => 'representative',
+                'label' => 'Representative',
+                'tab' => 'Basic',
+            ],
+            [
+                'name' => 'designation',
+                'label' => 'Designation',
+                'tab' => 'Basic',
+            ],
+            [
+                'name' => 'email',
+                'label' => 'Email',
+                'type' => 'email',
+                'tab' => 'Basic',
+            ],
+            [
+                'name' => 'phone',
+                'label' => 'Phone',
+                'tab' => 'Basic',
+            ],
+            [
+                'name' => 'status',
+                'label' => 'Status',
+                'type' => 'select_from_array',
+                'options' => Company::STATUSES,
+                'allows_null' => false,
+                'tab' => 'Detail'
+            ],
+            [
+                'name' => 'block_reason',
+                'label' => 'Suspend/Banned Reason',
+                'type' => 'textarea',
+                'tab' => 'Detail'
+            ],
+            [
+                'name' => 'note',
+                'label' => 'Notes',
+                'type' => 'textarea',
+                'tab' => 'Detail'
+            ],
+        ]);
     }
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */

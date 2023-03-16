@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\AddressBookRequest;
 use App\Models\AddressBook;
+use App\Models\Company;
 use App\Models\Customer;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
@@ -49,14 +50,24 @@ class AddressBookCrudController extends CrudController
                 'label' => '#',
             ],
             [
-                'name' => 'customer',
-                'label' => 'Customer'
+                'name' => 'addressable',
+                'label' => 'Address To',
+                'type' => 'custom_html',
+                'value' => function ($addressBook) {
+                    if ($addressBook->addressable instanceof Customer) {
+                        return "<a class='text-dark' title='Customer' target='_blank' href='" . route('customer.show', $addressBook->addressable->id) . "'><i class='la la-user text-info'></i> {$addressBook->addressable->name}</a>";
+                    } elseif ($addressBook->addressable instanceof Company) {
+                        return "<a class='text-dark' title='Company' target='_blank' href='" . route('company.show', $addressBook->addressable->id) . "'><i class='la la-building text-success'></i> {$addressBook->addressable->name}</a>";
+                    } else {
+                        return '-';
+                    }
+                }
             ],
             [
                 'name' => 'type',
                 'label' => 'Type',
                 'type' => 'custom_html',
-                function ($addressBook) {
+                'value' => function ($addressBook) {
                     return $this->addressBookType($addressBook);
                 },
             ],
@@ -90,18 +101,22 @@ class AddressBookCrudController extends CrudController
     {
         CRUD::setValidation(AddressBookRequest::class);
 
-        $customers = [];
+        $addressable = [];
 
-        Customer::all()->each(function ($customer) use (&$customers) {
-            $customers[$customer->id] = $customer->name;
+        Customer::all()->each(function ($customer) use (&$addressable) {
+            $addressable[Customer::class . ':' . $customer->id] = $customer->name;
+        });
+
+        Company::all()->each(function ($company) use (&$addressable) {
+            $addressable[Company::class . ':' . $company->id] = $company->name;
         });
 
         CRUD::addFields([
             [
-                'name' => 'customer',
-                'label' => 'Customer',
+                'name' => 'addressable',
+                'label' => 'Address To',
                 'type' => 'select_from_array',
-                'options' => $customers,
+                'options' => $addressable,
                 'allows_null' => false,
                 'tab' => 'Basic',
             ],

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Company;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CompanyRequest extends FormRequest
 {
@@ -25,31 +27,14 @@ class CompanyRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
-        ];
-    }
-
-    /**
-     * Get the validation attributes that apply to the request.
-     *
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            //
-        ];
-    }
-
-    /**
-     * Get the validation messages that apply to the request.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            //
+            'name' => ['string', 'required', 'min:1', 'max:255'],
+            'representative' => ['string', 'required', 'min:1', 'max:255'],
+            'designation' => ['string', 'nullable', 'min:1', 'max:255'],
+            'email' => ['string', 'nullable', 'min:1', 'max:255', 'nullable'],
+            'phone' => ['string', 'required', 'min:1', 'max:255'],
+            'status' => ['string', 'required', 'min:1', 'max:255', Rule::in(array_keys(Company::STATUSES))],
+            'block_reason' => ['string', 'nullable', 'min:1', 'max:255', 'nullable'],
+            'note' => ['string', 'nullable', 'min:1', 'max:255', 'nullable'],
         ];
     }
 }

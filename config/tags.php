@@ -11,5 +11,5 @@ return [
     /*
      * The fully qualified class name of the tag model.
      */
-    'tag_model' => Spatie\Tags\Tag::class,
+    'tag_model' => \App\Models\Tag::class,
 ];

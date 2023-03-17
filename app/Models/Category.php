@@ -5,11 +5,15 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Tags\HasSlug;
+use Spatie\Translatable\HasTranslations;
 
 class Category extends Model
 {
     use CrudTrait;
     use HasFactory;
+    use HasTranslations;
+    use HasSlug;
 
     /*
     |--------------------------------------------------------------------------
@@ -24,6 +28,7 @@ class Category extends Model
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
+    public array $translatable = ['name', 'slug'];
 
     /*
     |--------------------------------------------------------------------------

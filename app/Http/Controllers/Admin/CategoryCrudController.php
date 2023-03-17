@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CategoryRequest;
+use App\Models\Category;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -56,6 +57,14 @@ class CategoryCrudController extends CrudController
                 'label' => 'Slug',
             ],
             [
+                'name' => 'parent',
+                'label' => 'Parent',
+            ],
+            [
+                'name' => 'depth',
+                'label' => 'Depth',
+            ],
+            [
                 'name' => 'created_at',
                 'label' => 'Created At',
             ],
@@ -72,12 +81,20 @@ class CategoryCrudController extends CrudController
     {
         CRUD::setValidation(CategoryRequest::class);
 
+        $categories = Category::all()->pluck('name', 'id')->toArray();
+
         CRUD::addFields([
             [
                 'name' => 'name',
                 'label' => 'Name',
                 'type' => 'text'
-            ]
+            ],
+            [
+                'name' => 'parent_id',
+                'label' => 'Parent',
+                'type' => 'select_from_array',
+                'options' => $categories
+            ],
         ]);
 
         /**

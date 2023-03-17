@@ -140,4 +140,52 @@ class NewsletterCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+
+    /**
+     * Define what happens when the Show operation is loaded.
+     *
+     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::addColumns([
+            [
+                'name' => 'id',
+                'label' => 'ID',
+            ],
+            [
+                'name' => 'newsletterable',
+                'label' => 'Subscriber',
+                'type' => 'custom_html',
+                'value' => function ($newsletter) {
+                    if ($newsletter->newsletterable instanceof Customer) {
+                        return "<a class='text-dark' title='Customer' target='_blank' href='" . route('customer.show', $newsletter->newsletterable->id) . "'><i class='la la-user text-info'></i> {$newsletter->newsletterable->name}</a>";
+                    } elseif ($newsletter->newsletterable instanceof Company) {
+                        return "<a class='text-dark' title='Company' target='_blank' href='" . route('company.show', $newsletter->newsletterable->id) . "'><i class='la la-building text-success'></i> {$newsletter->newsletterable->name}</a>";
+                    } else {
+                        return '-';
+                    }
+                }
+            ],
+            [
+                'name' => 'email',
+                'label' => 'Email',
+                'type' => 'custom_html',
+                'value' => function ($newsletter) {
+                    return "<a class='text-dark' href='mailto:{$newsletter->email}'>{$newsletter->email}</a>";
+                }
+            ],
+            [
+                'name' => 'attempted',
+                'label' => 'Attempted',
+                'type' => 'number'
+            ],
+            [
+                'name' => 'subscribed',
+                'label' => 'Subscribed?',
+                'type' => 'boolean'
+            ],
+        ]);
+    }
 }

@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Company::factory(15)->create();
         \App\Models\Tag::factory(15)->create();
         \App\Models\Category::factory(15)->create();
+        \App\Models\Newsletter::factory(15)->create();
 
          \App\Models\User::factory()->create([
              'name' => 'Hafijul Islam',

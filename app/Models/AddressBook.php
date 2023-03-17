@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class AddressBook extends Model
 {
@@ -72,17 +73,17 @@ class AddressBook extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    /**
-     * Get the parent imageable model (user or post).
-     */
     public function addressable(): MorphTo
     {
         return $this->morphTo();
     }
-
-    public function customer(): BelongsTo
+    public function customers(): MorphToMany
     {
-        return $this->belongsTo(Customer::class);
+        return $this->morphedByMany(Customer::class, 'addressable');
+    }
+    public function companies()
+    {
+        return $this->morphedByMany(Company::class, 'addressable');
     }
     /*
     |--------------------------------------------------------------------------

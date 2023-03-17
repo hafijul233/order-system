@@ -6,6 +6,7 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Company extends Model
 {
@@ -45,6 +46,10 @@ class Company extends Model
     public function address(): MorphMany
     {
         return $this->morphMany(AddressBook::class, 'addressable');
+    }
+    public function newsletter(): MorphOne
+    {
+        return $this->morphOne(Newsletter::class, 'newsletterable');
     }
     /*
     |--------------------------------------------------------------------------

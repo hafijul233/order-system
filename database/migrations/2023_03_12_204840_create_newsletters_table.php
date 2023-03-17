@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('newsletters', function (Blueprint $table) {
             $table->id();
+            $table->morphs('newsletterable');
+            $table->string('email');
+            $table->unsignedInteger('attempted')->default(1);
+            $table->boolean('subscribed')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

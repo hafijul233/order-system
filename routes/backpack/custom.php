@@ -41,4 +41,7 @@ Route::group([
     Route::crud('page', 'PageCrudController');
     Route::crud('notification', 'NotificationCrudController');
     Route::crud('audit', 'AuditCrudController');
+    Route::crud('attribute', 'AttributeCrudController');
+    Route::crud('modifier', 'ModifierCrudController');
+    Route::crud('unit', 'UnitCrudController');
 }); // this should be the absolute last line of this file

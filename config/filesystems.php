@@ -43,6 +43,27 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
+        'customer' => [
+            'driver' => 'local',
+            'root' => public_path('media/customer'),
+            'url' => env('APP_URL').'/media/customer',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+        'product' => [
+            'driver' => 'local',
+            'root' => public_path('media/product'),
+            'url' => env('APP_URL').'/media/product',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+        'banner' => [
+            'driver' => 'local',
+            'root' => public_path('media/banner'),
+            'url' => env('APP_URL').'/media/banner',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
 
         's3' => [
             'driver' => 's3',

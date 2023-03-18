@@ -5,11 +5,9 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use OwenIt\Auditing\Contracts\Auditable;
 
-class Payment extends Model implements Auditable
+class Audit extends Model
 {
-    use \OwenIt\Auditing\Auditable;
     use CrudTrait;
     use HasFactory;
 
@@ -19,7 +17,7 @@ class Payment extends Model implements Auditable
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'payments';
+    protected $table = 'audits';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];

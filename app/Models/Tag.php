@@ -9,13 +9,15 @@ use Illuminate\Database\Eloquent\Collection as DbCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
 use Spatie\Tags\HasSlug;
 use Spatie\Translatable\HasTranslations;
 
-class Tag extends Model implements Sortable
+class Tag extends Model implements Sortable, Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use CrudTrait;
     use HasFactory;
     use SortableTrait;

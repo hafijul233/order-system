@@ -39,4 +39,5 @@ Route::group([
     Route::crud('banner', 'BannerCrudController');
     Route::crud('widget', 'WidgetCrudController');
     Route::crud('page', 'PageCrudController');
+    Route::crud('notification', 'NotificationCrudController');
 }); // this should be the absolute last line of this file

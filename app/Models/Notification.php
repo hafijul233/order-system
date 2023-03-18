@@ -5,15 +5,13 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-class Customer extends Model
+class Notification extends Model
 {
     use CrudTrait;
     use HasFactory;
-    use Notifiable;
 
     /*
     |--------------------------------------------------------------------------
@@ -21,27 +19,13 @@ class Customer extends Model
     |--------------------------------------------------------------------------
     */
 
-    public const TYPES = [
-        'offline' => 'Offline',
-        'online' => 'Online'
-    ];
-
-    public const STATUSES = [
-        'active' => 'Active',
-        'suspended' => 'Suspended',
-        'banned' => 'Banned'
-    ];
-
-    protected $table = 'customers';
+    protected $table = 'notifications';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
     // protected $fillable = [];
     // protected $hidden = [];
-    protected $dates = [
-        'email_verified_at',
-        'phone_verified_at'
-    ];
+    // protected $dates = [];
 
     /*
     |--------------------------------------------------------------------------
@@ -54,16 +38,18 @@ class Customer extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    public function addresses(): MorphMany
+    public function notifiable(): MorphTo
     {
-        return $this->morphMany(AddressBook::class, 'addressable');
+        return $this->morphTo();
     }
-    public function newsletter(): MorphOne
+    public function customers(): MorphToMany
     {
-        return $this->morphOne(Newsletter::class, 'newsletterable');
+        return $this->morphedByMany(Customer::class, 'notifiable');
     }
-
-
+    public function users()
+    {
+        return $this->morphedByMany(User::class, 'notifiable');
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

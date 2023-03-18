@@ -51,9 +51,11 @@
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-bullseye"></i> Promotions</a>
     <ul class="nav-dropdown-items">
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('email') }}">
-                <i class="nav-icon la la-envelope"></i> Emails</a>
-        </li>
+        @if(setting('developer_mode'))
+            <li class="nav-item"><a class="nav-link" href="{{ backpack_url('email') }}">
+                    <i class="nav-icon la la-envelope"></i> Emails</a>
+            </li>
+        @endif
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('newsletter') }}">
                 <i class="nav-icon la la-newspaper"></i> Newsletters</a>
         </li>
@@ -70,13 +72,13 @@
     <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-globe"></i> Web Site</a>
     <ul class="nav-dropdown-items">
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('banner') }}">
-                <i class="nav-icon la la-question"></i> Banners</a>
+                <i class="nav-icon la la-image"></i> Banners</a>
         </li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('widget') }}">
-                <i class="nav-icon la la-question"></i> Widgets</a>
+                <i class="nav-icon la la-tools"></i> Widgets</a>
         </li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('page') }}">
-                <i class="nav-icon la la-question"></i> Pages</a>
+                <i class="nav-icon la la-file-image"></i> Pages</a>
         </li>
     </ul>
 </li>
@@ -84,10 +86,11 @@
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#"><i class="nav-icon la la-bell"></i> Notifications</a>
     <ul class="nav-dropdown-items">
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('event') }}">
-                <i class="nav-icon la la-calendar-day"></i> Events</a>
-        </li>
-
+        @if(setting('developer_mode'))
+            <li class="nav-item"><a class="nav-link" href="{{ backpack_url('event') }}">
+                    <i class="nav-icon la la-calendar-day"></i> Events</a>
+            </li>
+        @endif
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('template') }}">
                 <i class="nav-icon la la-paperclip"></i> Templates</a>
         </li>
@@ -107,8 +110,10 @@
                     class="nav-icon la la-id-badge"></i> <span>Roles</span></a></li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('permission') }}"><i
                     class="nav-icon la la-key"></i> <span>Permissions</span></a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('audit') }}">
-                <i class="nav-icon la la-search"></i> Audits</a></li>
+        @if(setting('developer_mode'))
+            <li class="nav-item"><a class="nav-link" href="{{ backpack_url('audit') }}">
+                    <i class="nav-icon la la-search"></i> Audits</a></li>
+        @endif
     </ul>
 </li>
 
@@ -125,7 +130,9 @@
                     class="nav-icon la la-map-pin"></i> Cities</a></li>
         <li class="nav-item"><a class="nav-link" href="{{ backpack_url('translation') }}"><i
                     class="nav-icon la la-language"></i> Translations</a></li>
-        <li class='nav-item'><a class='nav-link' href='{{ backpack_url('log') }}'><i
-                    class='nav-icon la la-terminal'></i> Logs</a></li>
+        @if(setting('developer_mode'))
+            <li class='nav-item'><a class='nav-link' href='{{ backpack_url('log') }}'><i
+                        class='nav-icon la la-terminal'></i> Logs</a></li>
+        @endif
     </ul>
 </li>

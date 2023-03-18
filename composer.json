@@ -22,6 +22,7 @@
     },
     "require-dev": {
         "backpack/generators": "^3.3",
+        "barryvdh/laravel-debugbar": "^3.8",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
@@ -35,7 +36,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+           "app/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

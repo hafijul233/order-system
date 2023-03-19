@@ -198,7 +198,7 @@ return [
 
     // The web middleware (group) used in all base & CRUD routes
     // If you've modified your "web" middleware group (ex: removed sessions), you can use a different
-    // route group, that has all the the middleware listed below in the comments.
+    // route group, that has all the middleware listed below in the comments.
     'web_middleware' => 'web',
     // Or you can comment the above, and uncomment the complete list below.
     // 'web_middleware' => [
@@ -210,7 +210,7 @@ return [
     // ],
 
     // Set this to false if you would like to use your own AuthController and PasswordController
-    // (you then need to setup your auth routes manually in your routes.php file)
+    // (you then need to set up your auth routes manually in your routes.php file)
     // Warning: if you disable this, the password recovery routes (below) will be disabled too!
     'setup_auth_routes' => true,
 

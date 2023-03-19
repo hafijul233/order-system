@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('rgt')->nullable()->default(0);
             $table->integer('depth')->nullable()->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

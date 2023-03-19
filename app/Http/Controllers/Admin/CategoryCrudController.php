@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CategoryRequest;
-use App\Models\Category;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -81,8 +80,6 @@ class CategoryCrudController extends CrudController
     {
         CRUD::setValidation(CategoryRequest::class);
 
-        $categories = Category::all()->pluck('name', 'id')->toArray();
-
         CRUD::addFields([
             [
                 'name' => 'name',
@@ -123,10 +120,7 @@ class CategoryCrudController extends CrudController
      */
     protected function setupReorderOperation()
     {
-        // define which model attribute will be shown on draggable elements
         $this->crud->set('reorder.label', 'name');
-        // define how deep the admin is allowed to nest the items
-        // for infinite levels, set it to 0
         $this->crud->set('reorder.max_level', 5);
     }
 }

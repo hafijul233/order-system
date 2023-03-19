@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('countries', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('iso2', 2)->nullable();
+            $table->string('iso3', 3)->nullable();
+            $table->string('phone')->nullable();
+            $table->string('currency')->nullable();
+            $table->string('flag')->nullable();
+            $table->json('timezones')->nullable();
+            $table->boolean('enabled')->default(true);
             $table->timestamps();
         });
     }

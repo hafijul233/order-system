@@ -25,9 +25,8 @@ return new class extends Migration
             $table->decimal('cost', 18, 2)->default(0);
             $table->decimal('price', 18, 2)->default(0);
             $table->decimal('reorder_level', 18,3)->default(1);
-            $table->decimal('reorder_level', 18,3)->default(1);
             $table->boolean('inventory_enabled')->default(true);
-            $table->enum('status', ['active', 'suspended', 'banned'])->default(1);
+            $table->enum('status', ['draft', 'active', 'suspended', 'banned'])->default('active');
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
             $table->timestamps();

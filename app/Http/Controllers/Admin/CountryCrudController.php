@@ -43,12 +43,16 @@ class CountryCrudController extends CrudController
     {
         CRUD::addColumns([
             [
-                'name' => 'flag',
-                'label' => 'Flag',
+                'name' => 'id',
+                'label' => '#',
             ],
             [
                 'name' => 'name',
                 'label' => 'Name',
+                'type' => 'custom_html',
+                'value' => function($country) {
+                    return "{$country->flag} {$country->name}";
+                }
             ],
             [
                 'name' => 'iso2',
@@ -63,7 +67,7 @@ class CountryCrudController extends CrudController
                 'label' => 'Phone Code',
             ],
             [
-                'name' => 'Currency',
+                'name' => 'currency',
                 'label' => 'Currency',
             ]
         ]);
@@ -81,6 +85,10 @@ class CountryCrudController extends CrudController
 
         CRUD::addFields([
             [
+                'name' => 'id',
+                'label' => '#',
+            ],
+            [
                 'name' => 'flag',
                 'label' => 'Flag',
             ],
@@ -102,7 +110,7 @@ class CountryCrudController extends CrudController
             ],
             [
                 'name' => 'Currency',
-                'label' => 'Currency',
+                'label' => 'currency',
             ]
         ]);
     }

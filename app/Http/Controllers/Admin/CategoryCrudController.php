@@ -92,8 +92,8 @@ class CategoryCrudController extends CrudController
             [
                 'name' => 'parent_id',
                 'label' => 'Parent',
-                'type' => 'select_from_array',
-                'options' => $categories
+                'type' => 'select',
+                'entity' => 'parent'
             ],
         ]);
 

@@ -12,8 +12,8 @@ class StateSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach ($this->data() as $country) {
-            State::create($country);
+        foreach ($this->data() as $state) {
+            State::create($state);
         }
     }
 

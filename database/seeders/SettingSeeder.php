@@ -12,6 +12,8 @@ class SettingSeeder extends Seeder
      */
     public function run(): void
     {
+
+        DB::table('settings')->truncate();
         DB::table('settings')->insert($this->data());
     }
 

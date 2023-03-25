@@ -104,11 +104,11 @@ class AddressBookCrudController extends CrudController
         $addressable = [];
 
         Customer::all()->each(function ($customer) use (&$addressable) {
-            $addressable[Customer::class . ':' . $customer->id] = $customer->name;
+            $addressable[Customer::class . ':' . $customer->id] = "(customer) " . $customer->name;
         });
 
         Company::all()->each(function ($company) use (&$addressable) {
-            $addressable[Company::class . ':' . $company->id] = $company->name;
+            $addressable[Company::class . ':' . $company->id] = "(company) " . $company->name;
         });
 
         CRUD::addFields([

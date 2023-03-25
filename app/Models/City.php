@@ -38,6 +38,16 @@ class City extends Model implements Auditable
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+}
+
+    public function state()
+    {
+        return $this->belongsTo(State::class);
+}
+
 
     /*
     |--------------------------------------------------------------------------

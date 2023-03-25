@@ -21,7 +21,7 @@ class CityCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -33,24 +33,44 @@ class CityCrudController extends CrudController
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
     protected function setupListOperation()
     {
-        
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
-         */
+        CRUD::addColumns([
+            [
+                'name' => 'id',
+                'label' => '#',
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Name',
+            ],
+            [
+                'name' => 'country',
+                'label' => 'Country',
+                'type' => 'custom_html',
+                'value' => function ($city) {
+                    return "{$city->country->flag} {$city->country->name}";
+                }
+            ],
+            [
+                'name' => 'state',
+                'label' => 'State',
+            ],
+            [
+                'name' => 'enabled',
+                'label' => 'Enabled',
+                'type' => 'boolean'
+            ]
+        ]);
     }
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -58,18 +78,41 @@ class CityCrudController extends CrudController
     {
         CRUD::setValidation(CityRequest::class);
 
-        
-
+        CRUD::addFields([
+            [
+                'name' => 'name',
+                'label' => 'Name',
+            ],
+            [
+                'name' => 'country',
+                'label' => 'Country',
+                'type' => 'select2',
+                'entity' => 'country',
+                'allows_null' => false
+            ],
+            [
+                'name' => 'state',
+                'label' => 'State',
+                'type' => 'relationship',
+                'entity' => 'state',
+                'dependencies' => ['country']
+            ],
+            [
+                'name' => 'enabled',
+                'label' => 'Enabled',
+                'type' => 'boolean'
+            ]
+        ]);
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
+         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
          */
     }
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */

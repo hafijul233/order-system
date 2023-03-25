@@ -38,7 +38,10 @@ class State extends Model implements Auditable
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

@@ -44,20 +44,33 @@ class StateCrudController extends CrudController
     {
         CRUD::addColumns([
             [
+                'name' => 'id',
+                'label' => '#',
+            ],
+            [
                 'name' => 'name',
                 'label' => 'Name',
+            ],
+            [
+                'name' => 'country',
+                'label' => 'Country',
+                'type' => 'custom_html',
+                'value' => function ($state) {
+                    return "{$state->country->flag} {$state->country->name}";
+                }
             ],
             [
                 'name' => 'type',
                 'label' => 'Type',
             ],
             [
-                'name' => 'country',
-                'label' => 'Country',
+                'name' => 'iso2',
+                'label' => 'ISO2 Code',
             ],
             [
-                'name' => 'iso2',
-                'label' => 'ISO3 Code',
+                'name' => 'enabled',
+                'label' => 'Enabled',
+                'type'=> 'boolean'
             ]
         ]);
     }
@@ -72,38 +85,35 @@ class StateCrudController extends CrudController
     {
         CRUD::setValidation(StateRequest::class);
 
-        $countries = [];
 
-        Country::all()->each(function ($country) use (&$countries){
-            $countries[$country->id] = "{$country->flag} {$country->name}";
-        });
-
-        CRUD::addColumns([
+        CRUD::addFields([
             [
                 'name' => 'name',
                 'label' => 'Name',
             ],
             [
+                'name' => 'country_id',
+                'label' => 'Country',
+                'type' => 'select2',
+                'entity' => 'country',
+                'allows_null' => false
+            ],
+            [
                 'name' => 'type',
                 'label' => 'Type',
             ],
-            [
-                'name' => 'country_id',
-                'label' => 'Country',
-                'type' => 'select_from_array',
-                'options' => $countries
-            ],
+
             [
                 'name' => 'iso2',
-                'label' => 'ISO3 Code',
+                'label' => 'ISO2 Code',
+            ],
+            [
+                'name' => 'enabled',
+                'label' => 'Enabled',
+                'type'=> 'boolean'
             ]
         ]);
 
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
-         */
     }
 
     /**

@@ -35,6 +35,27 @@ class Newsletter extends Model implements Auditable
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::creating(function ($model) {
+            if ($model->newsletterable_id == null) {
+                $model->newsletterable_type = null;
+                $model->getDirty();
+            }
+        });
+
+        static::updating(function ($model) {
+            if ($model->newsletterable_id == null) {
+                $model->newsletterable_type = null;
+                $model->getDirty();
+            }
+        });
+    }
+
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
@@ -44,10 +65,12 @@ class Newsletter extends Model implements Auditable
     {
         return $this->morphTo();
     }
+
     public function customers(): MorphToMany
     {
         return $this->morphedByMany(Customer::class, 'newsletterable');
     }
+
     public function companies()
     {
         return $this->morphedByMany(Company::class, 'newsletterable');

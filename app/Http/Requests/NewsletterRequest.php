@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class NewsletterRequest extends FormRequest
 {
@@ -25,31 +26,11 @@ class NewsletterRequest extends FormRequest
     public function rules()
     {
         return [
-            // 'name' => 'required|min:5|max:255'
-        ];
-    }
+            'newsletterable' => 'nullable|array',
+            'email' => ['min:5', 'max:255', 'email:rfs,dns',
+                Rule::unique('newsletters', 'email')
+                    ->ignore(request()->route('id')),],
 
-    /**
-     * Get the validation attributes that apply to the request.
-     *
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            //
-        ];
-    }
-
-    /**
-     * Get the validation messages that apply to the request.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            //
         ];
     }
 }

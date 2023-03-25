@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\CityRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
+
 
 /**
  * Class CityCrudController
@@ -18,6 +20,7 @@ class CityCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use FetchOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -95,7 +98,15 @@ class CityCrudController extends CrudController
                 'label' => 'State',
                 'type' => 'relationship',
                 'entity' => 'state',
-                'dependencies' => ['country']
+                'ajax' => true,
+                'attribute' => "name",
+                'placeholder' => "Select a state",
+                // AJAX OPTIONALS:
+                'delay' => 500,
+                'data_source' => url("fetch/state"),
+                'dependencies' => ['country'],
+                'method' => 'GET',
+                'include_all_form_fields' => false,
             ],
             [
                 'name' => 'enabled',
@@ -103,11 +114,7 @@ class CityCrudController extends CrudController
                 'type' => 'boolean'
             ]
         ]);
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
-         */
+
     }
 
     /**
@@ -119,5 +126,10 @@ class CityCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function fetchState()
+    {
+        return $this->fetch(\App\Models\State::class);
     }
 }

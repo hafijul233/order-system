@@ -55,20 +55,17 @@ class CountryCrudController extends CrudController
                 }
             ],
             [
-                'name' => 'iso2',
-                'label' => 'ISO2 Code',
-            ],
-            [
-                'name' => 'iso3',
-                'label' => 'ISO3 Code',
-            ],
-            [
                 'name' => 'phone',
                 'label' => 'Phone Code',
             ],
             [
                 'name' => 'currency',
                 'label' => 'Currency',
+            ],
+            [
+                'name' => 'enabled',
+                'label' => 'Enabled',
+                'type'=> 'boolean'
             ]
         ]);
     }
@@ -85,12 +82,8 @@ class CountryCrudController extends CrudController
 
         CRUD::addFields([
             [
-                'name' => 'id',
-                'label' => '#',
-            ],
-            [
                 'name' => 'flag',
-                'label' => 'Flag',
+                'label' => 'Flag'
             ],
             [
                 'name' => 'name',
@@ -109,8 +102,13 @@ class CountryCrudController extends CrudController
                 'label' => 'Phone Code',
             ],
             [
-                'name' => 'Currency',
-                'label' => 'currency',
+                'name' => 'currency',
+                'label' => 'Currency',
+            ],
+            [
+                'name' => 'enabled',
+                'label' => 'Enabled',
+                'type'=> 'boolean'
             ]
         ]);
     }

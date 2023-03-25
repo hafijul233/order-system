@@ -146,14 +146,22 @@ class CustomerCrudController extends CrudController
             [
                 'name' => 'email_verified_at',
                 'label' => 'Email Verified At',
-                'type' => 'datetime',
-                'tab' => 'Authentication'
+                'type' => 'datetime_picker',
+                'tab' => 'Authentication',
+                'datetime_picker_options' => [
+                    'format' => 'YYYY-MM-DD HH:mm:ss',
+                ],
+                'allows_null' => true,
             ],
             [
                 'name' => 'phone_verified_at',
                 'label' => 'Phone Verified At',
-                'type' => 'datetime',
-                'tab' => 'Authentication'
+                'type' => 'datetime_picker',
+                'tab' => 'Authentication',
+                'datetime_picker_options' => [
+                    'format' => 'YYYY-MM-DD HH:mm:ss',
+                ],
+                'allows_null' => true,
             ],
             //Profile
             [

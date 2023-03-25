@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use OwenIt\Auditing\Contracts\Auditable;
 
 class Customer extends Model implements Auditable
@@ -83,4 +84,7 @@ class Customer extends Model implements Auditable
     | MUTATORS
     |--------------------------------------------------------------------------
     */
+    public function setPasswordAttribute($value) {
+        $this->attributes['password'] = Hash::make($value);
+    }
 }

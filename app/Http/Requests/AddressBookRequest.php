@@ -29,7 +29,7 @@ class AddressBookRequest extends FormRequest
     public function rules()
     {
         return [
-            'addressable' => ['required', 'min:1', 'string'],
+            'addressable' => ['required', 'min:1', 'array'],
             'type' => ['required', 'string', Rule::in(array_keys(AddressBook::TYPES))],
             'street_address' => ['nullable', 'min:3', 'max:255', 'string'],
             'city' => ['required', 'min:2', 'max:255', 'string'],
@@ -42,13 +42,4 @@ class AddressBookRequest extends FormRequest
             'note' => ['nullable', 'min:3', 'max:255', 'string'],
         ];
     }
-
-    protected function prepareForValidation()
-    {
-        if ($this->request->has('addressable')) {
-            [$addressable_type, $addressable_id] = explode(':', $this->addressable);
-            $this->mergeIfMissing(['addressable_id' => $addressable_id, 'addressable_type' => $addressable_type]);
-        }
-    }
-
 }

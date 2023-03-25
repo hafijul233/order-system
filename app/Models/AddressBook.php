@@ -49,27 +49,8 @@ class AddressBook extends Model implements Auditable
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-    /**
-     * The "booted" method of the model.
-     */
-    protected static function booted(): void
-    {
-        static::creating(function (self $addressBook) {
-            [$addressable_type, $addressable_id] = explode(':', request('addressable'));
-            $addressBook->addressable_id = $addressable_id;
-            $addressBook->addressable_type = $addressable_type;
-            $addressBook->getDirty();
-        });
-
-        static::updating(function (self $addressBook) {
-            [$addressable_type, $addressable_id] = explode(':', request('addressable'));
-            $addressBook->addressable_id = $addressable_id;
-            $addressBook->addressable_type = $addressable_type;
-            $addressBook->getDirty();
-        });
 
 
-    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

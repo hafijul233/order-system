@@ -87,6 +87,15 @@ class AddressBookCrudController extends CrudController
                     return $this->addressBookStatus($addressBook);
                 }
             ],
+            [
+                'name' => 'address',
+                'label' => 'Address',
+                'type' => 'custom_html',
+                'value' => function ($addressBook) {
+                    return "<span>{$addressBook->street_address}<br>
+{$addressBook->city}, {$addressBook->state} - {$addressBook->zip_code}</span>";
+                }
+            ],
 
         ]);
     }
@@ -101,27 +110,19 @@ class AddressBookCrudController extends CrudController
     {
         CRUD::setValidation(AddressBookRequest::class);
 
-        $addressable = [];
-
-        Customer::all()->each(function ($customer) use (&$addressable) {
-            $addressable[Customer::class . ':' . $customer->id] = "(customer) " . $customer->name;
-        });
-
-        Company::all()->each(function ($company) use (&$addressable) {
-            $addressable[Company::class . ':' . $company->id] = "(company) " . $company->name;
-        });
-
         CRUD::addFields([
             [
                 'name' => 'addressable',
                 'label' => 'Address To',
-                'type' => 'select_from_array',
-                'options' => $addressable,
+                'type' => 'relationship',
                 'allows_null' => false,
                 'tab' => 'Basic',
+                'morphOptions' => [
+                    [Customer::class,],
+                    [Company::class,]
+                ]
             ],
-            [
-                'name' => 'type',
+            ['name' => 'type',
                 'label' => 'Type',
                 'type' => 'select_from_array',
                 'options' => AddressBook::TYPES,
@@ -184,7 +185,6 @@ class AddressBookCrudController extends CrudController
                 'type' => 'textarea',
                 'tab' => 'Recognition'
             ],
-
         ]);
     }
 

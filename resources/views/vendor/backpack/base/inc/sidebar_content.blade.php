@@ -254,12 +254,12 @@
                 Cities
             </a>
         </li>
-        <li class="nav-item">
+{{--        <li class="nav-item">
             <a class="nav-link" href="{{ backpack_url('translation') }}">
                 <i class="nav-icon la la-language"></i>
                 Translations
             </a>
-        </li>
+        </li>--}}
         @if(setting('developer_mode'))
             <li class="nav-item">
                 <a class="nav-link" href='{{ backpack_url('log') }}'>

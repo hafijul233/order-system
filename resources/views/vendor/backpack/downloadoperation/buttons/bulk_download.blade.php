@@ -1,4 +1,4 @@
-@if ($crud->hasAccess('download') && $crud->get('list.bulkActions'))
+@if ($crud->get('list.bulkActions'))
   <a href="javascript:void(0)" onclick="bulkDownloadEntries(this)" class="btn btn-sm btn-secondary bulk-button"><i class="la la-download"></i> {{ trans('backpack.downloadoperation::downloadoperation.download') }}</a>
 @endif
 
@@ -68,7 +68,7 @@
                   responseType: 'blob' // to avoid binary data being mangled on charset conversion
                 },
                 success: function(blob, status, xhr) {
-                  // trigger download in the browser 
+                  // trigger download in the browser
                   downloadResponse(blob, status, xhr);
                   // mark the ajax call as completed
                   deferred.resolve(item);

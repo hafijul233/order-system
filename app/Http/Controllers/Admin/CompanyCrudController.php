@@ -41,6 +41,30 @@ class CompanyCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        CRUD::addFilter(
+            [
+                'name' => 'status',
+                'type' => 'dropdown',
+                'label' => 'Status'
+            ],
+            Company::STATUSES,
+            function ($value) { // if the filter is active
+                $this->crud->addClause('where', 'status', '=', $value);
+            });
+
+        CRUD::addFilter(
+            [
+                'name' => 'created_at',
+                'type' => 'date_range',
+                'label' => 'Created'
+            ],
+            false,
+            function ($value) { // if the filter is active
+                $dates = json_decode($value);
+                $this->crud->addClause('where', 'created_at', '>=', $dates->from . ' 00:00:00');
+                $this->crud->addClause('where', 'created_at', '<=', $dates->to . ' 23:59:59');
+            });
+
         CRUD::addColumns([
             [
                 'name' => 'id',

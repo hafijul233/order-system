@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CityRequest;
 use App\Models\City;
+use App\Models\Country;
 use App\Models\State;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -45,6 +46,47 @@ class CityCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        CRUD::addFilter(
+            [
+                'type' => 'dropdown',
+                'name' => 'enabled',
+                'label' => 'Enabled'
+            ],
+            [
+                1 => 'Yes',
+                0 => 'No',
+
+            ],
+            function ($value) {
+                $this->crud->addClause('where', 'enabled', '=', $value);
+            });
+
+        CRUD::addFilter(
+            [
+                'type' => 'select2',
+                'name' => 'country',
+                'label' => 'Country'
+            ],
+            function () {
+                return Country::all()->pluck('name', 'id')->toArray();
+            },
+            function ($value) {
+                $this->crud->addClause('where', 'country_id', '=', $value);
+            });
+
+        CRUD::addFilter(
+            [
+                'name' => 'created_at',
+                'type' => 'date_range',
+                'label' => 'Created'
+            ],
+            false,
+            function ($value) { // if the filter is active
+                $dates = json_decode($value);
+                $this->crud->addClause('where', 'created_at', '>=', $dates->from . ' 00:00:00');
+                $this->crud->addClause('where', 'created_at', '<=', $dates->to . ' 23:59:59');
+            });
+
         CRUD::addColumns([
             [
                 'name' => 'id',

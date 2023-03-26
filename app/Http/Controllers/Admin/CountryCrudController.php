@@ -41,6 +41,34 @@ class CountryCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        CRUD::addFilter(
+            [
+            'type' => 'dropdown',
+            'name' => 'enabled',
+            'label' => 'Enabled'
+        ],
+            [
+                1 => 'Yes',
+                0 => 'No',
+
+            ],
+            function ($value) {
+                $this->crud->addClause('where', 'enabled', '=', $value);
+            });
+
+        CRUD::addFilter(
+            [
+                'name' => 'created_at',
+                'type' => 'date_range',
+                'label' => 'Created'
+            ],
+            false,
+            function ($value) { // if the filter is active
+                $dates = json_decode($value);
+                $this->crud->addClause('where', 'created_at', '>=', $dates->from . ' 00:00:00');
+                $this->crud->addClause('where', 'created_at', '<=', $dates->to . ' 23:59:59');
+            });
+
         CRUD::addColumns([
             [
                 'name' => 'id',

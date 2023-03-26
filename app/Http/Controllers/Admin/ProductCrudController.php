@@ -21,7 +21,7 @@ class ProductCrudController extends CrudController
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     * 
+     *
      * @return void
      */
     public function setup()
@@ -33,24 +33,26 @@ class ProductCrudController extends CrudController
 
     /**
      * Define what happens when the List operation is loaded.
-     * 
+     *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
     protected function setupListOperation()
     {
-        
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
-         */
+        CRUD::column('id');
+        CRUD::column('code');
+        CRUD::column('name');
+        CRUD::column('category_id');
+        CRUD::column('platform');
+        CRUD::column('price');
+        CRUD::column('short_description');
+        CRUD::column('status');
+        CRUD::column('updated_at');
     }
 
     /**
      * Define what happens when the Create operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
@@ -58,18 +60,33 @@ class ProductCrudController extends CrudController
     {
         CRUD::setValidation(ProductRequest::class);
 
-        
+        CRUD::field('code');
+        CRUD::field('type');
+        CRUD::field('name');
+        CRUD::field('category_id');
+        CRUD::field('short_description');
+        CRUD::field('description');
+        CRUD::field('weight');
+        CRUD::field('default_quantity');
+        CRUD::field('platform');
+        CRUD::field('cost');
+        CRUD::field('price');
+        CRUD::field('reorder_level');
+        CRUD::field('inventory_enabled');
+        CRUD::field('status');
+        CRUD::field('block_reason');
+        CRUD::field('note');
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number'])); 
+         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
          */
     }
 
     /**
      * Define what happens when the Update operation is loaded.
-     * 
+     *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */

@@ -85,20 +85,21 @@ class AddressBookCrudController extends CrudController
                 }
             ],
             [
-                'name' => 'status',
-                'label' => 'Status',
-                'type' => 'custom_html',
-                'value' => function ($addressBook) {
-                    return $this->addressBookStatus($addressBook);
-                }
-            ],
-            [
                 'name' => 'address',
                 'label' => 'Address',
                 'type' => 'custom_html',
                 'value' => function ($addressBook) {
                     return "<span>{$addressBook->street_address}<br>
-{$addressBook->city}, {$addressBook->state} - {$addressBook->zip_code}</span>";
+{$addressBook->city->name}, {$addressBook->state->name} - {$addressBook->zip_code}<br>
+{$addressBook->country->name}</span>";
+                }
+            ],
+            [
+                'name' => 'status',
+                'label' => 'Status',
+                'type' => 'custom_html',
+                'value' => function ($addressBook) {
+                    return $this->addressBookStatus($addressBook);
                 }
             ],
 

@@ -49,10 +49,12 @@ class Category extends Model implements Auditable
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
+
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id');
     }
+
     public function siblings(): HasMany
     {
         return $this->hasMany(self::class, 'depth', 'depth');
@@ -69,7 +71,10 @@ class Category extends Model implements Auditable
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
-
+    public function getLabelAttribute()
+    {
+        return $this->name;
+    }
     /*
     |--------------------------------------------------------------------------
     | MUTATORS

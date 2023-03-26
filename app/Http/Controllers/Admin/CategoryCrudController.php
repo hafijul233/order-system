@@ -50,6 +50,10 @@ class CategoryCrudController extends CrudController
             [
                 'name' => 'name',
                 'label' => 'Name',
+                'type' => 'closure',
+                'function' => function($category) {
+                    return $category->name;
+                }
             ],
             [
                 'name' => 'slug',

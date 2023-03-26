@@ -90,7 +90,7 @@ class CityCrudController extends CrudController
                 'label' => 'Name',
             ],
             [
-                'name' => 'country_id',
+                'name' => 'country',
                 'label' => 'Country',
                 'type' => 'select2',
                 'entity' => 'country',

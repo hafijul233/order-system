@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CityRequest;
+use App\Models\City;
+use App\Models\State;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
+use Illuminate\Http\JsonResponse;
 
 
 /**
@@ -29,7 +32,7 @@ class CityCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\City::class);
+        CRUD::setModel(City::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/city');
         CRUD::setEntityNameStrings('city', 'cities');
     }
@@ -55,7 +58,7 @@ class CityCrudController extends CrudController
                 'name' => 'country',
                 'label' => 'Country',
                 'type' => 'custom_html',
-                'value' => function ($city) {
+                'value' => function (City $city) {
                     return "{$city->country->flag} {$city->country->name}";
                 }
             ],
@@ -87,11 +90,14 @@ class CityCrudController extends CrudController
                 'label' => 'Name',
             ],
             [
-                'name' => 'country',
+                'name' => 'country_id',
                 'label' => 'Country',
                 'type' => 'select2',
                 'entity' => 'country',
-                'allows_null' => false
+                'allows_null' => false,
+                'options' => (function ($query) {
+                    return $query->enabled()->get();
+                }),
             ],
             [
                 'name' => 'state',
@@ -103,10 +109,10 @@ class CityCrudController extends CrudController
                 'placeholder' => "Select a state",
                 // AJAX OPTIONALS:
                 'delay' => 500,
-                'data_source' => url("fetch/state"),
+                'data_source' => backpack_url("city/fetch/state"),
                 'dependencies' => ['country'],
-                'method' => 'GET',
-                'include_all_form_fields' => false,
+                'method' => 'POST',
+                'include_all_form_fields' => true,
             ],
             [
                 'name' => 'enabled',
@@ -128,8 +134,35 @@ class CityCrudController extends CrudController
         $this->setupCreateOperation();
     }
 
+    /**
+     * return a list of states with county condition
+     * @link {app_url}/admin/city/fetch/state
+     *
+     * @return array|JsonResponse
+     */
     public function fetchState()
     {
-        return $this->fetch(\App\Models\State::class);
+        $country = null;
+        $request = request('form', []);
+
+        foreach ($request as $field) {
+            if (isset($field['name']) && $field['name'] == 'country') {
+                $country = $field['value'];
+                break;
+            }
+        }
+
+        if ($country) {
+
+            return $this->fetch([
+                'model' => State::class,
+                'paginate' => false,
+                'query' => function (State $state) use (&$country) {
+                    return $state->enabled()->where('country_id', '=', $country);
+                }
+            ]);
+        } else {
+            return [];
+        }
     }
 }

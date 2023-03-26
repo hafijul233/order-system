@@ -5,11 +5,15 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Tags\HasSlug;
+use Spatie\Translatable\HasTranslations;
 
 class Product extends Model
 {
     use CrudTrait;
     use HasFactory;
+    use HasTranslations;
+    use HasSlug;
 
     /*
     |--------------------------------------------------------------------------
@@ -24,6 +28,7 @@ class Product extends Model
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
+    public array $translatable = ['name', 'short_description', 'description'];
 
     /*
     |--------------------------------------------------------------------------
@@ -36,7 +41,10 @@ class Product extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+}
     /*
     |--------------------------------------------------------------------------
     | SCOPES

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -44,7 +45,11 @@ class Country extends Model implements Auditable
     | SCOPES
     |--------------------------------------------------------------------------
     */
+    public function scopeEnabled(Builder $query)
+    {
+        return $query->where('enabled', true);
 
+    }
     /*
     |--------------------------------------------------------------------------
     | ACCESSORS

@@ -52,6 +52,14 @@ class CustomerCrudController extends CrudController
                 'label' => 'Name',
             ],
             [
+                'name' => 'type',
+                'label' => 'Type',
+                'type' => 'custom_html',
+                'value' => function ($customer) {
+                    return $this->customerType($customer);
+                }
+            ],
+            [
                 'name' => 'email',
                 'label' => 'Email',
                 'type' => 'custom_html',
@@ -68,27 +76,11 @@ class CustomerCrudController extends CrudController
                 }
             ],
             [
-                'name' => 'type',
-                'label' => 'Type',
-                'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return match ($customer->type) {
-                        'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . Customer::TYPES[$customer->type] . "</span>",
-                        'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . Customer::TYPES[$customer->type] . "</span>",
-                        default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
-                    };
-                }
-            ],
-            [
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
                 'value' => function ($customer) {
-                    return match ($customer->status) {
-                        'active' => "<span class='text-success'><i class='la la-check'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                        'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                        'banned' => "<span class='text-danger'><i class='la la-times'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                    };
+                    return $this->customerStatus($customer);
                 }
             ]
         ]);
@@ -244,11 +236,7 @@ class CustomerCrudController extends CrudController
                 'label' => 'Type',
                 'type' => 'custom_html',
                 'value' => function ($customer) {
-                    return match ($customer->type) {
-                        'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . Customer::TYPES[$customer->type] . "</span>",
-                        'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . Customer::TYPES[$customer->type] . "</span>",
-                        default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
-                    };
+                    return $this->customerType($customer);
                 }
             ],
             [
@@ -266,11 +254,7 @@ class CustomerCrudController extends CrudController
                 'label' => 'Status',
                 'type' => 'custom_html',
                 'value' => function ($customer) {
-                    return match ($customer->status) {
-                        'active' => "<span class='text-success'><i class='la la-check'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                        'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                        'banned' => "<span class='text-danger'><i class='la la-times'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                    };
+                    return $this->customerStatus($customer);
                 }
             ],
             [
@@ -289,5 +273,23 @@ class CustomerCrudController extends CrudController
                 'type' => 'boolean'
             ]
         ]);
+    }
+
+    private function customerType($customer)
+    {
+        return match ($customer->type) {
+            'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . Customer::TYPES[$customer->type] . "</span>",
+            'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . Customer::TYPES[$customer->type] . "</span>",
+            default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
+        };
+    }
+
+    private function customerStatus($customer)
+    {
+        return match ($customer->status) {
+            'active' => "<span class='text-success'><i class='la la-check'></i> " . Customer::STATUSES[$customer->status] . "</span>",
+            'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . Customer::STATUSES[$customer->status] . "</span>",
+            'banned' => "<span class='text-danger'><i class='la la-times'></i> " . Customer::STATUSES[$customer->status] . "</span>",
+        };
     }
 }

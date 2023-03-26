@@ -24,14 +24,18 @@ class DatabaseSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
         \App\Models\Customer::factory(15)->createQuietly();
-        \App\Models\Category::factory(15)->createQuietly();
         \App\Models\Company::factory(15)->createQuietly();
         \App\Models\Newsletter::factory(15)->createQuietly();
         \App\Models\Tag::factory(15)->createQuietly();
-        $this->call(SettingSeeder::class);
-        $this->call(CountrySeeder::class);
-        $this->call(StateSeeder::class);
-        $this->call(CitySeeder::class);
+        $this->call([
+            RoleSeeder::class,
+            RoleSeeder::class,
+            SettingSeeder::class,
+            CountrySeeder::class,
+            StateSeeder::class,
+            CitySeeder::class,
+            CategorySeeder::class
+        ]);
 
     }
 }

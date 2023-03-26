@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code')->nullable();
             $table->json('name');
-            $table->json('slug')->unique();
+            $table->text('slug')->unique();
             $table->foreignId('category_id')->nullable();
             $table->json('short_description')->nullable();
             $table->json('description')->nullable();

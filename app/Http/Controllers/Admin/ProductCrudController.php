@@ -76,11 +76,20 @@ class ProductCrudController extends CrudController
                     };
                 }
             ],
-
+            [
+                'name' => 'price',
+                'label' => 'Price'
+            ],
+            [
+                'name' => 'status',
+                'label' => 'Status'
+            ],
+            [
+                'name' => 'updated_at',
+                'label' => 'Last updated',
+                'type' => 'datetime'
+            ],
         ]);
-        CRUD::column('price');
-        CRUD::column('status');
-        CRUD::column('updated_at');
     }
 
     /**

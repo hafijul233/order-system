@@ -59,13 +59,13 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ backpack_url('attribute') }}">
-                <i class="nav-icon la la-question"></i>
+                <i class="nav-icon la la-list"></i>
                 Attributes
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ backpack_url('modifier') }}">
-                <i class="nav-icon la la-question"></i>
+                <i class="nav-icon la la-edit"></i>
                 Modifiers
             </a>
         </li>
@@ -148,7 +148,7 @@
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ backpack_url('widget') }}">
-                <i class="nav-icon la la-tools"></i>
+                <i class="nav-icon la la-plug"></i>
                 Widgets
             </a>
         </li>
@@ -156,11 +156,6 @@
             <a class="nav-link" href="{{ backpack_url('page') }}">
                 <i class="nav-icon la la-file-image"></i>
                 Pages
-            </a>
-        </li>
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('elfinder') }}">
-                <i class="nav-icon la la-files-o"></i>
-                <span>{{ trans('backpack::crud.file_manager') }}</span>
             </a>
         </li>
     </ul>
@@ -226,6 +221,12 @@
                     Audits
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ backpack_url('status-history') }}">
+                    <i class="nav-icon la la-history"></i>
+                    Status History
+                </a>
+            </li>
         @endif
     </ul>
 </li>
@@ -265,7 +266,16 @@
                         Translations
                     </a>
                 </li>--}}
-        @if(setting('developer_mode'))
+    </ul>
+</li>
+
+@if(setting('developer_mode'))
+    <li class="nav-item nav-dropdown">
+        <a class="nav-link nav-dropdown-toggle" href="#">
+            <i class="nav-icon la la-tools"></i>
+            Tools
+        </a>
+        <ul class="nav-dropdown-items">
             <li class="nav-item">
                 <a class="nav-link" href='{{ backpack_url('log') }}'>
                     <i class='nav-icon la la-terminal'></i>
@@ -278,6 +288,18 @@
                     Units
                 </a>
             </li>
-        @endif
-    </ul>
-</li>
+            <li class="nav-item"><a class="nav-link" href="{{ backpack_url('elfinder') }}">
+                    <i class="nav-icon la la-files-o"></i>
+                    Media
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ backpack_url('status') }}">
+                    <i class="nav-icon la la-info"></i>
+                    Statuses
+                </a>
+            </li>
+        </ul>
+    </li>
+@endif
+

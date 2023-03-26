@@ -16,8 +16,9 @@ return new class extends Migration {
             $table->enum('type', array_keys(\App\Models\AddressBook::TYPES))->default('home');
             $table->text('street_address')->nullable();
             $table->string('landmark')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
+            $table->foreignId('city_id')->nullable();
+            $table->foreignId('state_id')->nullable();
+            $table->foreignId('country_id')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('phone')->nullable();
             $table->enum('status', array_keys(\App\Models\AddressBook::STATUSES))->default('active')->nullable();

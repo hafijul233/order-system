@@ -136,16 +136,37 @@ class AddressBookCrudController extends CrudController
                 'tab' => 'Basic',
             ],
             [
-                'name' => 'city',
+                'name' => 'city_id',
                 'label' => 'City',
-                'type' => 'text',
+                'type' => 'select2',
                 'tab' => 'Basic',
+                'entity' => 'city',
+                'allows_null' => false,
+                'options' => function ($model) {
+                    return $model->enabled()->get();
+                }
             ],
             [
-                'name' => 'state',
+                'name' => 'state_id',
                 'label' => 'State',
-                'type' => 'text',
+                'type' => 'select2',
                 'tab' => 'Basic',
+                'entity' => 'state',
+                'allows_null' => true,
+                'options' => function ($model) {
+                    return $model->enabled()->get();
+                }
+            ],
+            [
+                'name' => 'country_id',
+                'label' => 'Country',
+                'type' => 'select2',
+                'tab' => 'Basic',
+                'entity' => 'country',
+                'allows_null' => true,
+                'options' => function ($model) {
+                    return $model->enabled()->get();
+                }
             ],
             [
                 'name' => 'zip_code',

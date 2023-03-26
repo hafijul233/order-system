@@ -29,7 +29,9 @@ class DatabaseSeeder extends Seeder
         \App\Models\Newsletter::factory(15)->createQuietly();
         \App\Models\Tag::factory(15)->createQuietly();
         $this->call(SettingSeeder::class);
-/*        $this->call(CountrySeeder::class);
-        $this->call(StateSeeder::class);*/
+        $this->call(CountrySeeder::class);
+        $this->call(StateSeeder::class);
+        $this->call(CitySeeder::class);
+
     }
 }

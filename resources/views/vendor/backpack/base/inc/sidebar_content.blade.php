@@ -158,6 +158,11 @@
                 Pages
             </a>
         </li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('elfinder') }}">
+                <i class="nav-icon la la-files-o"></i>
+                <span>{{ trans('backpack::crud.file_manager') }}</span>
+            </a>
+        </li>
     </ul>
 </li>
 
@@ -254,12 +259,12 @@
                 Cities
             </a>
         </li>
-{{--        <li class="nav-item">
-            <a class="nav-link" href="{{ backpack_url('translation') }}">
-                <i class="nav-icon la la-language"></i>
-                Translations
-            </a>
-        </li>--}}
+        {{--        <li class="nav-item">
+                    <a class="nav-link" href="{{ backpack_url('translation') }}">
+                        <i class="nav-icon la la-language"></i>
+                        Translations
+                    </a>
+                </li>--}}
         @if(setting('developer_mode'))
             <li class="nav-item">
                 <a class="nav-link" href='{{ backpack_url('log') }}'>
@@ -276,3 +281,5 @@
         @endif
     </ul>
 </li>
+
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('elfinder') }}"><i class="nav-icon la la-files-o"></i> <span>{{ trans('backpack::crud.file_manager') }}</span></a></li>

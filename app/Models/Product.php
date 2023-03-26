@@ -20,6 +20,11 @@ class Product extends Model
     | GLOBAL VARIABLES
     |--------------------------------------------------------------------------
     */
+    public const PLATFORMS = [
+        'online' => 'Online',
+        'offline' => 'Offline',
+        'both' => 'Both'
+    ];
 
     protected $table = 'products';
     // protected $primaryKey = 'id';

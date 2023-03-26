@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\ProductRequest;
+use App\Models\Customer;
+use App\Models\Product;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -40,13 +42,43 @@ class ProductCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('id');
-        CRUD::column('code');
-        CRUD::column('name');
-        CRUD::column('category_id');
-        CRUD::column('platform');
+        CRUD::addColumns([
+            [
+                'name' => 'id',
+                'label' => '#'
+            ],
+            [
+                'name' => 'code',
+                'label' => 'Code'
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Title',
+                'type' => 'closure',
+                'function' => function ($product) {
+                    return $product->name;
+                }
+            ],
+            [
+                'name' => 'category_id',
+                'label' => 'Category'
+            ],
+            [
+                'name' => 'platform',
+                'label' => 'Platform',
+                'type' => 'custom_html',
+                'value' => function ($product) {
+                    return match ($product->type) {
+                        'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . Product::PLATFORMS[$product->platform] . "</span>",
+                        'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . Product::PLATFORMS[$product->platform] . "</span>",
+                        'both' => "<span class='text-black-50'><i class='la la-mail-bulk'></i> " . Product::PLATFORMS[$product->platform] . "</span>",
+                        default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
+                    };
+                }
+            ],
+
+        ]);
         CRUD::column('price');
-        CRUD::column('short_description');
         CRUD::column('status');
         CRUD::column('updated_at');
     }

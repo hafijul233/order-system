@@ -112,6 +112,7 @@ class CityCrudController extends CrudController
                 'data_source' => backpack_url("city/fetch/state"),
                 'dependencies' => ['country'],
                 'method' => 'POST',
+                'minimum_input_length' => 0,
                 'include_all_form_fields' => true,
             ],
             [

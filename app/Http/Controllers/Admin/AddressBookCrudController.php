@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\AddressBookRequest;
 use App\Models\AddressBook;
+use App\Models\City;
 use App\Models\Company;
 use App\Models\Customer;
+use App\Models\State;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -14,6 +16,9 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class AddressBookCrudController
@@ -22,7 +27,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  */
 class AddressBookCrudController extends CrudController
 {
-    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation, ShowOperation;
+    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation, ShowOperation, FetchOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -130,53 +135,65 @@ class AddressBookCrudController extends CrudController
                 'tab' => 'Basic',
             ],
             [
+                'name' => 'phone',
+                'label' => 'Phone',
+                'tab' => 'Basic',
+            ],
+            [
                 'name' => 'street_address',
                 'label' => 'Street Address',
                 'type' => 'textarea',
                 'tab' => 'Basic',
             ],
             [
-                'name' => 'city_id',
-                'label' => 'City',
-                'type' => 'select2',
-                'tab' => 'Basic',
-                'entity' => 'city',
-                'allows_null' => false,
-                'options' => function ($model) {
-                    return $model->enabled()->get();
-                }
-            ],
-            [
-                'name' => 'state_id',
-                'label' => 'State',
-                'type' => 'select2',
-                'tab' => 'Basic',
-                'entity' => 'state',
-                'allows_null' => true,
-                'options' => function ($model) {
-                    return $model->enabled()->get();
-                }
-            ],
-            [
-                'name' => 'country_id',
+                'name' => 'country',
                 'label' => 'Country',
                 'type' => 'select2',
-                'tab' => 'Basic',
                 'entity' => 'country',
-                'allows_null' => true,
-                'options' => function ($model) {
-                    return $model->enabled()->get();
-                }
+                'allows_null' => false,
+                'options' => (function ($query) {
+                    return $query->enabled()->get();
+                }),
+                'tab' => 'Basic'
+            ],
+            [
+                'name' => 'state',
+                'label' => 'State',
+                'type' => 'relationship',
+                'entity' => 'state',
+                'ajax' => true,
+                'attribute' => "name",
+                'placeholder' => "Select a state",
+                // AJAX OPTIONALS:
+                'delay' => 500,
+                'data_source' => backpack_url("address-book/fetch/state"),
+                'dependencies' => ['country'],
+                'method' => 'POST',
+                'minimum_input_length' => 0,
+                'include_all_form_fields' => true,
+                'tab' => 'Basic'
+            ],
+            [
+                'name' => 'city',
+                'label' => 'State',
+                'type' => 'relationship',
+                'entity' => 'city',
+                'ajax' => true,
+                'attribute' => "name",
+                'placeholder' => "Select a city",
+                // AJAX OPTIONALS:
+                'delay' => 500,
+                'data_source' => backpack_url("address-book/fetch/city"),
+                'dependencies' => ['country', 'state'],
+                'method' => 'POST',
+                'minimum_input_length' => 0,
+                'include_all_form_fields' => true,
+                'tab' => 'Basic'
             ],
             [
                 'name' => 'zip_code',
                 'label' => 'Zip Code',
                 'type' => 'number',
-                'tab' => 'Basic',
-            ],
-            [
-                'name' => 'phone',
-                'label' => 'Phone',
                 'tab' => 'Basic',
             ],
             //Recognition Tab
@@ -327,5 +344,81 @@ class AddressBookCrudController extends CrudController
             'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . AddressBook::STATUSES[$addressBook->status] . "</span>",
             'banned' => "<span class='text-danger'><i class='la la-times'></i> " . AddressBook::STATUSES[$addressBook->status] . "</span>",
         };
+    }
+
+    /**
+     * return a list of states with county condition
+     * @return array|JsonResponse
+     * @link {app_url}/admin/address-book/fetch/state
+     *
+     */
+    public function fetchState()
+    {
+        $country = null;
+        $request = request('form', []);
+
+        foreach ($request as $field) {
+            if (isset($field['name']) && $field['name'] == 'country') {
+                $country = $field['value'];
+                break;
+            }
+        }
+
+        if ($country) {
+
+            return $this->fetch([
+                'model' => State::class,
+                'paginate' => false,
+                'query' => function (State $state) use (&$country) {
+                    return $state->enabled()->where('country_id', '=', $country);
+                }
+            ]);
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * return a list of states with county condition
+     * @return array|JsonResponse
+     * @link {app_url}/admin/address-book/fetch/city
+     *
+     */
+    public function fetchCity()
+    {
+        $country = null;
+        $state = null;
+
+        $request = request('form', []);
+
+        foreach ($request as $field) {
+            if (isset($field['name']) && $field['name'] == 'country') {
+                $country = $field['value'];
+            }
+            if (isset($field['name']) && $field['name'] == 'state') {
+                $state = $field['value'];
+                if ($country) {
+                    break;
+                }
+            }
+
+        }
+
+        if ($country) {
+
+            return $this->fetch([
+                'model' => City::class,
+                'paginate' => false,
+                'query' => function (City $city) use ($country, $state) {
+                    return $city->enabled()
+                        ->where('country_id', '=', $country)
+                        ->when($state, function (Builder $query) use ($state) {
+                            return $query->where('state_id', '=', $state);
+                        });
+                }
+            ]);
+        } else {
+            return [];
+        }
     }
 }

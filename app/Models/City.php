@@ -42,12 +42,12 @@ class City extends Model implements Auditable
     public function country()
     {
         return $this->belongsTo(Country::class);
-}
+    }
 
     public function state()
     {
         return $this->belongsTo(State::class);
-}
+    }
 
 
     /*

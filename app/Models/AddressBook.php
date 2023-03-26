@@ -68,6 +68,20 @@ class AddressBook extends Model implements Auditable
     {
         return $this->morphedByMany(Company::class, 'addressable');
     }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function state()
+    {
+        return $this->belongsTo(State::class);
+    }
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

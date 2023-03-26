@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\StateRequest;
-use App\Models\Country;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -96,13 +95,15 @@ class StateCrudController extends CrudController
                 'label' => 'Country',
                 'type' => 'select2',
                 'entity' => 'country',
-                'allows_null' => false
+                'allows_null' => false,
+                'options' => (function ($query) {
+                    return $query->enabled()->get();
+                }),
             ],
             [
                 'name' => 'type',
                 'label' => 'Type',
             ],
-
             [
                 'name' => 'iso2',
                 'label' => 'ISO2 Code',
@@ -110,7 +111,7 @@ class StateCrudController extends CrudController
             [
                 'name' => 'enabled',
                 'label' => 'Enabled',
-                'type'=> 'boolean'
+                'type' => 'boolean'
             ]
         ]);
 

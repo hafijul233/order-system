@@ -58,14 +58,14 @@ class CategoryCrudController extends CrudController
             [
                 'name' => 'slug',
                 'label' => 'Slug',
+                'type' => 'closure',
+                'function' => function($category) {
+                    return $category->slug;
+                }
             ],
             [
                 'name' => 'parent',
                 'label' => 'Parent',
-            ],
-            [
-                'name' => 'depth',
-                'label' => 'Depth',
             ],
             [
                 'name' => 'created_at',
@@ -91,9 +91,14 @@ class CategoryCrudController extends CrudController
                 'type' => 'text'
             ],
             [
-                'name' => 'parent_id',
+                'name' => 'slug',
+                'label' => 'Slug',
+                'type' => 'text'
+            ],
+            [
+                'name' => 'parent',
                 'label' => 'Parent',
-                'type' => 'select',
+                'type' => 'select2',
                 'entity' => 'parent'
             ],
         ]);

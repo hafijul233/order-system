@@ -32,7 +32,7 @@ class Category extends Model implements Auditable
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
-    public array $translatable = ['name'];
+    public array $translatable = ['name', 'slug'];
 
     /*
     |--------------------------------------------------------------------------

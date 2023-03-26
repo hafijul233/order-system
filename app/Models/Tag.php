@@ -37,7 +37,7 @@ class Tag extends Model implements Sortable, Auditable
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
-    public array $translatable = ['name', 'slug'];
+    public array $translatable = ['name'];
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

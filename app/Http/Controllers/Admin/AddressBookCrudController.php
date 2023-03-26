@@ -59,13 +59,7 @@ class AddressBookCrudController extends CrudController
                 'label' => 'Address To',
                 'type' => 'custom_html',
                 'value' => function ($addressBook) {
-                    if ($addressBook->addressable instanceof Customer) {
-                        return "<a class='text-dark' title='Customer' target='_blank' href='" . route('customer.show', $addressBook->addressable->id) . "'><i class='la la-user text-info'></i> {$addressBook->addressable->name}</a>";
-                    } elseif ($addressBook->addressable instanceof Company) {
-                        return "<a class='text-dark' title='Company' target='_blank' href='" . route('company.show', $addressBook->addressable->id) . "'><i class='la la-building text-success'></i> {$addressBook->addressable->name}</a>";
-                    } else {
-                        return '-';
-                    }
+                    return $this->addressableModel($addressBook);
                 }
             ],
             [
@@ -80,8 +74,8 @@ class AddressBookCrudController extends CrudController
                 'name' => 'phone',
                 'label' => 'Phone',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return "<a class='text-dark' href='tel:{$customer->phone}'>{$customer->phone} " . (($customer->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>";
+                'value' => function ($addressBook) {
+                    return "<a class='text-dark' href='tel:{$addressBook->phone}'>{$addressBook->phone} " . (($addressBook->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>";
                 }
             ],
             [
@@ -256,13 +250,7 @@ class AddressBookCrudController extends CrudController
                 'label' => 'Address To',
                 'type' => 'custom_html',
                 'value' => function ($addressBook) {
-                    if ($addressBook->addressable instanceof Customer) {
-                        return "<a class='text-dark' title='Customer' target='_blank' href='" . route('customer.show', $addressBook->addressable->id) . "'><i class='la la-user text-info'></i> {$addressBook->addressable->name}</a>";
-                    } elseif ($addressBook->addressable instanceof Company) {
-                        return "<a class='text-dark' title='Company' target='_blank' href='" . route('company.show', $addressBook->addressable->id) . "'><i class='la la-building text-success'></i> {$addressBook->addressable->name}</a>";
-                    } else {
-                        return '-';
-                    }
+                    return $this->addressableModel($addressBook);
                 }
             ],
             [
@@ -280,14 +268,15 @@ class AddressBookCrudController extends CrudController
             ],
             [
                 'name' => 'city',
-                'label' => 'City',
-                'type' => 'text'
+                'label' => 'City'
             ],
             [
                 'name' => 'state',
-                'label' => 'State',
-                'type' => 'text',
-                'tab' => 'Basic',
+                'label' => 'State'
+            ],
+            [
+                'name' => 'country',
+                'label' => 'Country'
             ],
             [
                 'name' => 'zip_code',
@@ -345,6 +334,17 @@ class AddressBookCrudController extends CrudController
             'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . AddressBook::STATUSES[$addressBook->status] . "</span>",
             'banned' => "<span class='text-danger'><i class='la la-times'></i> " . AddressBook::STATUSES[$addressBook->status] . "</span>",
         };
+    }
+
+    private function addressableModel($addressBook)
+    {
+        if ($addressBook->addressable instanceof Customer) {
+            return "<a class='text-dark' title='Customer' target='_blank' href='" . route('customer.show', $addressBook->addressable->id) . "'><i class='la la-user text-info'></i> {$addressBook->addressable->name}</a>";
+        } elseif ($addressBook->addressable instanceof Company) {
+            return "<a class='text-dark' title='Company' target='_blank' href='" . route('company.show', $addressBook->addressable->id) . "'><i class='la la-building text-success'></i> {$addressBook->addressable->name}</a>";
+        } else {
+            return '-';
+        }
     }
 
     /**

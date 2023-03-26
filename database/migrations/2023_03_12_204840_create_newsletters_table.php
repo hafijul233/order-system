@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('newsletters', function (Blueprint $table) {
             $table->id();
-            $table->string('newsletterable_id')->nullable();
+            $table->string('newsletterable_type')->nullable();
             $table->unsignedBigInteger('newsletterable_id')->nullable();
             $table->string('email');
             $table->unsignedInteger('attempted')->default(1);

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('widgets', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('size');
+            $table->json('attribute')->nullable();
             $table->timestamps();
         });
     }

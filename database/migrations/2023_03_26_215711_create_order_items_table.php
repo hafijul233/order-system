@@ -17,9 +17,8 @@ return new class extends Migration
             $table->foreignId('product_id');
             $table->string('name');
             $table->decimal('quantity', 18, 3)->default(1);
-            $table->decimal('price', 18, 2)->default(0);
-            $table->decimal('subtotal', 18, 2)->default(0);
-            $table->boolean('', 18, 2)->default(0);
+            $table->decimal('price',19, 4)->default(0);
+            $table->decimal('subtotal',19, 4)->default(0);
             $table->timestamps();
         });
     }

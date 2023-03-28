@@ -26,12 +26,12 @@ return new class extends Migration
             $table->text('user_agent')->nullable();
             $table->foreignId('assignee_id')->nullable();
             $table->enum('priority', ['lowest','low', 'medium', 'high', 'highest'])->default('medium');
-            $table->enum('status', array_keys(\App\Models\Customer::STATUSES))->default('active')->nullable();
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
             $table->timestamp('ordered_at')->nullable()->useCurrent();
             $table->timestamp('delivered_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

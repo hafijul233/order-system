@@ -20,7 +20,6 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->string('password');
-            $table->enum('status', array_keys(\App\Models\Customer::STATUSES))->default('active')->nullable();
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
             $table->boolean('newsletter_subscribed')->default(false);

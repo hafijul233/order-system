@@ -19,8 +19,7 @@ class TagFactory extends Factory
     {
         return [
             'name' => fake()->word(),
-            'type' => 'Product',
-            'slug' => fake()->word()
+            'type' => 'Product'
         ];
     }
 }

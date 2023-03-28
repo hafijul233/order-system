@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('status_histories', function (Blueprint $table) {
             $table->id();
-            $table->morphs('model');
+            $table->morphs('statusable');
             $table->foreignId('previous_status_id')->nullable()->constrained('statuses');
             $table->foreignId('updated_status_id')->constrained('statuses');
+            $table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

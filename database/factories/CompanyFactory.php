@@ -22,7 +22,6 @@ class CompanyFactory extends Factory
             'name' => fake()->company(),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),
-            'status' => 'active',
             'representative' => fake()->name(),
             'designation' => fake()->title(),
             'note' => fake()->paragraph(2)

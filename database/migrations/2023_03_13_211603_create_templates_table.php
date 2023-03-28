@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('templates', function (Blueprint $table) {
             $table->id();
+            $table->morphs('templateable');
+            $table->enum('type', ['text', 'html'])->default('html');
+            $table->longText('content');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code')->nullable();
             $table->json('name');
-            $table->text('slug')->unique();
+            $table->string('slug')->unique();
             $table->foreignId('category_id')->nullable();
             $table->json('short_description')->nullable();
             $table->json('description')->nullable();
@@ -23,11 +23,10 @@ return new class extends Migration
             $table->decimal('default_quantity', 18,3)->default(1);
             $table->enum('platform', ['online', 'offline', 'both'])->default('offline');
             $table->enum('type', ['normal', 'bundle'])->default('normal');
-            $table->decimal('cost', 18, 2)->default(0);
-            $table->decimal('price', 18, 2)->default(0);
+            $table->decimal('cost',19, 4)->default(0);
+            $table->decimal('price',19, 4)->default(0);
             $table->decimal('reorder_level', 18,3)->default(1);
             $table->boolean('inventory_enabled')->default(true);
-            $table->enum('status', ['draft', 'active', 'suspended', 'banned'])->default('active');
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
             $table->timestamps();

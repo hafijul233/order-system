@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Sluggable;
 use ArrayAccess;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,7 +13,6 @@ use Illuminate\Support\Collection;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
-use Spatie\Tags\HasSlug;
 use Spatie\Translatable\HasTranslations;
 
 class Tag extends Model implements Sortable, Auditable
@@ -22,7 +22,8 @@ class Tag extends Model implements Sortable, Auditable
     use HasFactory;
     use SortableTrait;
     use HasTranslations;
-    use HasSlug;
+    use Sluggable;
+
 
     /*
     |--------------------------------------------------------------------------

@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('product_id');
+            $table->string('batch');
+            $table->date('manufacture_date');
+            $table->date('expiry_date');
+            $table->decimal('quantity', 18,3)->default(1);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

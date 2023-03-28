@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->json('name');
-            $table->json('slug');
+            $table->string('slug');
             $table->foreignId('parent_id')->nullable()->default(0);
             $table->integer('lft')->nullable()->default(0);
             $table->integer('rgt')->nullable()->default(0);

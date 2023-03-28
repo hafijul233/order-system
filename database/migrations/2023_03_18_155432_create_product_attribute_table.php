@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('product_attribute', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('product_id');
+            $table->foreignId('attribute_id');
+            $table->string('value')->nullable();
             $table->timestamps();
         });
     }

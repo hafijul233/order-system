@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('designation')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->enum('status', array_keys(\App\Models\Company::STATUSES))->default('active')->nullable();
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
             $table->timestamps();

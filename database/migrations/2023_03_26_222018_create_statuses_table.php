@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('statuses', function (Blueprint $table) {
             $table->id();
-            $table->morphs('statusable');
+            $table->string('model');
             $table->string('icon')->comment('line awesome icon class name');
             $table->string('name');
             $table->string('code')->comment('slug format of status');

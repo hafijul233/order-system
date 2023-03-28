@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Sluggable;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,8 @@ class Category extends Model implements Auditable
     use CrudTrait;
     use HasFactory;
     use HasTranslations;
-    use HasSlug;
+    use Sluggable;
+
 
     /*
     |--------------------------------------------------------------------------
@@ -32,7 +34,7 @@ class Category extends Model implements Auditable
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
-    public array $translatable = ['name', 'slug'];
+    public array $translatable = ['name'];
 
     /*
     |--------------------------------------------------------------------------

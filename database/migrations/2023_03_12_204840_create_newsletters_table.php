@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('newsletterable_id')->nullable();
             $table->string('email');
             $table->unsignedInteger('attempted')->default(1);
-            $table->boolean('subscribed')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('prodcut_modifier', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('product_modifier', function (Blueprint $table) {
+            $table->foreignId('product_id')->constrained('products');
+            $table->foreignId('modifier_id')->constrained('modifiers');
         });
     }
 

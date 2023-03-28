@@ -25,7 +25,6 @@ class NewsletterFactory extends Factory
             'newsletterable_id' => fake()->numberBetween(1, 15),
             'email' => fake()->unique()->safeEmail(),
             'attempted' => fake()->numberBetween(1, 100),
-            'subscribed' => true
         ];
     }
 }

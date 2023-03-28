@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Sluggable;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,7 @@ class Product extends Model
     use CrudTrait;
     use HasFactory;
     use HasTranslations;
+    use Sluggable;
 
     /*
     |--------------------------------------------------------------------------
@@ -40,25 +42,6 @@ class Product extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-    /**
-     * The "booted" method of the model.
-     */
-    protected static function booted(): void
-    {
-        static::creating(function (self $product) {
-            if ($product->slug == null) {
-                $product->slug = Str::slug($product->name);
-                $product->getDirty();
-            }
-        });
-
-        static::updating(function (self $product) {
-            if ($product->slug == null) {
-                $product->slug = Str::slug($product->name);
-                $product->getDirty();
-            }
-        });
-    }
 
     /*
     |--------------------------------------------------------------------------

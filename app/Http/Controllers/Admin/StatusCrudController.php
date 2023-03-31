@@ -3,13 +3,30 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\StatusRequest;
+use App\Models\AddressBook;
+use App\Models\Banner;
+use App\Models\Campaign;
+use App\Models\Category;
+use App\Models\Company;
+use App\Models\Coupon;
+use App\Models\Customer;
+use App\Models\Email;
+use App\Models\Newsletter;
+use App\Models\Order;
+use App\Models\Page;
+use App\Models\Payment;
+use App\Models\Product;
+use App\Models\Stock;
+use App\Models\Task;
+use App\Models\Template;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
  * Class StatusCrudController
  * @package App\Http\Controllers\Admin
- * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
+ * @property-read CrudPanel $crud
  */
 class StatusCrudController extends CrudController
 {
@@ -18,6 +35,7 @@ class StatusCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\ReorderOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -39,23 +57,20 @@ class StatusCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('name');
+        CRUD::column('id')->label('#');
+        CRUD::addColumn([
+            'name' => 'name',
+            'type' => 'custom_html',
+            'label' => 'Name',
+            'value' => function ($status) {
+                return "<span><i class='{$status->icon}'></i> $status->name</span>";
+            }
+        ]);
         CRUD::column('code');
-        CRUD::column('depth');
-        CRUD::column('description');
-        CRUD::column('enabled');
-        CRUD::column('is_default');
-        CRUD::column('lft');
         CRUD::column('parent_id');
-        CRUD::column('rgt');
-        CRUD::column('created_at');
+        CRUD::column('is_default')->type('boolean')->label('Default?');
+        CRUD::column('enabled')->type('boolean');
         CRUD::column('updated_at');
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
-         */
     }
 
     /**
@@ -68,23 +83,41 @@ class StatusCrudController extends CrudController
     {
         CRUD::setValidation(StatusRequest::class);
 
-        CRUD::field('code');
-        CRUD::field('depth');
-        CRUD::field('description');
-        CRUD::field('enabled');
-        CRUD::field('is_default');
-        CRUD::field('lft');
+        CRUD::addField([
+            'name' => 'model',
+            'label' => 'Model',
+            'type' => 'select2_from_array',
+            'options' => [
+                Customer::class => 'Customer',
+                AddressBook::class => 'Address Book',
+                Company::class => 'Company',
+                Category::class => 'Category',
+                Order::class => 'Order',
+                Payment::class => 'Payment',
+                Product::class => 'Product',
+                Stock::class => 'Stock',
+                Email::class => 'Email',
+                NewsLetter::class => 'NewsLetter',
+                Campaign::class => 'Campaign',
+                Coupon::class => 'Coupon',
+                Banner::class => 'Banner',
+                Page::class => 'Page',
+                Template::class => 'Template',
+                Task::class => 'Task',
+            ]
+        ]);
         CRUD::field('name');
-        CRUD::field('parent_id');
-        CRUD::field('rgt');
-        CRUD::field('statusable_id');
-        CRUD::field('statusable_type');
-
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
-         */
+        CRUD::field('code');
+        CRUD::addField([
+            'label' => "Icon",
+            'name' => 'icon',
+            'type' => 'icon_picker',
+            'iconset' => 'lineawesome' // options: fontawesome, lineawesome, glyphicon, ionicon, weathericon, mapicon, octicon, typicon, elusiveicon, materialdesign
+        ]);
+        CRUD::field('icon')->type('icon_picker');
+        CRUD::field('description');
+        CRUD::field('enabled')->type('boolean');
+        CRUD::field('is_default')->type('boolean');
     }
 
     /**
@@ -96,5 +129,11 @@ class StatusCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+    protected function setupReorderOperation()
+    {
+        // model attribute to be shown on draggable items
+        $this->crud->set('reorder.label', 'name');
+        $this->crud->allowAccess('revisions');
     }
 }

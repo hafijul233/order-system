@@ -18,10 +18,10 @@ trait Sluggable
             }
         });
 
-        static::updating(function (self $product) {
-            if ($product->slug == null) {
-                $product->slug = Str::slug($product->name);
-                $product->getDirty();
+        static::updating(function (self $model) {
+            if ($model->slug == null) {
+                $model->slug = Str::slug($model->name);
+                $model->getDirty();
             }
         });
     }

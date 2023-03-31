@@ -41,7 +41,7 @@
             <span class="position-absolute bg-danger rounded-circle"
                   style="top:5px; left: 60%; transform: translate(-50%, -50%) !important;"></span>
         </a>
-        <div class="dropdown-menu dropdown-menu-right border-0 py-0 mt-4" style="width: 360px;">
+        <div class="dropdown-menu dropdown-menu-right border-0 py-0 mt-4 bg-secondary" style="width: 360px;">
             <div class="card mb-0">
                 <div class="card-header d-flex align-items-center bg-light">
                     <span class="font-weight-bold" id="notification-count"></span>
@@ -52,13 +52,14 @@
                     </div>
                 </div>
                 <div class="card-footer bg-light">
-                    <a class="btn btn-block btn-primary" href="{{ route('notification.index') }}">
+                    <a class="btn btn-block btn-outline-primary" href="{{ route('notification.index') }}">
                         View all notifications
                     </a>
                 </div>
             </div>
         </div>
         <script type="text/javascript">
+
             function renderNotification(id, created_at, data) {
 
                 let notification_dt = Date.parse(created_at);
@@ -85,35 +86,43 @@
                     </a>`;
             }
 
+            function notificationApiCall() {
+                $.ajax({
+                    method: 'GET',
+                    url: '{{ route('notifications.index') }}?guard=web', success: function (notifications) {
+                        if (notifications.length > 0) {
+                            $("#notification-count").text(`Notifications(${notifications.length})`);
+                            $("#notification-bell-icon").css({
+                                "animation": "tilt-shaking 0.25s linear infinite",
+                                "margin-top": "3px"
+                            });
+
+                            notifications.forEach(function (notification) {
+                                $("#notification-dropdown").append(
+                                    renderNotification(notification.id, notification.created_at, notification.data)
+                                );
+                            });
+                        } else {
+                            $("#notification-count").text(`Notifications`);
+                            $("#notification-bell-icon").css({"margin-top": "3px"});
+                            $("#notification-dropdown")
+                                .html(`<a class="list-group-item list-group-item-action" href="#" style="min-height: 200px; padding: 100px 0;">
+                                    <p class="text-center" style="margin: auto;">No notifications available</p>
+                                   </a>`);
+                        }
+                    }
+                });
+            }
+
             document.addEventListener('DOMContentLoaded', function () {
                 if (window.jQuery) {
+                    @if(setting('refresh_interval') <= 0)
+                    notificationApiCall();
+                    @else
                     setInterval(function () {
-                        $.ajax({
-                            method: 'GET',
-                            url: '{{ route('notifications.index') }}?guard=web', success: function (notifications) {
-                                if (notifications.length > 0) {
-                                    $("#notification-count").text(`Notifications(${notifications.length})`);
-                                    $("#notification-bell-icon").css({
-                                        "animation": "tilt-shaking 0.25s linear infinite",
-                                        "margin-top": "3px"
-                                    });
-
-                                    notifications.forEach(function (notification) {
-                                        $("#notification-dropdown").append(
-                                            renderNotification(notification.id, notification.created_at, notification.data)
-                                        );
-                                    });
-                                } else {
-                                    $("#notification-count").text(`Notifications`);
-                                    $("#notification-bell-icon").css({"margin-top": "3px"});
-                                    $("#notification-dropdown")
-                                        .html(`<a class="list-group-item list-group-item-action" href="#">
-                                    <p class="text-center font-weight-bold">No notifications available</p>
-                                   </a>`);
-                                }
-                            }
-                        });
-                    }, 2000);
+                        notificationApiCall();
+                    }, {{ setting('refresh_interval')}});
+                    @endif
                 }
             });
         </script>

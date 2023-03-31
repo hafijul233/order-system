@@ -6,9 +6,9 @@ if (!function_exists('setting')) {
      *
      * @param string $key
      * @param $value
-     * @return bool|string
+     * @return mixed
      */
-    function setting(string $key, $value = null): bool|string
+    function setting(string $key, $value = null)
     {
         if ($value == null) {
             return \Backpack\Settings\app\Models\Setting::get($key);

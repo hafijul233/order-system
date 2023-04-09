@@ -5,15 +5,11 @@ if (!function_exists('setting')) {
      * convenient setting helper to get setting data
      *
      * @param string $key
-     * @param $value
+     * @param null $default
      * @return mixed
      */
-    function setting(string $key, $value = null)
+    function setting(string $key, $default = null)
     {
-        if ($value == null) {
-            return \Backpack\Settings\app\Models\Setting::get($key);
-        }
-
-        return \Backpack\Settings\app\Models\Setting::set($key, $value);
+        return config("settings.{$key}", $default);
     }
 }

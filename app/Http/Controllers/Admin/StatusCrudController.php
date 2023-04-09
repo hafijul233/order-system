@@ -37,6 +37,32 @@ class StatusCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ReorderOperation;
 
+    private array $models;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->models = [
+            Customer::class => 'Customer',
+            AddressBook::class => 'Address Book',
+            Company::class => 'Company',
+            Category::class => 'Category',
+            Order::class => 'Order',
+            Payment::class => 'Payment',
+            Product::class => 'Product',
+            Stock::class => 'Stock',
+            Email::class => 'Email',
+            NewsLetter::class => 'NewsLetter',
+            Campaign::class => 'Campaign',
+            Coupon::class => 'Coupon',
+            Banner::class => 'Banner',
+            Page::class => 'Page',
+            Template::class => 'Template',
+            Task::class => 'Task',
+        ];
+    }
+
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
      *
@@ -57,17 +83,29 @@ class StatusCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        CRUD::addFilter(
+            [
+                'name' => 'model',
+                'type' => 'dropdown',
+                'label' => 'Model'
+            ],
+            $this->models,
+            function ($value) {
+                $this->crud->addClause('where', 'model', '=', $value);
+            });
+
         CRUD::column('id')->label('#');
         CRUD::addColumn([
-            'name' => 'name',
+            'name' => 'icon',
             'type' => 'custom_html',
-            'label' => 'Name',
+            'label' => 'Icon',
             'value' => function ($status) {
-                return "<span><i class='{$status->icon}'></i> $status->name</span>";
+                return "<i class='{$status->icon}'></i>";
             }
         ]);
+        CRUD::column('name');
         CRUD::column('code');
-        CRUD::column('parent_id');
+        CRUD::column('parent_id')->type('relationship');
         CRUD::column('is_default')->type('boolean')->label('Default?');
         CRUD::column('enabled')->type('boolean');
         CRUD::column('updated_at');
@@ -87,24 +125,7 @@ class StatusCrudController extends CrudController
             'name' => 'model',
             'label' => 'Model',
             'type' => 'select2_from_array',
-            'options' => [
-                Customer::class => 'Customer',
-                AddressBook::class => 'Address Book',
-                Company::class => 'Company',
-                Category::class => 'Category',
-                Order::class => 'Order',
-                Payment::class => 'Payment',
-                Product::class => 'Product',
-                Stock::class => 'Stock',
-                Email::class => 'Email',
-                NewsLetter::class => 'NewsLetter',
-                Campaign::class => 'Campaign',
-                Coupon::class => 'Coupon',
-                Banner::class => 'Banner',
-                Page::class => 'Page',
-                Template::class => 'Template',
-                Task::class => 'Task',
-            ]
+            'options' => $this->models
         ]);
         CRUD::field('name');
         CRUD::field('code');
@@ -112,7 +133,7 @@ class StatusCrudController extends CrudController
             'label' => "Icon",
             'name' => 'icon',
             'type' => 'icon_picker',
-            'iconset' => 'lineawesome' // options: fontawesome, lineawesome, glyphicon, ionicon, weathericon, mapicon, octicon, typicon, elusiveicon, materialdesign
+            'iconset' => 'fontawesome' // options: fontawesome, lineawesome, glyphicon, ionicon, weathericon, mapicon, octicon, typicon, elusiveicon, materialdesign
         ]);
         CRUD::field('icon')->type('icon_picker');
         CRUD::field('description');
@@ -130,10 +151,10 @@ class StatusCrudController extends CrudController
     {
         $this->setupCreateOperation();
     }
+
     protected function setupReorderOperation()
     {
-        // model attribute to be shown on draggable items
         $this->crud->set('reorder.label', 'name');
-        $this->crud->allowAccess('revisions');
+        $this->crud->set('reorder.max_level', 0);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class StatusHistory extends Model
 {
@@ -36,7 +37,10 @@ class StatusHistory extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
+    public function statusable(): MorphTo
+    {
+        return $this->morphTo();
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

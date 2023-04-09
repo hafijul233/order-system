@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
+use App\Models\Status;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -12,6 +13,7 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class CustomerCrudController
@@ -42,46 +44,31 @@ class CustomerCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::addFilter([
-            'type' => 'simple',
-            'name' => 'email_verified_at',
-            'label' => 'Email Verified'
-        ],
+        CRUD::addFilter([ 'type' => 'simple', 'name' => 'email_verified_at', 'label' => 'Email Verified'],
             false,
             function () {
                 $this->crud->addClause('where', 'email_verified_at', '!=', null);
             });
 
-        CRUD::addFilter([
-            'type' => 'simple',
-            'name' => 'phone_verified_at',
-            'label' => 'Phone Verified'
-        ],
+        CRUD::addFilter(['type' => 'simple', 'name' => 'phone_verified_at', 'label' => 'Phone Verified'],
             false,
             function () {
                 $this->crud->addClause('where', 'phone_verified_at', '!=', null);
             });
 
-        CRUD::addFilter(
-            [
-                'name' => 'type',
-                'type' => 'dropdown',
-                'label' => 'Type'
-            ],
+        CRUD::addFilter(['name' => 'type', 'type' => 'dropdown', 'label' => 'Type'],
             Customer::TYPES,
-            function ($value) { // if the filter is active
+            function ($value) {
                 $this->crud->addClause('where', 'type', '=', $value);
             });
 
-        CRUD::addFilter(
-            [
-                'name' => 'status',
-                'type' => 'dropdown',
-                'label' => 'Status'
-            ],
-            Customer::STATUSES,
-            function ($value) { // if the filter is active
-                $this->crud->addClause('where', 'status', '=', $value);
+        CRUD::addFilter(['name' => 'status', 'type' => 'dropdown', 'label' => 'Status'],
+            Customer::statusDropdown(),
+            function ($value) {
+                $this->crud->addClause(function ($query) use ($value) {
+                    $query->join('statuses', "statuses.model", '=', Customer::class)
+                        ->where('statuses.id', '=', $value);
+                });
             });
 
         CRUD::addFilter(
@@ -130,14 +117,14 @@ class CustomerCrudController extends CrudController
                     return "<a class='text-dark' href='tel:{$customer->phone}'>{$customer->phone} " . (($customer->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>";
                 }
             ],
-            [
-                'name' => 'status',
-                'label' => 'Status',
-                'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return $this->customerStatus($customer);
-                }
-            ]
+            /*            [
+                            'name' => 'status',
+                            'label' => 'Status',
+                            'type' => 'custom_html',
+                            'value' => function ($customer) {
+                                return $this->customerStatus($customer);
+                            }
+                        ]*/
         ]);
     }
 
@@ -215,7 +202,7 @@ class CustomerCrudController extends CrudController
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'select_from_array',
-                'options' => Customer::STATUSES,
+                'options' => Customer::statusDropdown(),
                 'allows_null' => false,
                 'tab' => 'Profile'
             ],

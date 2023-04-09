@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,7 @@ class Customer extends Model implements Auditable
     use CrudTrait;
     use HasFactory;
     use Notifiable;
+    use HasStatus;
 
     /*
     |--------------------------------------------------------------------------
@@ -29,11 +31,6 @@ class Customer extends Model implements Auditable
         'online' => 'Online'
     ];
 
-    public const STATUSES = [
-        'active' => 'Active',
-        'suspended' => 'Suspended',
-        'banned' => 'Banned'
-    ];
 
     protected $table = 'customers';
     // protected $primaryKey = 'id';

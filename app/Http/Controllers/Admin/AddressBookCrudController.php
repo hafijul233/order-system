@@ -159,7 +159,7 @@ class AddressBookCrudController extends CrudController
             ],
             ['name' => 'type',
                 'label' => 'Type',
-                'type' => 'select_from_array',
+                'type' => 'select2_from_array',
                 'options' => AddressBook::TYPES,
                 'allows_null' => false,
                 'tab' => 'Basic',
@@ -236,7 +236,7 @@ class AddressBookCrudController extends CrudController
             [
                 'name' => 'status',
                 'label' => 'Status',
-                'type' => 'select_from_array',
+                'type' => 'select2_from_array',
                 'options' => AddressBook::STATUSES,
                 'allows_null' => false,
                 'tab' => 'Recognition'

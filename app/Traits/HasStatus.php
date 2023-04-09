@@ -8,51 +8,51 @@ use Illuminate\Database\Eloquent\Collection;
 
 trait HasStatus
 {
-    /**
-     * Return all status collection that are enabled
-     * @return Collection
-     */
-    public static function statuses(): Collection
+
+    public function addDefaultStatus(): void
     {
-        return Status::enabled()->where('model', __CLASS__)->get();
+        if ($defaultStatus = \App\Models\Status::enabled()->model(__CLASS__)->default()->first()) {
+            $this->statusHistory()->save(new StatusHistory(['status_id' => $defaultStatus->id]));
+        }
     }
 
-    public static function statusDropdown(): array
+    /**
+     * Return all status collection that are
+     * enabled for current model
+     *
+     * @param string|null $class
+     * @return Collection
+     */
+    public static function statuses(string $class = null): Collection
     {
-        return self::statuses()->pluck('name', 'id')->toArray();
+        $class = $class ?? __CLASS__;
+
+        return Status::enabled()->where('model', $class)->get();
+    }
+
+    /**
+     * Return all status name id array that are
+     * enabled for current model
+     *
+     * @param string|null $class
+     * @return array
+     */
+    public static function statusDropdown(string $class = null): array
+    {
+        return self::statuses($class)->pluck('name', 'id')->toArray();
     }
 
     public function status()
     {
-        return $this->morphOne(StatusHistory::class, 'statusable')
-            ->join('statuses', 'status.id', '=', 'status_histories.status_id')
-            ->orderBy('status_history.created_at', 'desc');
+        return $this->morphOne(StatusHistory::class, 'model')
+            ->join('statuses', 'statuses.id', '=', 'status_histories.status_id')
+            ->orderBy('status_histories.created_at', 'desc');
     }
 
     public function statusHistory()
     {
-        return $this->morphMany(StatusHistory::class, 'statusable')
-            ->with(['status']);
-    }
-
-    public function getStatusAttribute()
-    {
-        $status = $this->status()->w->first();
-
-        if ($status) {
-            return __($status->key);
-        }
-
-        return null;
-    }
-
-    public function setStatusAttribute()
-    {
-
-    }
-
-    public function getStatusHistoryAttribute()
-    {
-        return $this->statusHistory()->get() ?? [];
+        return $this->morphMany(StatusHistory::class, 'model')
+            ->with(['status'])
+            ->orderBy('created_at');
     }
 }

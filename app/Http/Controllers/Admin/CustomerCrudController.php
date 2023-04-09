@@ -44,7 +44,21 @@ class CustomerCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::addFilter([ 'type' => 'simple', 'name' => 'email_verified_at', 'label' => 'Email Verified'],
+        CRUD::addFilter(['name' => 'type', 'type' => 'dropdown', 'label' => 'Type'],
+            Customer::TYPES,
+            function ($value) {
+                $this->crud->addClause('where', 'type', '=', $value);
+            });
+
+        CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
+            Customer::statusDropdown(),
+            function ($value) {
+                $this->crud->addClause(function ($query) use ($value) {
+                    $query->whereHas('status', fn($query) => $query->whereIn('id', json_decode($value)));
+                });
+            });
+
+        CRUD::addFilter(['type' => 'simple', 'name' => 'email_verified_at', 'label' => 'Email Verified'],
             false,
             function () {
                 $this->crud->addClause('where', 'email_verified_at', '!=', null);
@@ -54,21 +68,6 @@ class CustomerCrudController extends CrudController
             false,
             function () {
                 $this->crud->addClause('where', 'phone_verified_at', '!=', null);
-            });
-
-        CRUD::addFilter(['name' => 'type', 'type' => 'dropdown', 'label' => 'Type'],
-            Customer::TYPES,
-            function ($value) {
-                $this->crud->addClause('where', 'type', '=', $value);
-            });
-
-        CRUD::addFilter(['name' => 'status', 'type' => 'dropdown', 'label' => 'Status'],
-            Customer::statusDropdown(),
-            function ($value) {
-                $this->crud->addClause(function ($query) use ($value) {
-                    $query->join('statuses', "statuses.model", '=', Customer::class)
-                        ->where('statuses.id', '=', $value);
-                });
             });
 
         CRUD::addFilter(
@@ -117,14 +116,14 @@ class CustomerCrudController extends CrudController
                     return "<a class='text-dark' href='tel:{$customer->phone}'>{$customer->phone} " . (($customer->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>";
                 }
             ],
-            /*            [
-                            'name' => 'status',
-                            'label' => 'Status',
-                            'type' => 'custom_html',
-                            'value' => function ($customer) {
-                                return $this->customerStatus($customer);
-                            }
-                        ]*/
+            [
+                'name' => 'status',
+                'label' => 'Status',
+                'type' => 'custom_html',
+                'value' => function ($customer) {
+                    return $this->customerStatus($customer);
+                }
+            ]
         ]);
     }
 
@@ -159,7 +158,7 @@ class CustomerCrudController extends CrudController
             [
                 'name' => 'type',
                 'label' => 'Type',
-                'type' => 'select_from_array',
+                'type' => 'select2_from_array',
                 'options' => Customer::TYPES,
                 'allows_null' => false,
                 'tab' => 'Basic'
@@ -201,7 +200,7 @@ class CustomerCrudController extends CrudController
             [
                 'name' => 'status',
                 'label' => 'Status',
-                'type' => 'select_from_array',
+                'type' => 'select2_from_array',
                 'options' => Customer::statusDropdown(),
                 'allows_null' => false,
                 'tab' => 'Profile'
@@ -225,11 +224,6 @@ class CustomerCrudController extends CrudController
                 'tab' => 'Promotion'
             ],
         ]);
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
-         */
     }
 
     /**
@@ -328,10 +322,8 @@ class CustomerCrudController extends CrudController
 
     private function customerStatus($customer)
     {
-        return match ($customer->status) {
-            'active' => "<span class='text-success'><i class='la la-check'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-            'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-            'banned' => "<span class='text-danger'><i class='la la-times'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-        };
+        return ($customer->status)
+            ? "<span style='color: {$customer->status->color};'><i class='{$customer->status->icon}'></i> {$customer->status->name}</span>"
+            : "<span class='text-secondary'><i class='la la-question'></i>N/A</span>";
     }
 }

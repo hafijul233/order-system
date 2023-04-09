@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('statuses', function (Blueprint $table) {
             $table->id();
             $table->string('model');
-            $table->string('icon')->comment('line awesome icon class name');
+            $table->string('icon')->comment('font awesome icon class name');
             $table->string('name');
             $table->string('code')->comment('slug format of status');
+            $table->string('color')->default('#1b2a4e')->comment('default black');
             $table->text('description')->nullable();
             $table->foreignId('parent_id')->nullable()->default(0);
             $table->integer('lft')->nullable()->default(0);

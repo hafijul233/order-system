@@ -149,7 +149,7 @@ class CompanyCrudController extends CrudController
             [
                 'name' => 'status',
                 'label' => 'Status',
-                'type' => 'select_from_array',
+                'type' => 'select2_from_array',
                 'options' => Company::STATUSES,
                 'allows_null' => false,
                 'tab' => 'Detail'

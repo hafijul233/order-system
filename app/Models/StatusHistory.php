@@ -37,7 +37,12 @@ class StatusHistory extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    public function statusable(): MorphTo
+    public function status()
+    {
+        return $this->hasOne(Status::class, 'id', 'status_id');
+    }
+
+    public function model(): MorphTo
     {
         return $this->morphTo();
     }

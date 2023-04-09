@@ -86,7 +86,7 @@ class StatusCrudController extends CrudController
         CRUD::addFilter(
             [
                 'name' => 'model',
-                'type' => 'dropdown',
+                'type' => 'select2',
                 'label' => 'Model'
             ],
             $this->models,
@@ -104,8 +104,15 @@ class StatusCrudController extends CrudController
             }
         ]);
         CRUD::column('name');
+        CRUD::addColumn([
+            'name' => 'color',
+            'type' => 'custom_html',
+            'label' => 'Color',
+            'value' => function ($status) {
+                return "<div style='background-color: {$status->color}; width: 1rem; height: 1rem; border-radius: 50%;'></div>";
+            }
+        ]);
         CRUD::column('code');
-        CRUD::column('parent_id')->type('relationship');
         CRUD::column('is_default')->type('boolean')->label('Default?');
         CRUD::column('enabled')->type('boolean');
         CRUD::column('updated_at');
@@ -133,8 +140,14 @@ class StatusCrudController extends CrudController
             'label' => "Icon",
             'name' => 'icon',
             'type' => 'icon_picker',
-            'iconset' => 'fontawesome' // options: fontawesome, lineawesome, glyphicon, ionicon, weathericon, mapicon, octicon, typicon, elusiveicon, materialdesign
+            'iconset' => 'fontawesome'
         ]);
+        CRUD::addField([
+            'label' => "Color",
+            'name' => 'color',
+            'type' => 'color_picker'
+        ]);
+
         CRUD::field('icon')->type('icon_picker');
         CRUD::field('description');
         CRUD::field('enabled')->type('boolean');

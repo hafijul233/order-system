@@ -138,7 +138,7 @@ class ProductCrudController extends CrudController
             [
                 'name' => 'platform',
                 'label' => 'Platform',
-                'type' => 'select_from_array',
+                'type' => 'select2_from_array',
                 'options' => ['online' => 'Online', 'offline' => 'Offline', 'both' => 'Both'],
                 'tab' => 'Basic'
             ],
@@ -183,14 +183,14 @@ class ProductCrudController extends CrudController
             [
                 'name' => 'type',
                 'label' => 'Type',
-                'type' => 'select_from_array',
+                'type' => 'select2_from_array',
                 'options' => ['normal' => 'Normal', 'bundle' => 'Bundle/Combo'],
                 'tab' => 'Detail'
             ],
             [
                 'name' => 'status',
                 'label' => 'Status',
-                'type' => 'select_from_array',
+                'type' => 'select2_from_array',
                 'tab' => 'Detail',
                 'options' => ['active' => 'Active']
             ],

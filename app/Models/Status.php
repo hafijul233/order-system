@@ -52,8 +52,19 @@ class Status extends Model
     */
     public function scopeEnabled(Builder $query)
     {
-        return $this->where('enabled', true);
+        return $query->where('enabled', true);
     }
+
+    public function scopeDefault(Builder $query)
+    {
+        return $query->where('is_default', true);
+    }
+
+    public function scopeModel(Builder $query, string $model)
+    {
+        return $query->where('model', $model);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | ACCESSORS

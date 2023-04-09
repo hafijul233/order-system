@@ -11,7 +11,7 @@ class CustomerObserver
      */
     public function created(Customer $customer): void
     {
-        //
+        $customer->addDefaultStatus();
     }
 
     /**

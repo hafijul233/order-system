@@ -18,7 +18,6 @@ Route::get('/', function () {
     return redirect()->to('admin/login');
 });
 
-
 Route::prefix('notifications')->name('notifications.')
     ->controller(NotificationController::class)
     ->group(function () {
@@ -27,3 +26,9 @@ Route::prefix('notifications')->name('notifications.')
         Route::get('/clear-all', 'clearAll')->name('clear-all');
 
     });
+
+Route::get('customers', function () {
+    foreach (\App\Models\Customer::all() as $customer) {
+        dd($customer->status);
+    }
+});

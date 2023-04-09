@@ -106,7 +106,7 @@ class UnitCrudController extends CrudController
             [
                 'name' => 'parent',
                 'label' => 'Parent',
-                'type' => 'select',
+                'type' => 'select2',
                 'entity' => 'parent'
             ],
             [

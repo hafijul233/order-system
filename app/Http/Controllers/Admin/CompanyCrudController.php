@@ -10,12 +10,13 @@ use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
+use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
 /**
  * Class CompanyCrudController
  * @package App\Http\Controllers\Admin
- * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
+ * @property-read CrudPanel $crud
  */
 class CompanyCrudController extends CrudController
 {
@@ -41,15 +42,12 @@ class CompanyCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::addFilter(
-            [
-                'name' => 'status',
-                'type' => 'dropdown',
-                'label' => 'Status'
-            ],
-            Company::STATUSES,
-            function ($value) { // if the filter is active
-                $this->crud->addClause('where', 'status', '=', $value);
+        CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
+            Company::statusDropdown(),
+            function ($value) {
+                $this->crud->addClause(function ($query) use ($value) {
+                    $query->whereHas('status', fn($query) => $query->whereIn('id', json_decode($value)));
+                });
             });
 
         CRUD::addFilter(
@@ -76,35 +74,25 @@ class CompanyCrudController extends CrudController
             ],
             [
                 'name' => 'representative',
-                'label' => 'Representative'
+                'label' => 'Representative',
             ],
             [
                 'name' => 'email',
-                'label' => 'Email',
+                'label' => 'Business Email',
                 'type' => 'custom_html',
-                'value' => function ($company) {
-                    return "<a class='text-dark' href='maiilto:{$company->email}'>{$company->email} " . (($company->email_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>";
-                }
+                'value' => fn (Company $company) => "<a class='text-dark' href='maiilto:{$company->email}'>{$company->email} " . (($company->email_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
             ],
             [
                 'name' => 'phone',
-                'label' => 'Phone',
+                'label' => 'Business Phone',
                 'type' => 'custom_html',
-                'value' => function ($company) {
-                    return "<a class='text-dark' href='tel:{$company->phone}'>{$company->phone} " . (($company->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>";
-                }
+                'value' => fn (Company $company) => "<a class='text-dark' href='tel:{$company->phone}'>{$company->phone} " . (($company->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
             ],
             [
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => function ($company) {
-                    return match ($company->status) {
-                        'active' => "<span class='text-success'><i class='la la-check'></i> " . Company::STATUSES[$company->status] . "</span>",
-                        'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . Company::STATUSES[$company->status] . "</span>",
-                        'banned' => "<span class='text-danger'><i class='la la-times'></i> " . Company::STATUSES[$company->status] . "</span>",
-                    };
-                }
+                'value' => fn(Company $company) => $company->statusHTML()
             ]
         ]);
     }
@@ -128,6 +116,16 @@ class CompanyCrudController extends CrudController
             [
                 'name' => 'representative',
                 'label' => 'Representative',
+                'type'  => 'relationship',
+                'ajax'          => true,
+                'inline_create' => [
+                    'entity' => 'relationship',
+                    'force_select' => true,
+                    'modal_class' => 'modal-dialog modal-xl',
+                    'modal_route' => route('customer-inline-create'), // InlineCreate::getInlineCreateModal()
+                    'create_route' =>  route('customer-inline-create-save'), // InlineCreate::storeInlineCreate()
+                    'add_button_label' => 'Add Representative'
+                ],
                 'tab' => 'Basic',
             ],
             [
@@ -137,20 +135,20 @@ class CompanyCrudController extends CrudController
             ],
             [
                 'name' => 'email',
-                'label' => 'Email',
+                'label' => 'Business Email',
                 'type' => 'email',
                 'tab' => 'Basic',
             ],
             [
                 'name' => 'phone',
-                'label' => 'Phone',
+                'label' => 'Business Phone',
                 'tab' => 'Basic',
             ],
             [
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'select2_from_array',
-                'options' => Company::STATUSES,
+                'options' => Company::statusDropdown(),
                 'allows_null' => false,
                 'tab' => 'Detail'
             ],

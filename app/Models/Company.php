@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,7 @@ class Company extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
     use CrudTrait;
     use HasFactory;
+    use HasStatus;
 
     /*
     |--------------------------------------------------------------------------
@@ -53,6 +55,11 @@ class Company extends Model implements Auditable
     {
         return $this->morphOne(Newsletter::class, 'newsletterable');
     }
+    public function representative()
+    {
+        return $this->belongsTo(Customer::class, 'representative_id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

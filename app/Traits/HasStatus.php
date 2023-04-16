@@ -6,6 +6,7 @@ use App\Models\Status;
 use App\Models\StatusHistory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 trait HasStatus
@@ -53,7 +54,6 @@ trait HasStatus
      * Return all status name id array that are
      * enabled for current model
      *
-     * @param string|null $class
      * @return array
      */
     public static function statusDropdown(): array
@@ -90,7 +90,7 @@ trait HasStatus
 
     /**
      * Return current model last status history collection  instance
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany|Collection
+     * @return MorphMany|Collection
      */
     public function statusHistory()
     {

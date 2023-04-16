@@ -14,10 +14,12 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('representative')->nullable();
+            $table->foreignId('representative_id')->nullable();
             $table->string('designation')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('phone_verified_at')->nullable();
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
             $table->timestamps();

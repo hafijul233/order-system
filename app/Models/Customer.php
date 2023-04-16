@@ -48,7 +48,14 @@ class Customer extends Model implements Auditable
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-
+    public function typeHTML(): string
+    {
+        return match ($this->type) {
+            'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . self::TYPES[$this->type] . "</span>",
+            'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . self::TYPES[$this->type] . "</span>",
+            default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
+        };
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

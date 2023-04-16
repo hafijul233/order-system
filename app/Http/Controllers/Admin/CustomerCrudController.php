@@ -46,9 +46,8 @@ class CustomerCrudController extends CrudController
     {
         CRUD::addFilter(['name' => 'type', 'type' => 'dropdown', 'label' => 'Type'],
             Customer::TYPES,
-            function ($value) {
-                $this->crud->addClause('where', 'type', '=', $value);
-            });
+            fn($value) => $this->crud->addClause('where', 'type', '=', $value)
+        );
 
         CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
             Customer::statusDropdown(),
@@ -60,15 +59,13 @@ class CustomerCrudController extends CrudController
 
         CRUD::addFilter(['type' => 'simple', 'name' => 'email_verified_at', 'label' => 'Email Verified'],
             false,
-            function () {
-                $this->crud->addClause('where', 'email_verified_at', '!=', null);
-            });
+            fn() => $this->crud->addClause('where', 'email_verified_at', '!=', null)
+        );
 
         CRUD::addFilter(['type' => 'simple', 'name' => 'phone_verified_at', 'label' => 'Phone Verified'],
             false,
-            function () {
-                $this->crud->addClause('where', 'phone_verified_at', '!=', null);
-            });
+            fn () =>  $this->crud->addClause('whereNotNull', 'phone_verified_at')
+        );
 
         CRUD::addFilter(
             [
@@ -96,33 +93,25 @@ class CustomerCrudController extends CrudController
                 'name' => 'type',
                 'label' => 'Type',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return $this->customerType($customer);
-                }
+                'value' => fn(Customer $customer) => $customer->typeHTML()
             ],
             [
                 'name' => 'email',
                 'label' => 'Email',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return "<a class='text-dark' href='maiilto:{$customer->email}'>{$customer->email} " . (($customer->email_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>";
-                }
+                'value' => fn(Customer $customer) => "<a class='text-dark' href='maiilto:{$customer->email}'>{$customer->email} " . (($customer->email_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
             ],
             [
                 'name' => 'phone',
                 'label' => 'Phone',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return "<a class='text-dark' href='tel:{$customer->phone}'>{$customer->phone} " . (($customer->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>";
-                }
+                'value' => fn(Customer $customer) => "<a class='text-dark' href='tel:{$customer->phone}'>{$customer->phone} " . (($customer->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
             ],
             [
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return $this->customerStatus($customer);
-                }
+                'value' => fn(Customer $customer) => $customer->statusHTML()
             ]
         ]);
     }
@@ -263,17 +252,13 @@ class CustomerCrudController extends CrudController
                 'name' => 'phone',
                 'label' => 'Phone',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return "<a href='tel:{$customer->phone}'>{$customer->phone}</a>";
-                }
+                'value' => fn(Customer $customer) => "<a href='tel:{$customer->phone}'>{$customer->phone}</a>"
             ],
             [
                 'name' => 'type',
                 'label' => 'Type',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return $this->customerType($customer);
-                }
+                'value' => fn(Customer $customer) => $customer->typeHTML()
             ],
             [
                 'name' => 'email_verified_at',
@@ -289,9 +274,7 @@ class CustomerCrudController extends CrudController
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return $this->customerStatus($customer);
-                }
+                'value' => fn(Customer $customer) => $customer->statusHTML()
             ],
             [
                 'name' => 'block_reason',
@@ -309,21 +292,5 @@ class CustomerCrudController extends CrudController
                 'type' => 'boolean'
             ]
         ]);
-    }
-
-    private function customerType($customer)
-    {
-        return match ($customer->type) {
-            'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . Customer::TYPES[$customer->type] . "</span>",
-            'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . Customer::TYPES[$customer->type] . "</span>",
-            default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
-        };
-    }
-
-    private function customerStatus($customer)
-    {
-        return ($customer->status)
-            ? "<span style='color: {$customer->status->color};'><i class='{$customer->status->icon}'></i> {$customer->status->name}</span>"
-            : "<span class='text-secondary'><i class='la la-question'></i>N/A</span>";
     }
 }

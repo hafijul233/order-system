@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use OwenIt\Auditing\Contracts\Auditable;
 
+/**
+ * @method static Builder email(string $email)
+ */
 class Newsletter extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
@@ -81,6 +85,10 @@ class Newsletter extends Model implements Auditable
     |--------------------------------------------------------------------------
     */
 
+    public function scopeEmail(Builder $builder, string $email): Builder
+    {
+        return  $builder->where('email', '=', $email);
+    }
     /*
     |--------------------------------------------------------------------------
     | ACCESSORS

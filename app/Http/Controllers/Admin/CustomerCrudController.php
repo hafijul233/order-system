@@ -66,7 +66,7 @@ class CustomerCrudController extends CrudController
 
         CRUD::addFilter(['type' => 'simple', 'name' => 'phone_verified_at', 'label' => 'Phone Verified'],
             false,
-            fn () =>  $this->crud->addClause('whereNotNull', 'phone_verified_at')
+            fn() => $this->crud->addClause('whereNotNull', 'phone_verified_at')
         );
 
         CRUD::addFilter(
@@ -95,7 +95,7 @@ class CustomerCrudController extends CrudController
                 'name' => 'type',
                 'label' => 'Type',
                 'type' => 'custom_html',
-                'value' => fn(Customer $customer) => $customer->typeHTML()
+                'value' => fn(Customer $customer) => $customer->type_html
             ],
             [
                 'name' => 'email',
@@ -113,7 +113,7 @@ class CustomerCrudController extends CrudController
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => fn(Customer $customer) => $customer->statusHTML()
+                'value' => fn(Customer $customer) => $customer->status_html
             ]
         ]);
     }
@@ -191,8 +191,9 @@ class CustomerCrudController extends CrudController
             [
                 'name' => 'status',
                 'label' => 'Status',
-                'type' => 'select2_from_array',
+                'type' => 'select_from_array',
                 'options' => Customer::statusDropdown(),
+                'default' => Customer::defaultStatusId(),
                 'allows_null' => false,
                 'tab' => 'Profile'
             ],
@@ -260,7 +261,7 @@ class CustomerCrudController extends CrudController
                 'name' => 'type',
                 'label' => 'Type',
                 'type' => 'custom_html',
-                'value' => fn(Customer $customer) => $customer->typeHTML()
+                'value' => fn(Customer $customer) => $customer->type_html
             ],
             [
                 'name' => 'email_verified_at',
@@ -276,7 +277,7 @@ class CustomerCrudController extends CrudController
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => fn(Customer $customer) => $customer->statusHTML()
+                'value' => fn(Customer $customer) => $customer->status_html
             ],
             [
                 'name' => 'block_reason',

@@ -24,7 +24,7 @@ return [
     // ----
 
     // Project name. Shown in the window title.
-    'project_name' => 'Food Ordering System',
+    'project_name' => env('APP_NAME', 'Order System'),
 
     // When clicking on the admin panel's top-left logo/name,
     // where should the user be redirected?

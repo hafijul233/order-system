@@ -6,9 +6,13 @@ use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @method static Builder enabled()
+ * @method static Builder model(string $class)
+ * @method static Builder default()
+ */
 class Status extends Model
 {
     use CrudTrait;
@@ -29,12 +33,51 @@ class Status extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
+    public const MODELS = [
+        Customer::class => 'Customer',
+        AddressBook::class => 'Address Book',
+        Company::class => 'Company',
+        Category::class => 'Category',
+        Order::class => 'Order',
+        Payment::class => 'Payment',
+        Product::class => 'Product',
+        Stock::class => 'Stock',
+        Email::class => 'Email',
+        NewsLetter::class => 'NewsLetter',
+        Campaign::class => 'Campaign',
+        Coupon::class => 'Coupon',
+        Banner::class => 'Banner',
+        Page::class => 'Page',
+        Template::class => 'Template',
+        Task::class => 'Task',
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::creating(function (self $status) {
+            self::resetToNotDefault($status);
+        });
 
+        static::updating(function (self $status) {
+            self::resetToNotDefault($status);
+        });
+
+    }
+
+    private static function resetToNotDefault(self $status)
+    {
+        if ($status->is_default == true) {
+            self::model($status->model)->update(['is_default' => false]);
+        }
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

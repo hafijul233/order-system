@@ -6,12 +6,15 @@ use App\Models\Customer;
 
 class CustomerObserver
 {
+
     /**
      * Handle the Customer "created" event.
      */
     public function created(Customer $customer): void
     {
         $customer->addStatus();
+        $customer->syncNewsLetterSubscription(__METHOD__);
+
     }
 
     /**
@@ -19,8 +22,9 @@ class CustomerObserver
      */
     public function updated(Customer $customer): void
     {
-        //
+        $customer->syncNewsLetterSubscription(__METHOD__);
     }
+
 
     /**
      * Handle the Customer "deleted" event.

@@ -16,6 +16,7 @@ use App\Models\Order;
 use App\Models\Page;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\Status;
 use App\Models\Stock;
 use App\Models\Task;
 use App\Models\Template;
@@ -43,24 +44,6 @@ class StatusCrudController extends CrudController
     {
         parent::__construct();
 
-        $this->models = [
-            Customer::class => 'Customer',
-            AddressBook::class => 'Address Book',
-            Company::class => 'Company',
-            Category::class => 'Category',
-            Order::class => 'Order',
-            Payment::class => 'Payment',
-            Product::class => 'Product',
-            Stock::class => 'Stock',
-            Email::class => 'Email',
-            NewsLetter::class => 'NewsLetter',
-            Campaign::class => 'Campaign',
-            Coupon::class => 'Coupon',
-            Banner::class => 'Banner',
-            Page::class => 'Page',
-            Template::class => 'Template',
-            Task::class => 'Task',
-        ];
     }
 
     /**
@@ -89,7 +72,7 @@ class StatusCrudController extends CrudController
                 'type' => 'select2',
                 'label' => 'Model'
             ],
-            $this->models,
+            Status::MODELS,
             function ($value) {
                 $this->crud->addClause('where', 'model', '=', $value);
             });
@@ -132,7 +115,7 @@ class StatusCrudController extends CrudController
             'name' => 'model',
             'label' => 'Model',
             'type' => 'select2_from_array',
-            'options' => $this->models
+            'options' => Status::MODELS
         ]);
         CRUD::field('name');
         CRUD::field('code');

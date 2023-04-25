@@ -4,11 +4,13 @@ namespace App\Traits;
 
 use App\Models\Status;
 use App\Models\StatusHistory;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
+/**
+ * @property-read string status_html
+ */
 trait HasStatus
 {
 
@@ -25,14 +27,14 @@ trait HasStatus
      */
     public function addStatus(int $id = null): bool
     {
-        $status = \App\Models\Status::enabled()
+        $status = Status::enabled()
             ->model(__CLASS__)
-            ->when($id == null, fn ($query) => $query->default())
-            ->when($id != null, fn ($query) => $query->where('id', $id))
+            ->when($id == null, fn($query) => $query->default())
+            ->when($id != null, fn($query) => $query->where('id', $id))
             ->first();
 
         if ($status == null) {
-            throw new \InvalidArgumentException("Default or Invalid Status Model id passed for ".basename(__CLASS__). " status value.");
+            throw new \InvalidArgumentException("Default or Invalid Status Model id passed for " . basename(__CLASS__) . " status value.");
         } else {
             return $this->statusHistory()->save(new StatusHistory(['status_id' => $status->id]));
         }
@@ -64,13 +66,23 @@ trait HasStatus
     /**
      * Return current model last status in html string  form
      *
-     * @return string
+     * @return int|null
      */
-    public function statusHTML(): string
+    public static function defaultStatusId(): ?int
     {
-        return ($this->status()->exists())
-            ? "<span style='color: {$this->status->color};'><i class='{$this->status->icon}'></i> {$this->status->name}</span>"
-            : "<span class='text-secondary'><i class='la la-question'></i>N/A</span>";
+        $status = Status::enabled()->default()->model(__CLASS__)->first();
+
+        return ($status) ? $status->id : null;
+
+    }
+
+    /**
+     * return current model status
+     * @return array
+     */
+    public static function statusesId(): array
+    {
+        return self::statuses()->pluck('id')->toArray();
     }
     /*
     |--------------------------------------------------------------------------
@@ -79,7 +91,7 @@ trait HasStatus
     */
     /**
      * Return current model last status model instance
-     * @return MorphOne|Status|null
+     * @return MorphOne
      */
     public function status()
     {
@@ -90,7 +102,7 @@ trait HasStatus
 
     /**
      * Return current model last status history collection  instance
-     * @return MorphMany|Collection
+     * @return MorphMany
      */
     public function statusHistory()
     {
@@ -109,6 +121,17 @@ trait HasStatus
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
+    /**
+     * Return current model last status in html string  form
+     *
+     * @return string
+     */
+    public function getStatusHtmlAttribute(): string
+    {
+        return ($this->status()->exists())
+            ? "<span style='color: {$this->status->color};'><i class='{$this->status->icon}'></i> {$this->status->name}</span>"
+            : "<span class='text-secondary'><i class='la la-question'></i>N/A</span>";
+    }
 
     /*
     |--------------------------------------------------------------------------

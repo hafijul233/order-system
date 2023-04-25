@@ -50,11 +50,12 @@ class CustomerCrudController extends CrudController
             fn($value) => $this->crud->addClause('where', 'type', '=', $value)
         );
 
+        /** Status Filter */
         CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
             Customer::statusDropdown(),
             function ($value) {
                 $this->crud->addClause(function ($query) use ($value) {
-                    $query->whereHas('status', fn($query) => $query->whereIn('id', json_decode($value)));
+                    $query->whereHas('status', fn($query) => $query->whereIn('status_id', json_decode($value)));
                 });
             });
 

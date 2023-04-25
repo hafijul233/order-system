@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ class AddressBook extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
     use CrudTrait;
     use HasFactory;
+    use HasStatus;
 
     /*
     |--------------------------------------------------------------------------

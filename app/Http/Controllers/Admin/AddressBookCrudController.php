@@ -60,15 +60,12 @@ class AddressBookCrudController extends CrudController
                 $this->crud->addClause('where', 'type', '=', $value);
             });
 
-        CRUD::addFilter(
-            [
-                'name' => 'status',
-                'type' => 'dropdown',
-                'label' => 'Status'
-            ],
-            AddressBook::STATUSES,
-            function ($value) { // if the filter is active
-                $this->crud->addClause('where', 'status', '=', $value);
+        CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
+            AddressBook::statusDropdown(),
+            function ($value) {
+                $this->crud->addClause(function ($query) use ($value) {
+                    $query->whereHas('status', fn($query) => $query->whereIn('status_id', json_decode($value)));
+                });
             });
 
         CRUD::addFilter(
@@ -237,7 +234,7 @@ class AddressBookCrudController extends CrudController
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'select2_from_array',
-                'options' => AddressBook::STATUSES,
+                'options' => AddressBook::statusDropdown(),
                 'allows_null' => false,
                 'tab' => 'Recognition'
             ],

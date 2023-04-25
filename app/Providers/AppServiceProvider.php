@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
-use App\Observers\CustomerObserver;
+use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,25 +24,44 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->overrideConfigValues();
+
+        $this->startQueryLogger();
+
     }
 
     private function overrideConfigValues()
     {
         $config = [];
+
         if (config('settings.developer_mode') == '1') {
             $config['app.debug'] = true;
             $config['app.env'] = 'local';
             $config['debugbar.enabled'] = true;
-        } else {
-            $config['app.debug'] = false;
-            $config['app.env'] = 'production';
-            $config['debugbar.enabled'] = false;
         }
 
-/*        if (config('settings.skin'))
-            $config['backpack.base.skin'] = config('settings.skin');
-        if (config('settings.show_powered_by'))
-            $config['backpack.base.show_powered_by'] = config('settings.show_powered_by') == '1';*/
-        config($config);
+        Config::set($config);
+    }
+
+    private function startQueryLogger()
+    {
+        if (config('settings.query_logger') == '1') {
+            DB::listen(function (QueryExecuted $query) {
+
+                $bindings = $query->bindings ?? [];
+
+                $sql = '';
+
+                foreach (str_split($query->sql) as $char) {
+                    if ($char == '?') {
+                        $param = array_shift($bindings);
+                        $sql .= "'" . addslashes($param) . "'";
+                        continue;
+                    }
+                    $sql .= $char;
+                }
+
+                Log::channel('query')->info("SQL: {$sql};");
+            });
+        }
     }
 }

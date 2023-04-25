@@ -12,9 +12,7 @@ class CustomerObserver
      */
     public function created(Customer $customer): void
     {
-        $customer->addStatus();
         $customer->syncNewsLetterSubscription(__METHOD__);
-
     }
 
     /**

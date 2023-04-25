@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
 use App\Models\Status;
+use App\Models\StatusHistory;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -114,7 +115,12 @@ class CustomerCrudController extends CrudController
                 'label' => 'Status',
                 'type' => 'custom_html',
                 'value' => fn(Customer $customer) => $customer->status_html
-            ]
+            ],
+            [
+                'name' => 'created_at',
+                'type' => 'datetime',
+                'label' => 'Created'
+            ],
         ]);
     }
 
@@ -189,12 +195,20 @@ class CustomerCrudController extends CrudController
             ],
             //Profile
             [
-                'name' => 'status',
+                'name' => 'custom_status_id',
                 'label' => 'Status',
                 'type' => 'select_from_array',
                 'options' => Customer::statusDropdown(),
                 'default' => Customer::defaultStatusId(),
                 'allows_null' => false,
+                'fake' => true,
+                'events' => [
+                    'saved' => function ($entry) {
+                        if ($entry->custom_status_id != request('custom_status_id')) {
+                            $entry->status()->save(new StatusHistory(['status_id' => request('custom_status_id')]));
+                        }
+                    }
+                ],
                 'tab' => 'Profile'
             ],
             [

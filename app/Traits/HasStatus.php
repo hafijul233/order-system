@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  */
 trait HasStatus
 {
-
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS
@@ -36,7 +35,7 @@ trait HasStatus
         if ($status == null) {
             throw new \InvalidArgumentException("Default or Invalid Status Model id passed for " . basename(__CLASS__) . " status value.");
         } else {
-            return $this->statusHistory()->save(new StatusHistory(['status_id' => $status->id]));
+            return (bool)$this->statusHistory()->save(new StatusHistory(['status_id' => $status->id]));
         }
     }
 
@@ -93,7 +92,7 @@ trait HasStatus
      * Return current model last status model instance
      * @return MorphOne
      */
-    public function status()
+    public function status(): MorphOne
     {
         return $this->morphOne(StatusHistory::class, 'model')
             ->join('statuses', 'statuses.id', '=', 'status_histories.status_id')
@@ -131,6 +130,14 @@ trait HasStatus
         return ($this->status()->exists())
             ? "<span style='color: {$this->status->color};'><i class='{$this->status->icon}'></i> {$this->status->name}</span>"
             : "<span class='text-secondary'><i class='la la-question'></i>N/A</span>";
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCustomStatusIdAttribute()
+    {
+        return $this->status->id ?? null;
     }
 
     /*

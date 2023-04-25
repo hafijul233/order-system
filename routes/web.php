@@ -29,6 +29,5 @@ Route::prefix('notifications')->name('notifications.')
 
 Route::get('customers', function () {
     foreach (\App\Models\Customer::all() as $customer) {
-        dd($customer->status);
     }
 });

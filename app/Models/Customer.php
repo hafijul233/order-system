@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use OwenIt\Auditing\Contracts\Auditable;
+
 /**
  * @property-read string type_html
  */
@@ -52,7 +53,15 @@ class Customer extends Model implements Auditable
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+/*        static::creating(function (self $customer) {
+            dd($customer);
+        });*/
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

@@ -115,15 +115,17 @@
             }
 
             document.addEventListener('DOMContentLoaded', function () {
-                if (window.jQuery) {
-                    @if(setting('refresh_interval') <= 0)
-                    notificationApiCall();
-                    @else
-                    setInterval(function () {
+                setTimeout(() => {
+                    if (window.jQuery) {
+                        @if(setting('refresh_interval') <= 0)
                         notificationApiCall();
-                    }, {{ setting('refresh_interval')}});
-                    @endif
-                }
+                        @else
+                        setInterval(function () {
+                            notificationApiCall();
+                        }, {{ setting('refresh_interval')}});
+                        @endif
+                    }
+                }, 500);
             });
         </script>
     </li>

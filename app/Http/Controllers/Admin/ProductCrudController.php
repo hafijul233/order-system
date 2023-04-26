@@ -54,9 +54,7 @@ class ProductCrudController extends CrudController
                 'name' => 'name',
                 'label' => 'Title',
                 'type' => 'closure',
-                'function' => function ($product) {
-                    return $product->name;
-                }
+                'function' => fn(Product $product) => $product->name,
             ],
             [
                 'name' => 'category_id',
@@ -66,14 +64,7 @@ class ProductCrudController extends CrudController
                 'name' => 'platform',
                 'label' => 'Platform',
                 'type' => 'custom_html',
-                'value' => function ($product) {
-                    return match ($product->type) {
-                        'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . Product::PLATFORMS[$product->platform] . "</span>",
-                        'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . Product::PLATFORMS[$product->platform] . "</span>",
-                        'both' => "<span class='text-black-50'><i class='la la-mail-bulk'></i> " . Product::PLATFORMS[$product->platform] . "</span>",
-                        default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
-                    };
-                }
+                'value' => fn (Product $product) => $product->platform_html,
             ],
             [
                 'name' => 'price',
@@ -81,7 +72,9 @@ class ProductCrudController extends CrudController
             ],
             [
                 'name' => 'status',
-                'label' => 'Status'
+                'label' => 'Status',
+                'type' => 'custom_html',
+                'value' => fn (Product $product) => $product->status_html,
             ],
             [
                 'name' => 'updated_at',
@@ -104,14 +97,15 @@ class ProductCrudController extends CrudController
         CRUD::addFields([
             //Basic
             [
-                'name' => 'name',
-                'label' => 'Title',
-                'type' => 'text',
+                'name' => 'type',
+                'label' => 'Type',
+                'type' => 'select2_from_array',
+                'options' => Product::TYPES,
                 'tab' => 'Basic'
             ],
             [
-                'name' => 'code',
-                'label' => 'Product Code OR SKU',
+                'name' => 'name',
+                'label' => 'Title',
                 'type' => 'text',
                 'tab' => 'Basic'
             ],
@@ -138,7 +132,7 @@ class ProductCrudController extends CrudController
                 'name' => 'platform',
                 'label' => 'Platform',
                 'type' => 'select2_from_array',
-                'options' => ['online' => 'Online', 'offline' => 'Offline', 'both' => 'Both'],
+                'options' => Product::PLATFORMS,
                 'tab' => 'Basic'
             ],
             [
@@ -180,10 +174,9 @@ class ProductCrudController extends CrudController
             ],
             //Detail
             [
-                'name' => 'type',
-                'label' => 'Type',
-                'type' => 'select2_from_array',
-                'options' => ['normal' => 'Normal', 'bundle' => 'Bundle/Combo'],
+                'name' => 'code',
+                'label' => 'Code OR SKU',
+                'type' => 'text',
                 'tab' => 'Detail'
             ],
             [
@@ -191,7 +184,9 @@ class ProductCrudController extends CrudController
                 'label' => 'Status',
                 'type' => 'select2_from_array',
                 'tab' => 'Detail',
-                'options' => ['active' => 'Active']
+                'options' => Product::statusDropdown(),
+                'default' => Product::defaultStatusId(),
+                'allows_null' => false
             ],
             [
                 'name' => 'block_reason',

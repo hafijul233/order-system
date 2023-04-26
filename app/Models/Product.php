@@ -2,20 +2,23 @@
 
 namespace App\Models;
 
+use App\Traits\HasStatus;
 use App\Traits\Sluggable;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
-use Spatie\Tags\HasSlug;
 use Spatie\Translatable\HasTranslations;
 
+/**
+ * @property-read string $platform_html
+ */
 class Product extends Model
 {
     use CrudTrait;
     use HasFactory;
     use HasTranslations;
     use Sluggable;
+    use HasStatus;
 
     /*
     |--------------------------------------------------------------------------
@@ -27,6 +30,8 @@ class Product extends Model
         'offline' => 'Offline',
         'both' => 'Both'
     ];
+
+    public const TYPES = ['normal' => 'Normal', 'bundle' => 'Bundle/Combo'];
 
     protected $table = 'products';
     // protected $primaryKey = 'id';
@@ -63,7 +68,15 @@ class Product extends Model
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
-
+    public function getPlatformHtmlAttribute()
+    {
+        return match ($this->platform) {
+            'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . self::PLATFORMS[$this->platform] . "</span>",
+            'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . self::PLATFORMS[$this->platform] . "</span>",
+            'both' => "<span class='text-black-50'><i class='la la-mail-bulk'></i> " . self::PLATFORMS[$this->platform] . "</span>",
+            default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
+        };
+}
     /*
     |--------------------------------------------------------------------------
     | MUTATORS

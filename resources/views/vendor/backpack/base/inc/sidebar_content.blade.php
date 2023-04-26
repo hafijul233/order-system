@@ -57,18 +57,6 @@
                 {{ ucfirst(\Str::plural(setting('item_label', 'product'))) }}
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ backpack_url('attribute') }}">
-                <i class="nav-icon la la-list"></i>
-                Attributes
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ backpack_url('modifier') }}">
-                <i class="nav-icon la la-edit"></i>
-                Modifiers
-            </a>
-        </li>
     </ul>
 </li>
 
@@ -82,6 +70,18 @@
             <a class="nav-link" href="{{ backpack_url('category') }}">
                 <i class="nav-icon la la-tree"></i>
                 Categories
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ backpack_url('attribute') }}">
+                <i class="nav-icon la la-list"></i>
+                Attributes
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ backpack_url('modifier') }}">
+                <i class="nav-icon la la-edit"></i>
+                Modifiers
             </a>
         </li>
         <li class="nav-item">

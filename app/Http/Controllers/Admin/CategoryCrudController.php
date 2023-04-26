@@ -57,11 +57,7 @@ class CategoryCrudController extends CrudController
             ],
             [
                 'name' => 'slug',
-                'label' => 'Slug',
-                'type' => 'closure',
-                'function' => function($category) {
-                    return $category->slug;
-                }
+                'label' => 'Slug'
             ],
             [
                 'name' => 'parent',

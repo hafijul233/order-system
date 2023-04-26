@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId('order_id');
             $table->foreignId('product_id');
             $table->string('name');
-            $table->decimal('quantity', 18, 3)->default(1);
-            $table->decimal('price',19, 4)->default(0);
-            $table->decimal('subtotal',19, 4)->default(0);
+            $table->decimal('quantity', 18, 5)->default(1);
+            $table->decimal('price',18, 5)->default(0);
+            $table->decimal('subtotal',18, 5)->default(0);
             $table->foreignId('status_id')->nullable()->constrained('statuses');
             $table->timestamps();
         });

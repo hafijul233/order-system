@@ -24,6 +24,7 @@ class CompanyFactory extends Factory
             'phone' => fake()->phoneNumber(),
             'representative_id' => mt_rand(1,15),
             'designation' => fake()->title(),
+            'status_id' => mt_rand(9,12),
             'note' => fake()->paragraph(2)
         ];
     }

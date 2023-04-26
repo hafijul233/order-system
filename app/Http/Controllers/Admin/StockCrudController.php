@@ -44,11 +44,34 @@ class StockCrudController extends CrudController
             Stock::statusDropdown(),
             fn($value) => $this->crud->addClause('whereIn', 'status_id', json_decode($value, true))
         );
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']);
-         */
+
+        CRUD::addColumns([
+           [
+               'name' => 'batch',
+               'label' => 'Batch No.',
+               'type' => 'text',
+           ],
+            [
+               'name' => 'manufacture_date',
+               'label' => 'Manufactured Date',
+               'type' => 'date',
+           ],
+            [
+               'name' => 'expiry_date',
+               'label' => 'Expired Date',
+               'type' => 'date',
+           ],
+            [
+               'name' => 'quantity',
+               'label' => 'Quantity',
+               'type' => 'number',
+           ],
+            [
+               'name' => 'unit_id',
+               'label' => 'Unit',
+               'type' => 'number',
+           ],
+        ]);
     }
 
     /**
@@ -61,13 +84,50 @@ class StockCrudController extends CrudController
     {
         CRUD::setValidation(StockRequest::class);
 
-
-
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
-         */
+        CRUD::addFields([
+            [
+                'name' => 'product_id',
+                'label' => ucfirst(setting('item_label', 'product')),
+                'type' => 'select2',
+                'entity' => 'product',
+                'attribute' => 'name',
+            ],
+            [
+                'name' => 'batch',
+                'label' => 'Batch No.',
+                'type' => 'text',
+            ],
+            [
+                'name' => 'manufacture_date',
+                'label' => 'Manufactured Date',
+                'type' => 'date',
+            ],
+            [
+                'name' => 'expiry_date',
+                'label' => 'Expired Date',
+                'type' => 'date',
+            ],
+            [
+                'name' => 'unit_id',
+                'label' => 'Unit',
+                'type' => 'select2',
+                'entity' => 'unit',
+                'attribute' => 'name',
+                'allows_null' => false,
+                'placeholder' => 'Select an unit'
+            ],
+            [
+                'name' => 'quantity',
+                'label' => 'Quantity',
+                'type' => 'number',
+            ],
+            [
+                'name' => 'note',
+                'label' => 'Notes',
+                'type' => 'textarea',
+                'tab' => 'Profile'
+            ],
+        ]);
     }
 
     /**

@@ -53,6 +53,10 @@ class Unit extends Model implements Auditable
         return $this->hasMany(self::class, 'depth', 'depth');
     }
 
+    public function stocks()
+    {
+        return $this->hasMany(Stock::class);
+}
     /*
     |--------------------------------------------------------------------------
     | SCOPES

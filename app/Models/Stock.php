@@ -40,7 +40,14 @@ class Stock extends Model implements Auditable
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

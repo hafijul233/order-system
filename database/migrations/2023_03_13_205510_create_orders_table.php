@@ -22,6 +22,11 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->foreignId('address_book_id')->nullable();
             $table->unsignedBigInteger('total_item')->nullable();
+            $table->decimal('subtotal', 18, 5)->nullable();
+            $table->decimal('discount', 18, 5)->nullable();
+            $table->decimal('tax', 18, 5)->nullable();
+            $table->decimal('delivery_charge', 18, 5)->nullable();
+            $table->decimal('total_amount', 18, 5)->nullable();
             $table->string('ip_address')->nullable();
             $table->text('user_agent')->nullable();
             $table->foreignId('assignee_id')->nullable();

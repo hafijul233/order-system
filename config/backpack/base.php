@@ -52,6 +52,7 @@ return [
         //'packages/backpack/base/css/bundle.css', // has primary color electric purple (backpack default)
         //'packages/backpack/base/css/blue-bundle.css', // has primary color blue
         'packages/backpack/base/css/orange-bundle.css', // has primary color blue
+        'packages/backpack/base/css/custom.css', // has primary color blue
 
 
         // Here's what's inside the bundle:

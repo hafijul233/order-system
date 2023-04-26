@@ -54,7 +54,7 @@
         <li class="nav-item">
             <a class="nav-link" href="{{ backpack_url('product') }}">
                 <i class="nav-icon la la-box"></i>
-                Products
+                {{ ucfirst(\Str::plural(setting('item_label', 'product'))) }}
             </a>
         </li>
         <li class="nav-item">

@@ -284,13 +284,13 @@ class AddressBookCrudController extends CrudController
                 'name' => 'addressable',
                 'label' => 'Address To',
                 'type' => 'custom_html',
-                'value' => fn($addressBook) => $addressBook->addressable_html,
+                'value' => fn(AddressBook $addressBook) => $addressBook->addressable_html,
             ],
             [
                 'name' => 'type',
                 'label' => 'Type',
                 'type' => 'custom_html',
-                'value' => fn($addressBook) => $addressBook->typeHtml,
+                'value' => fn(AddressBook $addressBook) => $addressBook->type_html,
             ],
             [
                 'name' => 'street_address',

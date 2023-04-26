@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CompanyRequest;
+use App\Models\AddressBook;
 use App\Models\Company;
+use App\Models\Customer;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -12,6 +14,10 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 /**
  * Class CompanyCrudController
@@ -20,7 +26,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  */
 class CompanyCrudController extends CrudController
 {
-    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation, ShowOperation;
+    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation, ShowOperation, FetchOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -46,6 +52,7 @@ class CompanyCrudController extends CrudController
             Company::statusDropdown(),
             fn($value) => $this->crud->addClause('whereIn', 'status_id', json_decode($value, true))
         );
+
         CRUD::addFilter(
             [
                 'name' => 'created_at',
@@ -71,24 +78,26 @@ class CompanyCrudController extends CrudController
             [
                 'name' => 'representative',
                 'label' => 'Representative',
+                'type' => 'custom_html',
+                'value' => fn(Company $company) => "<a class='text-info text-decoration-none' style='font-weight: 550 !important;' title='Customer' target='_blank' href='" . route('customer.show', $company->representative->id) . "'>{$company->representative->name}</a>",
             ],
             [
                 'name' => 'email',
                 'label' => 'Business Email',
                 'type' => 'custom_html',
-                'value' => fn (Company $company) => "<a class='text-dark' href='maiilto:{$company->email}'>{$company->email} " . (($company->email_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
+                'value' => fn(Company $company) => "<a class='text-dark' href='maiilto:{$company->email}'>{$company->email} " . (($company->email_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
             ],
             [
                 'name' => 'phone',
                 'label' => 'Business Phone',
                 'type' => 'custom_html',
-                'value' => fn (Company $company) => "<a class='text-dark' href='tel:{$company->phone}'>{$company->phone} " . (($company->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
+                'value' => fn(Company $company) => "<a class='text-dark' href='tel:{$company->phone}'>{$company->phone} " . (($company->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
             ],
             [
-                'name' => 'status',
+                'name' => 'status_id',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => fn(Company $company) => $company->statusHTML()
+                'value' => fn(Company $company) => $company->status_html
             ]
         ]);
     }
@@ -112,14 +121,14 @@ class CompanyCrudController extends CrudController
             [
                 'name' => 'representative',
                 'label' => 'Representative',
-                'type'  => 'relationship',
-                'ajax'          => true,
+                'type' => 'relationship',
+                'ajax' => true,
                 'inline_create' => [
-                    'entity' => 'relationship',
+                    'entity' => 'customer',
                     'force_select' => true,
                     'modal_class' => 'modal-dialog modal-xl',
                     'modal_route' => route('customer-inline-create'), // InlineCreate::getInlineCreateModal()
-                    'create_route' =>  route('customer-inline-create-save'), // InlineCreate::storeInlineCreate()
+                    'create_route' => route('customer-inline-create-save'), // InlineCreate::storeInlineCreate()
                     'add_button_label' => 'Add Representative'
                 ],
                 'tab' => 'Basic',
@@ -141,10 +150,11 @@ class CompanyCrudController extends CrudController
                 'tab' => 'Basic',
             ],
             [
-                'name' => 'status',
+                'name' => 'status_id',
                 'label' => 'Status',
                 'type' => 'select2_from_array',
                 'options' => Company::statusDropdown(),
+                'default' => Company::defaultStatusId(),
                 'allows_null' => false,
                 'tab' => 'Detail'
             ],
@@ -160,6 +170,12 @@ class CompanyCrudController extends CrudController
                 'type' => 'textarea',
                 'tab' => 'Detail'
             ],
+            [
+                'name' => 'newsletter_subscribed',
+                'label' => 'Newsletter Subscribed?',
+                'type' => 'boolean',
+                'tab' => 'Promotion'
+            ],
         ]);
     }
 
@@ -172,5 +188,28 @@ class CompanyCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    /**
+     * return a list of states with county condition
+     * @return LengthAwarePaginator|Collection|JsonResponse
+     * @link {app_url}/admin/company/fetch/representative
+     *
+     */
+    public function fetchRepresentative()
+    {
+        return $this->fetch(Customer::class);
+        /*
+        return $this->fetch([
+        'model' => Customer::class,
+        'paginate' => false,
+        'query' => function (State $state) use (&$country) {
+            return $state->enabled()->where('country_id', '=', $country);
+        }]);
+
+    } else {
+        return collect();
+    }
+        */
     }
 }

@@ -28,11 +28,12 @@ class CompanyRequest extends FormRequest
     {
         return [
             'name' => ['string', 'required', 'min:1', 'max:255'],
-            'representative' => ['string', 'required', 'min:1', 'max:255'],
+            'representative' => ['required', 'min:1', 'max:255'],
             'designation' => ['string', 'nullable', 'min:1', 'max:255'],
-            'email' => ['string', 'nullable', 'min:1', 'max:255', 'nullable'],
+            'email' => ['min:5', 'max:255', 'email:rfs,dns', 'nullable', 'required_if:newsletter_subscribed,==,true',
+                Rule::unique('companies', 'email')->ignore(request()->route('id'))],
             'phone' => ['string', 'required', 'min:1', 'max:255'],
-            'status' => ['string', 'required', 'min:1', 'max:255', Rule::in(array_keys(Company::STATUSES))],
+            'status_id' => ['required', Rule::in(Company::statusesId())],
             'block_reason' => ['string', 'nullable', 'min:1', 'max:255', 'nullable'],
             'note' => ['string', 'nullable', 'min:1', 'max:255', 'nullable'],
         ];

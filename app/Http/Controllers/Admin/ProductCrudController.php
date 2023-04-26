@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\ProductRequest;
-use App\Models\Customer;
 use App\Models\Product;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
@@ -31,7 +30,7 @@ class ProductCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Product::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/product');
-        CRUD::setEntityNameStrings('product', 'products');
+        CRUD::setEntityNameStrings(setting('item_label', 'product'), \Str::plural(setting('item_label', 'product')));
     }
 
     /**
@@ -112,7 +111,7 @@ class ProductCrudController extends CrudController
             ],
             [
                 'name' => 'code',
-                'label' => 'Code OR SKU',
+                'label' => 'Product Code OR SKU',
                 'type' => 'text',
                 'tab' => 'Basic'
             ],

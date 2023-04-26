@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasStatus;
+use App\Traits\NewsletterSyncTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,12 +11,16 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use OwenIt\Auditing\Contracts\Auditable;
 
+/**
+ * @property-read Customer $representative
+ */
 class Company extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
     use CrudTrait;
     use HasFactory;
     use HasStatus;
+    use NewsletterSyncTrait;
 
     /*
     |--------------------------------------------------------------------------

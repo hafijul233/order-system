@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
+            $table->boolean('newsletter_subscribed')->default(false);
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
             $table->foreignId('status_id')->nullable()->constrained('statuses');

@@ -11,6 +11,10 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use OwenIt\Auditing\Contracts\Auditable;
 
+/**
+ * @property-read string $type_html
+ * @property-read string $addressable_html
+ */
 class AddressBook extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
@@ -30,12 +34,6 @@ class AddressBook extends Model implements Auditable
         'bill' => 'Billing',
         'work' => 'Work',
         'other' => 'Other',
-    ];
-
-    public const STATUSES = [
-        'active' => 'Active',
-        'suspended' => 'Suspended',
-        'banned' => 'Banned'
     ];
 
     protected $table = 'address_books';
@@ -109,9 +107,9 @@ class AddressBook extends Model implements Auditable
     public function getAddressableHtmlAttribute(): string
     {
         if ($this->addressable instanceof Customer) {
-            return "<a class='text-dark' title='Customer' target='_blank' href='" . route('customer.show', $this->addressable->id) . "'><i class='la la-user text-info'></i> {$this->addressable->name}</a>";
+            return "<a class='text-info text-decoration-none' style='font-weight: 550 !important;' title='Customer' target='_blank' href='" . route('customer.show', $this->addressable->id) . "'><i class='la la-user text-info'></i> {$this->addressable->name}</a>";
         } elseif ($this->addressable instanceof Company) {
-            return "<a class='text-dark' title='Company' target='_blank' href='" . route('company.show', $this->addressable->id) . "'><i class='la la-building text-success'></i> {$this->addressable->name}</a>";
+            return "<a class='text-info text-decoration-none' style='font-weight: 550 !important;' title='Company' target='_blank' href='" . route('company.show', $this->addressable->id) . "'><i class='la la-building text-success'></i> {$this->addressable->name}</a>";
         } else {
             return '-';
         }

@@ -46,6 +46,9 @@ return [
     // - 4 - less important than most columns
     'actionsColumnPriority' => 1,
 
+    // Nest action buttons within a dropdown in actions column
+    'lineButtonsAsDropdown' => true,
+
     // Show a "Reset" button next to the List operation subheading
     // (Showing 1 to 25 of 9999 entries. Reset)
     // that allows the user to erase local storage for that datatable,
@@ -60,5 +63,5 @@ return [
 
     // Display the `Showing X of XX entries (filtered  from X entries)`?
     // Setting this to false will improve performance on big datasets.
-    'showEntryCount' => true,
+    'showEntryCount' => false,
 ];

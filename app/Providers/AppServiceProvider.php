@@ -60,7 +60,7 @@ class AppServiceProvider extends ServiceProvider
                     $sql .= $char;
                 }
 
-                Log::channel('query')->info("SQL: {$sql};");
+                Log::channel('query')->info("TIME: {$query->time}ms, SQL: {$sql};");
             });
         }
     }

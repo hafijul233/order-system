@@ -8,6 +8,7 @@ use App\Models\City;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\State;
+use Backpack\CRUD\app\Exceptions\BackpackProRequiredException;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -46,6 +47,7 @@ class AddressBookCrudController extends CrudController
      *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
+     * @throws BackpackProRequiredException
      */
     protected function setupListOperation()
     {
@@ -77,6 +79,8 @@ class AddressBookCrudController extends CrudController
                 $this->crud->addClause('where', 'created_at', '>=', $dates->from . ' 00:00:00');
                 $this->crud->addClause('where', 'created_at', '<=', $dates->to . ' 23:59:59');
             });
+
+        CRUD::enableDetailsRow();
 
         CRUD::addColumns([
             [

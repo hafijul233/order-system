@@ -112,7 +112,7 @@ trait HasStatus
      */
     public function getStatusHtmlAttribute(): string
     {
-        return ($this->status()->exists())
+        return ($this->status instanceof Status)
             ? "<span style='color: {$this->status->color};'><i class='{$this->status->icon}'></i> {$this->status->name}</span>"
             : "<span class='text-secondary'><i class='la la-question'></i>N/A</span>";
     }

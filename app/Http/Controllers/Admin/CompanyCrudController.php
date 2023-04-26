@@ -80,7 +80,7 @@ class CompanyCrudController extends CrudController
                 'label' => 'Name',
             ],
             [
-                'name' => 'representative',
+                'name' => 'representative_id',
                 'label' => 'Representative',
                 'type' => 'custom_html',
                 'value' => fn(Company $company) => "<a class='text-info text-decoration-none' style='font-weight: 550 !important;' title='Customer' target='_blank' href='" . route('customer.show', $company->representative->id) . "'>{$company->representative->name}</a>",

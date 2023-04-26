@@ -30,6 +30,7 @@ class AddressBookRequest extends FormRequest
     {
         return [
             'addressable' => ['required', 'min:1', 'array'],
+            'name' => ['nullable', 'required_if:addressable.addressable_type,==,' . Company::class, 'string', 'min:2'],
             'type' => ['required', 'string', Rule::in(array_keys(AddressBook::TYPES))],
             'street_address' => ['nullable', 'min:3', 'max:255', 'string'],
             'city' => ['required', 'min:2', 'max:255', 'string'],
@@ -37,9 +38,16 @@ class AddressBookRequest extends FormRequest
             'zip_code' => ['nullable', 'min:1', 'max:100000', 'integer'],
             'phone' => ['required', 'min:10', 'string'],
             'landmark' => ['nullable', 'min:3', 'max:255', 'string'],
-            'status' => ['required', 'string', Rule::in(array_keys(AddressBook::STATUSES))],
+            'status_id' => ['required', Rule::in(AddressBook::statusesId())],
             'block_reason' => ['nullable', 'min:3', 'max:255', 'string'],
             'note' => ['nullable', 'min:3', 'max:255', 'string'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required_if' => 'The name field is required when company selected'
         ];
     }
 }

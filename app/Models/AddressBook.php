@@ -95,6 +95,27 @@ class AddressBook extends Model implements Auditable
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
+    public function getTypeHtmlAttribute(): string
+    {
+        return match ($this->type) {
+            'home' => "<span class='text-info'><i class='la la-home'></i> " . self::TYPES[$this->type] . "</span>",
+            'ship' => "<span class='text-info'><i class='la la-shipping-fast'></i> " . self::TYPES[$this->type] . "</span>",
+            'bill' => "<span class='text-info'><i class='la la-file-invoice-dollar'></i> " . self::TYPES[$this->type] . "</span>",
+            'work' => "<span class='text-info'><i class='la la-user-graduate'></i> " . self::TYPES[$this->type] . "</span>",
+            'other' => "<span class='text-info'><i class='la la-exclamation'></i> " . self::TYPES[$this->type] . "</span>",
+            default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
+        };
+    }
+    public function getAddressableHtmlAttribute(): string
+    {
+        if ($this->addressable instanceof Customer) {
+            return "<a class='text-dark' title='Customer' target='_blank' href='" . route('customer.show', $this->addressable->id) . "'><i class='la la-user text-info'></i> {$this->addressable->name}</a>";
+        } elseif ($this->addressable instanceof Company) {
+            return "<a class='text-dark' title='Company' target='_blank' href='" . route('company.show', $this->addressable->id) . "'><i class='la la-building text-success'></i> {$this->addressable->name}</a>";
+        } else {
+            return '-';
+        }
+    }
 
     /*
     |--------------------------------------------------------------------------

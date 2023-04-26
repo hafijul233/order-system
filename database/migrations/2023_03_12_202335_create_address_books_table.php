@@ -12,6 +12,7 @@ return new class extends Migration {
     {
         Schema::create('address_books', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable();
             $table->morphs('addressable');
             $table->enum('type', array_keys(\App\Models\AddressBook::TYPES))->default('home');
             $table->text('street_address')->nullable();

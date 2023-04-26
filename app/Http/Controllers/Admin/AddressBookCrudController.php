@@ -61,7 +61,7 @@ class AddressBookCrudController extends CrudController
             });
 
         CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
-            Customer::statusDropdown(),
+            AddressBook::statusDropdown(),
             fn($value) => $this->crud->addClause('whereIn', 'status_id', json_decode($value, true))
         );
 
@@ -87,17 +87,18 @@ class AddressBookCrudController extends CrudController
                 'name' => 'addressable',
                 'label' => 'Address To',
                 'type' => 'custom_html',
-                'value' => function ($addressBook) {
-                    return $this->addressableModel($addressBook);
-                }
+                'value' => fn($addressBook) => $addressBook->addressable_html
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Title',
+                'hint' => 'Head Office, Branch Name, Unique Reference'
             ],
             [
                 'name' => 'type',
                 'label' => 'Type',
                 'type' => 'custom_html',
-                'value' => function ($addressBook) {
-                    return $this->addressBookType($addressBook);
-                },
+                'value' => fn($addressBook) => $addressBook->typeHtml,
             ],
             [
                 'name' => 'phone',
@@ -121,9 +122,7 @@ class AddressBookCrudController extends CrudController
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => function ($addressBook) {
-                    return $this->addressBookStatus($addressBook);
-                }
+                'value' => fn($addressBook) => $addressBook->statusHtml,
             ],
 
         ]);
@@ -150,6 +149,12 @@ class AddressBookCrudController extends CrudController
                     [Customer::class,],
                     [Company::class,]
                 ]
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Title',
+                'hint' => 'N.B: Required for company entries',
+                'tab' => 'Basic',
             ],
             ['name' => 'type',
                 'label' => 'Type',
@@ -199,7 +204,7 @@ class AddressBookCrudController extends CrudController
             ],
             [
                 'name' => 'city',
-                'label' => 'State',
+                'label' => 'City',
                 'type' => 'relationship',
                 'entity' => 'city',
                 'ajax' => true,
@@ -228,10 +233,11 @@ class AddressBookCrudController extends CrudController
                 'tab' => 'Recognition',
             ],
             [
-                'name' => 'status',
+                'name' => 'status_id',
                 'label' => 'Status',
                 'type' => 'select2_from_array',
                 'options' => AddressBook::statusDropdown(),
+                'default' => AddressBook::defaultStatusId(),
                 'allows_null' => false,
                 'tab' => 'Recognition'
             ],
@@ -278,17 +284,13 @@ class AddressBookCrudController extends CrudController
                 'name' => 'addressable',
                 'label' => 'Address To',
                 'type' => 'custom_html',
-                'value' => function ($addressBook) {
-                    return $this->addressableModel($addressBook);
-                }
+                'value' => fn($addressBook) => $addressBook->addressable_html,
             ],
             [
                 'name' => 'type',
                 'label' => 'Type',
                 'type' => 'custom_html',
-                'value' => function ($addressBook) {
-                    return $this->addressBookType($addressBook);
-                },
+                'value' => fn($addressBook) => $addressBook->typeHtml,
             ],
             [
                 'name' => 'street_address',
@@ -326,9 +328,7 @@ class AddressBookCrudController extends CrudController
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => function ($addressBook) {
-                    return $this->addressBookStatus($addressBook);
-                }
+                'value' => fn($addressBook) => $addressBook->statusHtml,
             ],
             [
                 'name' => 'block_reason',
@@ -342,38 +342,6 @@ class AddressBookCrudController extends CrudController
             ],
 
         ]);
-    }
-
-    private function addressBookType(AddressBook $addressBook)
-    {
-        return match ($addressBook->type) {
-            'home' => "<span class='text-info'><i class='la la-home'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
-            'ship' => "<span class='text-info'><i class='la la-shipping-fast'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
-            'bill' => "<span class='text-info'><i class='la la-file-invoice-dollar'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
-            'work' => "<span class='text-info'><i class='la la-user-graduate'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
-            'other' => "<span class='text-info'><i class='la la-exclamation'></i> " . AddressBook::TYPES[$addressBook->type] . "</span>",
-            default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
-        };
-    }
-
-    private function addressBookStatus($addressBook)
-    {
-        return match ($addressBook->status) {
-            'active' => "<span class='text-success'><i class='la la-check'></i> " . AddressBook::STATUSES[$addressBook->status] . "</span>",
-            'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . AddressBook::STATUSES[$addressBook->status] . "</span>",
-            'banned' => "<span class='text-danger'><i class='la la-times'></i> " . AddressBook::STATUSES[$addressBook->status] . "</span>",
-        };
-    }
-
-    private function addressableModel($addressBook)
-    {
-        if ($addressBook->addressable instanceof Customer) {
-            return "<a class='text-dark' title='Customer' target='_blank' href='" . route('customer.show', $addressBook->addressable->id) . "'><i class='la la-user text-info'></i> {$addressBook->addressable->name}</a>";
-        } elseif ($addressBook->addressable instanceof Company) {
-            return "<a class='text-dark' title='Company' target='_blank' href='" . route('company.show', $addressBook->addressable->id) . "'><i class='la la-building text-success'></i> {$addressBook->addressable->name}</a>";
-        } else {
-            return '-';
-        }
     }
 
     /**

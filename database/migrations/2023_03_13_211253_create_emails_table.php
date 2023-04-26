@@ -18,6 +18,7 @@ return new class extends Migration
             $table->longText('body')->nullable();
             $table->string('subject')->nullable();
             $table->json('attachments')->nullable();
+            $table->boolean('sent')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

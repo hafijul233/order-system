@@ -221,12 +221,6 @@
                     Audits
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ backpack_url('status-history') }}">
-                    <i class="nav-icon la la-history"></i>
-                    Status History
-                </a>
-            </li>
         @endif
     </ul>
 </li>

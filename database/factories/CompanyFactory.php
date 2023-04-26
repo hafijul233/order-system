@@ -22,7 +22,7 @@ class CompanyFactory extends Factory
             'name' => fake()->company(),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),
-            'representative' => fake()->name(),
+            'representative_id' => mt_rand(1,15),
             'designation' => fake()->title(),
             'note' => fake()->paragraph(2)
         ];

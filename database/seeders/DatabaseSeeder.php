@@ -14,27 +14,33 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        /*
+        \App\Models\User::factory(15)->createQuietly();
+                \App\Models\User::factory()->createQuietly([
+                    'name' => 'Hafijul Islam',
+                    'email' => 'hafijul233@gmail.com',
+                    'email_verified_at' => now(),
+                    'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+                    'remember_token' => Str::random(10),
+                ]);
 
-/*        \App\Models\User::factory(15)->createQuietly();
-        \App\Models\User::factory()->createQuietly([
-            'name' => 'Hafijul Islam',
-            'email' => 'hafijul233@gmail.com',
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
-        ]);
-        \App\Models\Customer::factory(15)->createQuietly();
-        \App\Models\Company::factory(15)->createQuietly();
-        \App\Models\Newsletter::factory(15)->createQuietly();
-        \App\Models\Tag::factory(15)->createQuietly();*/
-        $this->call([
-/*            RoleSeeder::class,
-            SettingSeeder::class,
-            CountrySeeder::class,*/
-            StateSeeder::class,
-            CitySeeder::class,
-/*            CategorySeeder::class*/
-        ]);
+                \App\Models\Customer::factory(15)->createQuietly();*/
+                \App\Models\Company::factory(15)->createQuietly();
+                \App\Models\Newsletter::factory(15)->createQuietly();
+                \App\Models\Tag::factory(15)->createQuietly();
+
+                $this->call([
+                    StatusSeeder::class,
+                    RoleSeeder::class,
+                    SettingSeeder::class,
+                    CategorySeeder::class,
+                    CountrySeeder::class,
+                ]);
+
+        $this->call(StateSeeder::class, false, ["19"]);
+
+        $this->call(CitySeeder::class, false, ['19']);
+
 
     }
 }

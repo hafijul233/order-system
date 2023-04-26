@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('product_modifier', function (Blueprint $table) {
             $table->foreignId('product_id')->constrained('products');
             $table->foreignId('modifier_id')->constrained('modifiers');
+            $table->boolean('enabled')->default(true);
         });
     }
 

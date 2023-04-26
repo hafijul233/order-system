@@ -30,6 +30,7 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->timestamp('ordered_at')->nullable()->useCurrent();
             $table->timestamp('delivered_at')->nullable();
+            $table->foreignId('status_id')->nullable()->constrained('statuses');
             $table->timestamps();
             $table->softDeletes();
         });

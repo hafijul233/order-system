@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('template_id')->constrained('templates');
             $table->string('channel')->comment('notification, email, sms');
             $table->morphs('notifiable');
+            $table->boolean('enabled')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

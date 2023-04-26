@@ -10,16 +10,24 @@ class CitySeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(...$arguments): void
     {
-        foreach (array_chunk($this->data(), 300) as $block) {
+        $country_id = $arguments[0] ?? null;
+
+        foreach (array_chunk($this->data($country_id), 300) as $block) {
             set_time_limit(2100);
             City::insert($block);
         }
     }
 
-    private function data()
+    private function data(int $country_id = null)
     {
-        return include "cities.dat";
+        $data = include "cities.dat";
+
+        if ($country_id != null) {
+            return array_filter($data, fn($state) => ($state['country_id'] == $country_id));
+        }
+
+        return $data;
     }
 }

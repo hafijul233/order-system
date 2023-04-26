@@ -44,12 +44,8 @@ class CompanyCrudController extends CrudController
     {
         CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
             Company::statusDropdown(),
-            function ($value) {
-                $this->crud->addClause(function ($query) use ($value) {
-                    $query->whereHas('status', fn($query) => $query->whereIn('id', json_decode($value)));
-                });
-            });
-
+            fn($value) => $this->crud->addClause('whereIn', 'status_id', json_decode($value, true))
+        );
         CRUD::addFilter(
             [
                 'name' => 'created_at',

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('size');
             $table->json('attribute')->nullable();
+            $table->boolean('enabled')->default(true);
             $table->timestamps();
         });
     }

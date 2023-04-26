@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('campaigns', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('status_id')->nullable()->constrained('statuses');
             $table->timestamps();
             $table->softDeletes();
         });

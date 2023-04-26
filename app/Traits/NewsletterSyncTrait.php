@@ -2,8 +2,6 @@
 
 namespace App\Traits;
 
-use App\Models\Company;
-use App\Models\Customer;
 use App\Models\Newsletter;
 
 trait NewsletterSyncTrait

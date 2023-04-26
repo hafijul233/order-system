@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('translations', function (Blueprint $table) {
             $table->id();
+            $table->boolean('enabled')->default(true);
             $table->timestamps();
         });
     }

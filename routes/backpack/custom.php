@@ -45,5 +45,4 @@ Route::group([
     Route::crud('modifier', 'ModifierCrudController');
     Route::crud('unit', 'UnitCrudController');
     Route::crud('status', 'StatusCrudController');
-    Route::crud('status-history', 'StatusHistoryCrudController');
 }); // this should be the absolute last line of this file

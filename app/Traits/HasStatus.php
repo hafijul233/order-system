@@ -3,10 +3,8 @@
 namespace App\Traits;
 
 use App\Models\Status;
-use App\Models\StatusHistory;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read string status_html
@@ -34,19 +32,18 @@ trait HasStatus
 
         if ($status == null) {
             throw new \InvalidArgumentException("Default or Invalid Status Model id passed for " . basename(__CLASS__) . " status value.");
-        } else {
-            return (bool)$this->statusHistory()->save(new StatusHistory(['status_id' => $status->id]));
         }
+        $this->status_id = $status->id;
+        return $this->save();
     }
 
     /**
      * Return all status collection that are
      * enabled for current model
      *
-     * @param string|null $class
      * @return Collection
      */
-    public static function statuses(string $class = null): Collection
+    private static function statuses(): Collection
     {
         return Status::enabled()->model(__CLASS__)->get();
     }
@@ -90,25 +87,13 @@ trait HasStatus
     */
     /**
      * Return current model last status model instance
-     * @return MorphOne
+     * @return BelongsTo
      */
-    public function status(): MorphOne
+    public function status(): BelongsTo
     {
-        return $this->morphOne(StatusHistory::class, 'model')
-            ->join('statuses', 'statuses.id', '=', 'status_histories.status_id')
-            ->orderBy('status_histories.created_at', 'desc');
+        return $this->belongsTo(Status::class);
     }
 
-    /**
-     * Return current model last status history collection  instance
-     * @return MorphMany
-     */
-    public function statusHistory()
-    {
-        return $this->morphMany(StatusHistory::class, 'model')
-            ->with(['status'])
-            ->orderBy('created_at');
-    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES
@@ -130,14 +115,6 @@ trait HasStatus
         return ($this->status()->exists())
             ? "<span style='color: {$this->status->color};'><i class='{$this->status->icon}'></i> {$this->status->name}</span>"
             : "<span class='text-secondary'><i class='la la-question'></i>N/A</span>";
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCustomStatusIdAttribute()
-    {
-        return $this->status->id ?? null;
     }
 
     /*

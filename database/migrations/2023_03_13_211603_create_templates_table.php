@@ -16,6 +16,7 @@ return new class extends Migration
             $table->morphs('templateable');
             $table->enum('type', ['text', 'html'])->default('html');
             $table->longText('content');
+            $table->boolean('enabled')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

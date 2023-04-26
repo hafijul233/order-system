@@ -10,18 +10,19 @@ class StateSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(...$arguments): void
     {
+        $country_id = $arguments[0] ?? null;
 
-        foreach (array_chunk($this->data(), 300) as $block) {
+        foreach (array_chunk($this->data($country_id), 300) as $block) {
             set_time_limit(2100);
             State::insert($block);
         }
     }
 
-    private function data()
+    private function data(int $country_id = null) : array
     {
-        return array(
+        $data = array(
             array('id' => '1','name' => 'Southern Nations, Nationalities, and Peoples\' Region','country_id' => '70','iso2' => 'SN','type' => NULL,'enabled' => '1','created_at' => '2023-03-26 13:57:41','updated_at' => NULL),
             array('id' => '2','name' => 'Somali Region','country_id' => '70','iso2' => 'SO','type' => NULL,'enabled' => '1','created_at' => '2023-03-26 13:57:41','updated_at' => NULL),
             array('id' => '3','name' => 'Amhara Region','country_id' => '70','iso2' => 'AM','type' => NULL,'enabled' => '1','created_at' => '2023-03-26 13:57:41','updated_at' => NULL),
@@ -5013,5 +5014,11 @@ class StateSeeder extends Seeder
             array('id' => '5132','name' => 'Tubas','country_id' => '169','iso2' => 'TBS','type' => 'governorate','enabled' => '1','created_at' => '2023-03-26 13:57:41','updated_at' => NULL),
             array('id' => '5133','name' => 'Tulkarm','country_id' => '169','iso2' => 'TKM','type' => 'governorate','enabled' => '1','created_at' => '2023-03-26 13:57:41','updated_at' => NULL)
         );
+
+        if($country_id != null) {
+            return array_filter($data, fn($state) => ($state['country_id'] == $country_id));
+        }
+
+        return $data;
     }
 }

@@ -19,11 +19,12 @@ return new class extends Migration
             $table->enum('type', array_keys(\App\Models\Customer::TYPES))->default('offline')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
-            $table->string('password');
+            $table->boolean('newsletter_subscribed')->default(false);
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
-            $table->boolean('newsletter_subscribed')->default(false);
+            $table->string('password');
             $table->rememberToken();
+            $table->foreignId('status_id')->nullable()->constrained('statuses');
             $table->timestamps();
             $table->softDeletes();
         });

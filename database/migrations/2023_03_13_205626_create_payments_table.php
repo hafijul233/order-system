@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->nullable()->constrained('orders');
-
+            $table->foreignId('status_id')->nullable()->constrained('statuses');
             $table->timestamps();
         });
     }

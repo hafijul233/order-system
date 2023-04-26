@@ -29,6 +29,7 @@ return new class extends Migration
             $table->boolean('inventory_enabled')->default(true);
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
+            $table->foreignId('status_id')->nullable()->constrained('statuses');
             $table->timestamps();
             $table->softDeletes();
         });

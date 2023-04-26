@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
-use App\Models\Status;
-use App\Models\StatusHistory;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -15,7 +13,6 @@ use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class CustomerCrudController
@@ -51,14 +48,10 @@ class CustomerCrudController extends CrudController
             fn($value) => $this->crud->addClause('where', 'type', '=', $value)
         );
 
-        /** Status Filter */
         CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
             Customer::statusDropdown(),
-            function ($value) {
-                $this->crud->addClause(function ($query) use ($value) {
-                    $query->whereHas('status', fn($query) => $query->whereIn('status_id', json_decode($value)));
-                });
-            });
+            fn($value) => $this->crud->addClause('whereIn', 'status_id', json_decode($value, true))
+        );
 
         CRUD::addFilter(['type' => 'simple', 'name' => 'email_verified_at', 'label' => 'Email Verified'],
             false,
@@ -160,6 +153,13 @@ class CustomerCrudController extends CrudController
                 'allows_null' => false,
                 'tab' => 'Basic'
             ],
+            [
+                'name' => 'allowed_login',
+                'label' => 'Customer Allowed to Login on system?',
+                'type' => 'boolean',
+                'fake' => true,
+                'tab' => 'Basic'
+            ],
             //Authentication Tab
             [
                 'name' => 'password',
@@ -195,20 +195,12 @@ class CustomerCrudController extends CrudController
             ],
             //Profile
             [
-                'name' => 'custom_status_id',
+                'name' => 'status_id',
                 'label' => 'Status',
                 'type' => 'select_from_array',
                 'options' => Customer::statusDropdown(),
                 'default' => Customer::defaultStatusId(),
                 'allows_null' => false,
-                'fake' => true,
-                'events' => [
-                    'saved' => function ($entry) {
-                        if ($entry->custom_status_id != request('custom_status_id')) {
-                            $entry->status()->save(new StatusHistory(['status_id' => request('custom_status_id')]));
-                        }
-                    }
-                ],
                 'tab' => 'Profile'
             ],
             [

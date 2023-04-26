@@ -36,15 +36,16 @@ class CustomerRequest extends FormRequest
         ];
         $rules['phone'] = ['required', 'min:10', 'max:255', 'string', 'nullable'];
         $rules['type'] = ['required', Rule::in(array_keys(Customer::TYPES))];
-        $rules['custom_status_id'] = ['required', Rule::in(Customer::statusesId())];
+        $rules['status_id'] = ['required', Rule::in(Customer::statusesId())];
         $rules['email_verified_at'] = ['nullable', 'date', 'before:' . now()];
         $rules['phone_verified_at'] = ['nullable', 'date', 'before:' . now()];
         $rules['block_reason'] = ['nullable', 'min:3', 'max:255', 'string'];
         $rules['note'] = ['nullable', 'min:3', 'max:255', 'string'];
         $rules['newsletter_subscribed'] = ['nullable', 'boolean'];
-        $rules['password'] = ($this->method() == 'POST')
-            ? ['required', 'min:5', 'max:255', 'confirmed', Password::default()]
-            : ['nullable', 'min:5', 'max:255', 'confirmed'];
+        $rules['password'] = ['nullable', 'confirmed', Password::default()];
+        if ($this->method() == 'POST') {
+            $rules['password'][] = 'required_if:allowed_login,==,true';
+        }
 
         return $rules;
     }

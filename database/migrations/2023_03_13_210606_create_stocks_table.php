@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('manufacture_date');
             $table->date('expiry_date');
             $table->decimal('quantity', 18,3)->default(1);
+            $table->foreignId('status_id')->nullable()->constrained('statuses');
             $table->timestamps();
             $table->softDeletes();
         });

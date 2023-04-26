@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CompanyRequest;
-use App\Models\AddressBook;
 use App\Models\Company;
 use App\Models\Customer;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -48,6 +47,11 @@ class CompanyCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        CRUD::addFilter(['name' => 'representative', 'type' => 'select2_multiple', 'label' => 'Representative'],
+            Customer::all()->pluck('name', 'id')->toArray(),
+            fn($value) => $this->crud->addClause('whereIn', 'representative_id', json_decode($value, true))
+        );
+
         CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
             Company::statusDropdown(),
             fn($value) => $this->crud->addClause('whereIn', 'status_id', json_decode($value, true))

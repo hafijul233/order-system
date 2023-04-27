@@ -63,20 +63,20 @@ class OrderCrudController extends CrudController
         );
 
         CRUD::addFilter([
-            'name'       => 'total_amount',
-            'type'       => 'range',
-            'label'      => 'Order Total Price',
+            'name' => 'total_amount',
+            'type' => 'range',
+            'label' => 'Order Total Price',
             'label_from' => 'min',
-            'label_to'   => 'max'
+            'label_to' => 'max'
         ],
             false,
-            function($value) { // if the filter is active
+            function ($value) { // if the filter is active
                 $range = json_decode($value);
                 if ($range->from) {
-                    $this->crud->addClause('where', 'total_amount', '>=', (float) $range->from);
+                    $this->crud->addClause('where', 'total_amount', '>=', (float)$range->from);
                 }
                 if ($range->to) {
-                    $this->crud->addClause('where', 'total_amount', '<=', (float) $range->to);
+                    $this->crud->addClause('where', 'total_amount', '<=', (float)$range->to);
                 }
             });
 
@@ -97,10 +97,11 @@ class OrderCrudController extends CrudController
             [
                 'name' => 'id',
                 'label' => '#',
-            ],
-            [
-                'name' => 'name',
-                'label' => 'Name',
+                'type' => 'custom_html',
+                'value' => function (Order $order) {
+                    return setting('order_prefix', '#')
+                        . str_pad($order->id, (int)setting('order_number_length', 8), "0", STR_PAD_LEFT);
+                }
             ],
             [
                 'name' => 'platform',
@@ -109,10 +110,19 @@ class OrderCrudController extends CrudController
                 'value' => fn(Order $order) => $order->type_html
             ],
             [
+                'name' => 'name',
+                'label' => 'Name',
+            ],
+            [
                 'name' => 'phone',
                 'label' => 'Phone',
                 'type' => 'custom_html',
                 'value' => fn(Order $order) => "<a class='text-dark' href='tel:{$order->phone}'>{$order->phone}</a>"
+            ],
+            [
+                'name' => 'total_amount',
+                'label' => 'Total',
+                'type' => 'number'
             ],
             [
                 'name' => 'status',
@@ -121,9 +131,9 @@ class OrderCrudController extends CrudController
                 'value' => fn(Order $order) => $order->status_html
             ],
             [
-                'name' => 'created_at',
+                'name' => 'ordered_at',
                 'type' => 'datetime',
-                'label' => 'Created'
+                'label' => 'Ordered'
             ],
         ]);
     }

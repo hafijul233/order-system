@@ -124,8 +124,7 @@ class StockCrudController extends CrudController
             [
                 'name' => 'note',
                 'label' => 'Notes',
-                'type' => 'textarea',
-                'tab' => 'Profile'
+                'type' => 'textarea'
             ],
         ]);
     }

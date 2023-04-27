@@ -107,7 +107,7 @@ class AddressBook extends Model implements Auditable
     public function getAddressableHtmlAttribute(): string
     {
         if ($this->addressable instanceof Customer) {
-            return "<a class='text-info text-decoration-none' style='font-weight: 550 !important;' title='Customer' target='_blank' href='" . route('customer.show', $this->addressable->id) . "'><i class='la la-user text-info'></i> {$this->addressable->name}</a>";
+            return "<a class='text-info text-decoration-none' style='font-weight: 550 !important;' title='Customer' target='_blank' href='" . route('customer.show', $this->addressable->id) . "'><i class='la la-user-check text-info'></i> {$this->addressable->name}</a>";
         } elseif ($this->addressable instanceof Company) {
             return "<a class='text-info text-decoration-none' style='font-weight: 550 !important;' title='Company' target='_blank' href='" . route('company.show', $this->addressable->id) . "'><i class='la la-building text-success'></i> {$this->addressable->name}</a>";
         } else {

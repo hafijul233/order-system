@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
+/**
+ * @property-read string $type_html
+ */
 class Order extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;

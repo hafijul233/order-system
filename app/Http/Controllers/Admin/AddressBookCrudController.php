@@ -58,13 +58,13 @@ class AddressBookCrudController extends CrudController
                 'label' => 'Type'
             ],
             AddressBook::TYPES,
-            function ($value) { // if the filter is active
+            function ($value) {
                 $this->crud->addClause('where', 'type', '=', $value);
             });
 
         CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
             AddressBook::statusDropdown(),
-            fn($value) => $this->crud->addClause('whereIn', 'status_id', json_decode($value, true))
+            fn($value) => $this->crud->addClause('whereIn', 'status_id', json_decode($value))
         );
 
         CRUD::addFilter(
@@ -74,13 +74,10 @@ class AddressBookCrudController extends CrudController
                 'label' => 'Created'
             ],
             false,
-            function ($value) { // if the filter is active
+            function ($value) {
                 $dates = json_decode($value);
-                $this->crud->addClause('where', 'created_at', '>=', $dates->from . ' 00:00:00');
-                $this->crud->addClause('where', 'created_at', '<=', $dates->to . ' 23:59:59');
+                $this->crud->addClause('whereBetween', 'created_at',  [$dates->from . ' 00:00:00', $dates->to . ' 23:59:59']);
             });
-
-        CRUD::enableDetailsRow();
 
         CRUD::addColumns([
             [
@@ -91,7 +88,7 @@ class AddressBookCrudController extends CrudController
                 'name' => 'addressable',
                 'label' => 'Address To',
                 'type' => 'custom_html',
-                'value' => fn($addressBook) => $addressBook->addressable_html
+                'value' => fn(AddressBook $addressBook) => $addressBook->addressable_html
             ],
             [
                 'name' => 'name',
@@ -102,13 +99,14 @@ class AddressBookCrudController extends CrudController
                 'name' => 'type',
                 'label' => 'Type',
                 'type' => 'custom_html',
-                'value' => fn($addressBook) => $addressBook->typeHtml,
+                'value' => fn(AddressBook $addressBook) => $addressBook->type_html,
+
             ],
             [
                 'name' => 'phone',
                 'label' => 'Phone',
                 'type' => 'custom_html',
-                'value' => function ($addressBook) {
+                'value' => function (AddressBook $addressBook) {
                     return "<a class='text-dark' href='tel:{$addressBook->phone}'>{$addressBook->phone} " . (($addressBook->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>";
                 }
             ],
@@ -116,7 +114,7 @@ class AddressBookCrudController extends CrudController
                 'name' => 'address',
                 'label' => 'Address',
                 'type' => 'custom_html',
-                'value' => function ($addressBook) {
+                'value' => function (AddressBook $addressBook) {
                     return "<span>{$addressBook->street_address}<br>
 {$addressBook->city->name}, {$addressBook->state->name} - {$addressBook->zip_code}<br>
 {$addressBook->country->name}</span>";
@@ -126,7 +124,7 @@ class AddressBookCrudController extends CrudController
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => fn($addressBook) => $addressBook->statusHtml,
+                'value' => fn(AddressBook $addressBook) => $addressBook->status_html,
             ],
 
         ]);

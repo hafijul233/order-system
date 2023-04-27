@@ -98,7 +98,7 @@ class StatusCrudController extends CrudController
         CRUD::column('code');
         CRUD::column('is_default')->type('boolean')->label('Default?');
         CRUD::column('enabled')->type('boolean');
-        CRUD::column('updated_at');
+        CRUD::column('created_at');
     }
 
     /**
@@ -111,30 +111,49 @@ class StatusCrudController extends CrudController
     {
         CRUD::setValidation(StatusRequest::class);
 
-        CRUD::addField([
-            'name' => 'model',
-            'label' => 'Model',
-            'type' => 'select2_from_array',
-            'options' => Status::MODELS
+        CRUD::addFields([
+            [
+                'name' => 'model',
+                'label' => 'Model',
+                'type' => 'select2_from_array',
+                'options' => Status::MODELS
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Name',
+                'type' => 'text'
+            ],
+            [
+                'name' => 'code',
+                'label' => 'Code',
+                'type' => 'text'
+            ],
+            [
+                'label' => "Icon",
+                'name' => 'icon',
+                'type' => 'icon_picker',
+                'iconset' => 'fontawesome'
+            ], [
+                'label' => "Color",
+                'name' => 'color',
+                'type' => 'color_picker'
+            ],
+            [
+                'name' => 'description',
+                'label' => 'Description',
+                'type' => 'textarea'
+            ],
+            [
+                'name' => 'enabled',
+                'label' => 'enabled?',
+                'type' => 'boolean'
+            ],
+            [
+                'name' => 'is_default',
+                'label' => 'is Default?',
+                'type' => 'boolean'
+            ],
         ]);
-        CRUD::field('name');
-        CRUD::field('code');
-        CRUD::addField([
-            'label' => "Icon",
-            'name' => 'icon',
-            'type' => 'icon_picker',
-            'iconset' => 'fontawesome'
-        ]);
-        CRUD::addField([
-            'label' => "Color",
-            'name' => 'color',
-            'type' => 'color_picker'
-        ]);
-
-        CRUD::field('icon')->type('icon_picker');
-        CRUD::field('description');
-        CRUD::field('enabled')->type('boolean');
-        CRUD::field('is_default')->type('boolean');
     }
 
     /**

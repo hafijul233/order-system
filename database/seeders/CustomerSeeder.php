@@ -13,9 +13,9 @@ class CustomerSeeder extends Seeder
      */
     public function run(): void
     {
-        foreach (array_chunk($this->data(), 300) as $block) {
+        foreach ($this->data() as $block) {
             set_time_limit(2100);
-            Customer::insert($block);
+            Customer::create($block);
         }
     }
 

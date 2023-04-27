@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
             StatusSeeder::class,
             RoleSeeder::class,
             SettingSeeder::class,
-            CategorySeeder::class,
             CountrySeeder::class,
+            CategorySeeder::class,
         ]);
 
         \App\Models\User::factory(15)->createQuietly();
@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
         $this->call(CustomerSeeder::class);
-        \App\Models\Company::factory(15)->createQuietly();
+        $this->call(CompanySeeder::class);
         \App\Models\Newsletter::factory(15)->createQuietly();
         \App\Models\Tag::factory(15)->createQuietly();
 

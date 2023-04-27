@@ -16,15 +16,16 @@ trait NewsletterSyncTrait
             case 'created' :
             {
                 if ($this->newsletter_subscribed) {
-                    if ($newsletter = Newsletter::email($this->email)->first()) {
-                        ++$newsletter->attempted;
-                        $newsletter->save();
-                    }
-                    else {
-                        $this->newsletter()->save(new Newsletter([
-                            'email' => $this->email,
-                            'attempted' => 1
-                        ]));
+                    if (strlen($this->email) > 1) {
+                        if ($newsletter = Newsletter::email($this->email)->first()) {
+                            ++$newsletter->attempted;
+                            $newsletter->save();
+                        } else {
+                            $this->newsletter()->save(new Newsletter([
+                                'email' => $this->email,
+                                'attempted' => 1
+                            ]));
+                        }
                     }
                 }
                 break;
@@ -33,18 +34,18 @@ trait NewsletterSyncTrait
             case 'updated' :
             {
                 if ($this->newsletter_subscribed) {
-                    if ($newsletter = Newsletter::email($this->email)->first()) {
-                        ++$newsletter->attempted;
-                        $newsletter->save();
+                    if (strlen($this->email) > 1) {
+                        if ($newsletter = Newsletter::email($this->email)->first()) {
+                            ++$newsletter->attempted;
+                            $newsletter->save();
+                        } else {
+                            $this->newsletter()->save(new Newsletter([
+                                'email' => $this->email,
+                                'attempted' => 1
+                            ]));
+                        }
+
                     }
-                    else {
-                        $this->newsletter()->save(new Newsletter([
-                            'email' => $this->email,
-                            'attempted' => 1
-                        ]));
-                    }
-                }
-                else {
                     //TODO unsubscribe customer from newsletter list
                 }
 

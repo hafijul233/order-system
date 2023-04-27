@@ -52,6 +52,12 @@
             </a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="{{ backpack_url('category') }}">
+                <i class="nav-icon la la-tree"></i>
+                Categories
+            </a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="{{ backpack_url('product') }}">
                 <i class="nav-icon la la-box"></i>
                 {{ ucfirst(\Str::plural(setting('item_label', 'product'))) }}
@@ -66,12 +72,6 @@
         Inventory
     </a>
     <ul class="nav-dropdown-items">
-        <li class="nav-item">
-            <a class="nav-link" href="{{ backpack_url('category') }}">
-                <i class="nav-icon la la-tree"></i>
-                Categories
-            </a>
-        </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ backpack_url('attribute') }}">
                 <i class="nav-icon la la-list"></i>

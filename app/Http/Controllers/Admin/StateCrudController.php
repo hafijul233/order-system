@@ -93,7 +93,7 @@ class StateCrudController extends CrudController
                 'label' => 'Name',
             ],
             [
-                'name' => 'country',
+                'name' => 'country_id',
                 'label' => 'Country',
                 'type' => 'custom_html',
                 'value' => function ($state) {

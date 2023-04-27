@@ -32,9 +32,10 @@ class DatabaseSeeder extends Seeder
         ]);
         $this->call(CustomerSeeder::class);
         $this->call(CompanySeeder::class);
+        $this->call(AddressBookSeeder::class);
         \App\Models\Newsletter::factory(15)->createQuietly();
-        \App\Models\Tag::factory(15)->createQuietly();
 
+        \App\Models\Tag::factory(15)->createQuietly();
 
         $this->call(StateSeeder::class, false, ["19"]);
         $this->call(CitySeeder::class, false, ['19']);

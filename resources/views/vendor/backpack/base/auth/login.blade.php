@@ -6,7 +6,7 @@
             <h3 class="text-center mb-4">{{ config('app.name', 'Order System') }}</h3>
             <div class="card">
                 <div class="card-body">
-                    <p class="lead text-center">Login in to start your session</p>
+                    <p class="lead text-center">{{ trans('backpack::base.login') }}</p>
                     <div class="row">
                         <form class="col-md-12 p-t-10" role="form" method="POST"
                               action="{{ route('backpack.auth.login') }}">
@@ -59,7 +59,7 @@
                                         <div class="text-right">
                                             <a
                                                 href="{{ route('backpack.auth.password.reset') }}">
-                                                {{ trans('backpack::base.forgot_your_password') }}
+                                                Forgot Password?
                                             </a>
                                         </div>
                                     </div>

@@ -97,7 +97,7 @@ class CityCrudController extends CrudController
                 'label' => 'Name',
             ],
             [
-                'name' => 'country',
+                'name' => 'country_id',
                 'label' => 'Country',
                 'type' => 'custom_html',
                 'value' => function (City $city) {
@@ -105,7 +105,7 @@ class CityCrudController extends CrudController
                 }
             ],
             [
-                'name' => 'state',
+                'name' => 'state_id',
                 'label' => 'State',
             ],
             [

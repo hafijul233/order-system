@@ -46,31 +46,42 @@ class StockCrudController extends CrudController
         );
 
         CRUD::addColumns([
-           [
-               'name' => 'batch',
-               'label' => 'Batch No.',
-               'type' => 'text',
-           ],
             [
-               'name' => 'manufacture_date',
-               'label' => 'Manufactured Date',
-               'type' => 'date',
-           ],
+                'name' => 'id',
+                'label' => '#'
+            ],
             [
-               'name' => 'expiry_date',
-               'label' => 'Expired Date',
-               'type' => 'date',
-           ],
+                'name' => 'product_id',
+                'label' => ucfirst(setting('item_label', 'product')),
+                'type' => 'select2',
+                'entity' => 'product',
+                'attribute' => 'name',
+            ],
             [
-               'name' => 'quantity',
-               'label' => 'Quantity',
-               'type' => 'number',
-           ],
+                'name' => 'batch',
+                'label' => 'Batch No.',
+                'type' => 'text',
+            ],
             [
-               'name' => 'unit_id',
-               'label' => 'Unit',
-               'type' => 'number',
-           ],
+                'name' => 'manufacture_date',
+                'label' => 'Manufactured Date',
+                'type' => 'date',
+            ],
+            [
+                'name' => 'expiry_date',
+                'label' => 'Expired Date',
+                'type' => 'date',
+            ],
+            [
+                'name' => 'quantity',
+                'label' => 'Quantity',
+                'type' => 'number',
+            ],
+            [
+                'name' => 'unit_id',
+                'label' => 'Unit',
+                'type' => 'number',
+            ],
         ]);
     }
 

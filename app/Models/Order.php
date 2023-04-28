@@ -6,6 +6,8 @@ use App\Traits\HasStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use OwenIt\Auditing\Contracts\Auditable;
 
 /**
@@ -32,6 +34,13 @@ class Order extends Model implements Auditable
         'pickup' => 'TakeOut',
         'delivery' => 'Home Delivery',
     ];
+    public const PRIORITIES = [
+        'lowest' => 'Lowest',
+        'low' => 'Low',
+        'medium' => 'Medium',
+        'high' => 'High',
+        'highest' => 'highest'
+    ];
 
     protected $table = 'orders';
     // protected $primaryKey = 'id';
@@ -52,7 +61,35 @@ class Order extends Model implements Auditable
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    public function orderable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 
+    public function customers(): MorphToMany
+    {
+        return $this->morphedByMany(Customer::class, 'orderable');
+    }
+
+    public function companies()
+    {
+        return $this->morphedByMany(Company::class, 'orderable');
+    }
+
+    public function addressBook()
+    {
+        return $this->belongsTo(AddressBook::class);
+    }
+
+    public function assignee()
+    {
+        return $this->belongsTo(User::class, 'assignee_id');
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

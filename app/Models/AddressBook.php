@@ -14,6 +14,8 @@ use OwenIt\Auditing\Contracts\Auditable;
 /**
  * @property-read string $type_html
  * @property-read string $addressable_html
+ * @property-read string $full_address_html
+ * @property-read string $full_address_dropdown
  */
 class AddressBook extends Model implements Auditable
 {
@@ -60,10 +62,12 @@ class AddressBook extends Model implements Auditable
     {
         return $this->morphTo();
     }
+
     public function customers(): MorphToMany
     {
         return $this->morphedByMany(Customer::class, 'addressable');
     }
+
     public function companies()
     {
         return $this->morphedByMany(Company::class, 'addressable');
@@ -78,6 +82,7 @@ class AddressBook extends Model implements Auditable
     {
         return $this->belongsTo(State::class);
     }
+
     public function city()
     {
         return $this->belongsTo(City::class);
@@ -104,6 +109,7 @@ class AddressBook extends Model implements Auditable
             default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
         };
     }
+
     public function getAddressableHtmlAttribute(): string
     {
         if ($this->addressable instanceof Customer) {
@@ -115,6 +121,15 @@ class AddressBook extends Model implements Auditable
         }
     }
 
+    public function getFullAddressDropdownAttribute()
+    {
+        return "({$this->name}) {$this->street_address}, {$this->city->name}, {$this->state->name}-{$this->zip_code}";
+    }
+
+    public function getFullAddressHtmlAttribute()
+    {
+        return "<span>{$this->street_address}<br/>{$this->city->name}, {$this->state->name} - {$this->zip_code}<br/>{$this->country->name}</span>";
+    }
     /*
     |--------------------------------------------------------------------------
     | MUTATORS

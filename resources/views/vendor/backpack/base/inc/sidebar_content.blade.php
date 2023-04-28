@@ -297,3 +297,5 @@
     </li>
 @endif
 
+
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('order-item') }}"><i class="nav-icon la la-question"></i> Order items</a></li>

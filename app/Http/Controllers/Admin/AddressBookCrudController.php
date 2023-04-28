@@ -114,11 +114,7 @@ class AddressBookCrudController extends CrudController
                 'name' => 'address',
                 'label' => 'Address',
                 'type' => 'custom_html',
-                'value' => function (AddressBook $addressBook) {
-                    return "<span>{$addressBook->street_address}<br>
-{$addressBook->city->name}, {$addressBook->state->name} - {$addressBook->zip_code}<br>
-{$addressBook->country->name}</span>";
-                }
+                'value' => fn (AddressBook $addressBook) => $addressBook->full_address_html
             ],
             [
                 'name' => 'status',

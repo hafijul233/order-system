@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\OrderRequest;
+use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Order;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Class OrderCrudController
@@ -21,6 +23,7 @@ class OrderCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\InlineCreateOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -148,8 +151,168 @@ class OrderCrudController extends CrudController
     {
         CRUD::setValidation(OrderRequest::class);
 
-        CRUD::addFields([
+        $scripts = Config::get('backpack.base.scripts');
 
+        $scripts[] = 'packages/backpack/base/js/order.js';
+
+        Config::set('backpack.base.scripts', $scripts);
+
+        CRUD::addFields([
+            [
+                'name' => 'platform',
+                'label' => 'platform',
+                'type' => 'hidden',
+                'options' => Order::PLATFORMS,
+                'tab' => 'Basic',
+                'default' => 'offline'
+            ],
+            [
+                'name' => 'name',
+                'label' => 'name',
+                'type' => 'text',
+                'tab' => 'Basic'
+            ],
+            [
+                'name' => 'email',
+                'label' => 'email',
+                'type' => 'text',
+                'tab' => 'Basic'
+            ],
+            [
+                'name' => 'phone',
+                'label' => 'phone',
+                'type' => 'text',
+                'tab' => 'Basic'
+            ],
+            [
+                'name' => 'status_id',
+                'label' => 'status',
+                'type' => 'select2_from_array',
+                'options' => Order::statusDropdown(),
+                'default' => Order::defaultStatusId(),
+                'tab' => 'Basic',
+            ],
+            [
+                'name' => 'orderable',
+                'label' => 'Ordered From',
+                'type' => 'relationship',
+                'allows_null' => false,
+                'morphOptions' => [
+                    [Customer::class,],
+                    [Company::class,]
+                ],
+                'tab' => 'Order',
+            ],
+            [
+                'name' => 'address_book_id',
+                'label' => 'Address',
+                'type' => 'select2',
+                'entity' => 'addressBook',
+                'attribute' => 'full_address_dropdown',
+                'tab' => 'Delivery'
+            ],
+            [
+                'name' => 'subtotal',
+                'label' => 'subtotal',
+                'type' => 'number',
+                'tab' => 'Order',
+            ],
+            [
+                'name' => 'tax',
+                'label' => 'tax',
+                'type' => 'number',
+                'tab' => 'Order',
+            ],
+            [
+                'name' => 'discount',
+                'label' => 'discount',
+                'type' => 'number',
+                'tab' => 'Order',
+            ],
+/*            [
+                'name' => 'total_item',
+                'label' => 'total_item',
+                'type' => 'number',
+                'tab' => 'Order',
+            ],*/
+            [
+                'name' => 'delivery_charge',
+                'label' => 'delivery_charge',
+                'type' => 'number',
+                'tab' => 'Order',
+            ],
+            [
+                'name' => 'total_amount',
+                'label' => 'total_amount',
+                'type' => 'number',
+                'tab' => 'Order'
+            ],
+            [
+                'name' => 'assignee_id',
+                'label' => 'assignee_id',
+                'type' => 'select2',
+                'entity' => 'assignee',
+                'attribute' => 'name',
+                'default' => backpack_user()->id,
+                'tab' => 'Order'
+            ],
+            [
+                'name' => 'delivery',
+                'label' => 'delivery',
+                'type' => 'select2_from_array',
+                'options' => Order::DELIVERIES,
+                'tab' => 'Delivery',
+            ],
+            [
+                'name' => 'delivery_comment',
+                'label' => 'delivery_comment',
+                'type' => 'textarea',
+                'tab' => 'Delivery',
+            ],
+            [
+                'name' => 'ip_address',
+                'label' => 'ip_address',
+                'type' => 'hidden',
+                'default' => request()->ip(),
+            ],
+            [
+                'name' => 'user_agent',
+                'label' => 'user_agent',
+                'type' => 'hidden',
+                'default' => request()->userAgent(),
+            ],
+            [
+                'name' => 'priority',
+                'label' => 'priority',
+                'type' => 'select2_from_array',
+                'options' => Order::PRIORITIES,
+                'default' => 'medium',
+                'tab' => 'Delivery'
+            ],
+            [
+                'name' => 'block_reason',
+                'label' => 'block_reason',
+                'type' => 'textarea',
+                'tab' => 'Delivery',
+            ],
+            [
+                'name' => 'note',
+                'label' => 'note',
+                'type' => 'textarea',
+                'tab' => 'Delivery',
+            ],
+            [
+                'name' => 'ordered_at',
+                'label' => 'ordered_at',
+                'type' => 'datetime',
+                'tab' => 'Order',
+            ],
+            [
+                'name' => 'delivered_at',
+                'label' => 'delivered_at',
+                'type' => 'datetime',
+                'tab' => 'Delivery',
+            ],
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\EmailPhoneVerifyTrait;
 use App\Traits\HasStatus;
 use App\Traits\NewsletterSyncTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
@@ -20,6 +21,7 @@ class Company extends Model implements Auditable
     use CrudTrait;
     use HasFactory;
     use HasStatus;
+    use EmailPhoneVerifyTrait;
     use NewsletterSyncTrait;
 
     /*
@@ -46,7 +48,12 @@ class Company extends Model implements Auditable
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-
+    protected static function booted(): void
+    {
+        static::saving(function (self $model) {
+            $model->syncVerifiedDate();
+        });
+    }
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\EmailPhoneVerifyTrait;
 use App\Traits\HasStatus;
 use App\Traits\NewsletterSyncTrait;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
@@ -23,6 +24,7 @@ class Customer extends Model implements Auditable
     use HasFactory;
     use Notifiable;
     use HasStatus;
+    use EmailPhoneVerifyTrait;
     use NewsletterSyncTrait;
 
     /*
@@ -53,14 +55,11 @@ class Customer extends Model implements Auditable
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-    /**
-     * The "booted" method of the model.
-     */
     protected static function booted(): void
     {
-/*        static::creating(function (self $customer) {
-            dd($customer);
-        });*/
+        static::saving(function (self $model) {
+            $model->syncVerifiedDate();
+        });
     }
     /*
     |--------------------------------------------------------------------------

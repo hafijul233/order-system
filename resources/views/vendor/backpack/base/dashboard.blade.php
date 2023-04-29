@@ -12,5 +12,16 @@
 
 @endphp
 
+@section('header')
+    <section class="container-fluid d-flex justify-content-between">
+        <h2>
+            <span class="text-capitalize">Dashboard</span>
+            <small>Dashboard</small>
+        </h2>
+        @includeWhen(isset($breadcrumbs), backpack_view('inc.breadcrumbs'))
+    </section>
+@endsection
+
 @section('content')
+
 @endsection

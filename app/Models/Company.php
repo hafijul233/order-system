@@ -59,7 +59,7 @@ class Company extends Model implements Auditable
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    public function address(): MorphMany
+    public function addresses(): MorphMany
     {
         return $this->morphMany(AddressBook::class, 'addressable');
     }

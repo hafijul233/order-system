@@ -43,9 +43,9 @@ class CustomerCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::addFilter(['name' => 'type', 'type' => 'dropdown', 'label' => 'Type'],
-            Customer::TYPES,
-            fn($value) => $this->crud->addClause('where', 'type', '=', $value)
+        CRUD::addFilter(['name' => 'platform', 'type' => 'dropdown', 'label' => 'Platform'],
+            Customer::PLATFORMS,
+            fn($value) => $this->crud->addClause('where', 'platform', '=', $value)
         );
 
         CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
@@ -86,12 +86,6 @@ class CustomerCrudController extends CrudController
                 'label' => 'Name',
             ],
             [
-                'name' => 'type',
-                'label' => 'Type',
-                'type' => 'custom_html',
-                'value' => fn(Customer $customer) => $customer->type_html
-            ],
-            [
                 'name' => 'email',
                 'label' => 'Email',
                 'type' => 'custom_html',
@@ -108,6 +102,12 @@ class CustomerCrudController extends CrudController
                 'label' => 'Status',
                 'type' => 'custom_html',
                 'value' => fn(Customer $customer) => $customer->status_html
+            ],
+            [
+                'name' => 'platform',
+                'label' => 'Platform',
+                'type' => 'custom_html',
+                'value' => fn(Customer $customer) => $customer->platform_html
             ],
             [
                 'name' => 'created_at',
@@ -152,10 +152,11 @@ class CustomerCrudController extends CrudController
                 ],
             ],
             [
-                'name' => 'type',
-                'label' => 'Type',
+                'name' => 'platform',
+                'label' => 'Platform',
                 'type' => 'select2_from_array',
-                'options' => Customer::TYPES,
+                'options' => Customer::PLATFORMS,
+                'default' => 'office',
                 'allows_null' => false,
                 'tab' => 'Basic',
                 'wrapper' => [

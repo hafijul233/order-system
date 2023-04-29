@@ -167,41 +167,63 @@ class OrderCrudController extends CrudController
                 'default' => 'offline'
             ],
             [
-                'name' => 'name',
-                'label' => 'name',
-                'type' => 'text',
-                'tab' => 'Basic'
-            ],
-            [
-                'name' => 'email',
-                'label' => 'email',
-                'type' => 'text',
-                'tab' => 'Basic'
-            ],
-            [
-                'name' => 'phone',
-                'label' => 'phone',
-                'type' => 'text',
-                'tab' => 'Basic'
-            ],
-            [
-                'name' => 'status_id',
-                'label' => 'status',
-                'type' => 'select2_from_array',
-                'options' => Order::statusDropdown(),
-                'default' => Order::defaultStatusId(),
-                'tab' => 'Basic',
-            ],
-            [
                 'name' => 'orderable',
                 'label' => 'Ordered From',
                 'type' => 'relationship',
                 'allows_null' => false,
+                'ajax' => true,
                 'morphOptions' => [
                     [Customer::class,],
                     [Company::class,]
                 ],
-                'tab' => 'Order',
+                'tab' => 'Basic',
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Name',
+                'type' => 'text',
+                'tab' => 'Basic',
+                'attributes' => [
+                    'placeholder' => 'Select Customer/Company First',
+                    'readonly' => 'readonly',
+                    'id' => 'orderable_name'
+                ]
+            ],
+            [
+                'name' => 'email',
+                'label' => 'Email',
+                'type' => 'text',
+                'tab' => 'Basic',
+                'attributes' => [
+                    'placeholder' => 'Select Customer/Company First',
+                    'readonly' => 'readonly',
+                    'id' => 'orderable_email'
+                ],
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            [
+                'name' => 'phone',
+                'label' => 'Phone',
+                'type' => 'text',
+                'tab' => 'Basic',
+                'attributes' => [
+                    'placeholder' => 'Select Customer/Company First',
+                    'readonly' => 'readonly',
+                    'id' => 'orderable_phone'
+                ],
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            [
+                'name' => 'status_id',
+                'label' => 'Status',
+                'type' => 'select2_from_array',
+                'options' => Order::statusDropdown(),
+                'default' => Order::defaultStatusId(),
+                'tab' => 'Basic',
             ],
             [
                 'name' => 'address_book_id',
@@ -209,7 +231,10 @@ class OrderCrudController extends CrudController
                 'type' => 'select2',
                 'entity' => 'addressBook',
                 'attribute' => 'full_address_dropdown',
-                'tab' => 'Delivery'
+                'ajax' => true,
+                'inline_create' => true,
+                'tab' => 'Delivery',
+
             ],
             [
                 'name' => 'subtotal',
@@ -229,12 +254,12 @@ class OrderCrudController extends CrudController
                 'type' => 'number',
                 'tab' => 'Order',
             ],
-/*            [
-                'name' => 'total_item',
-                'label' => 'total_item',
-                'type' => 'number',
-                'tab' => 'Order',
-            ],*/
+            /*            [
+                            'name' => 'total_item',
+                            'label' => 'total_item',
+                            'type' => 'number',
+                            'tab' => 'Order',
+                        ],*/
             [
                 'name' => 'delivery_charge',
                 'label' => 'delivery_charge',

@@ -12,12 +12,14 @@ use Backpack\CRUD\app\Exceptions\BackpackProRequiredException;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+
 use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
+use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 
@@ -28,7 +30,7 @@ use Illuminate\Http\JsonResponse;
  */
 class AddressBookCrudController extends CrudController
 {
-    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation, ShowOperation, FetchOperation;
+    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation, ShowOperation, FetchOperation, InlineCreateOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -47,7 +49,6 @@ class AddressBookCrudController extends CrudController
      *
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
-     * @throws BackpackProRequiredException
      */
     protected function setupListOperation()
     {
@@ -76,7 +77,7 @@ class AddressBookCrudController extends CrudController
             false,
             function ($value) {
                 $dates = json_decode($value);
-                $this->crud->addClause('whereBetween', 'created_at',  [$dates->from . ' 00:00:00', $dates->to . ' 23:59:59']);
+                $this->crud->addClause('whereBetween', 'created_at', [$dates->from . ' 00:00:00', $dates->to . ' 23:59:59']);
             });
 
         CRUD::addColumns([
@@ -114,7 +115,7 @@ class AddressBookCrudController extends CrudController
                 'name' => 'address',
                 'label' => 'Address',
                 'type' => 'custom_html',
-                'value' => fn (AddressBook $addressBook) => $addressBook->full_address_html
+                'value' => fn(AddressBook $addressBook) => $addressBook->full_address_html
             ],
             [
                 'name' => 'status',
@@ -149,17 +150,24 @@ class AddressBookCrudController extends CrudController
                 ]
             ],
             [
-                'name' => 'name',
-                'label' => 'Title',
-                'hint' => 'N.B: Required for company entries',
-                'tab' => 'Basic',
-            ],
-            ['name' => 'type',
+                'name' => 'type',
                 'label' => 'Type',
                 'type' => 'select2_from_array',
                 'options' => AddressBook::TYPES,
                 'allows_null' => false,
                 'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Title',
+                'hint' => 'N.B: Required for company entries',
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6 mb-md-0 mb-3'
+                ],
             ],
             [
                 'name' => 'phone',
@@ -178,10 +186,11 @@ class AddressBookCrudController extends CrudController
                 'type' => 'select2',
                 'entity' => 'country',
                 'allows_null' => false,
-                'options' => (function ($query) {
-                    return $query->enabled()->get();
-                }),
-                'tab' => 'Basic'
+                'options' => fn($query) => $query->enabled()->get(),
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-4'
+                ],
             ],
             [
                 'name' => 'state',
@@ -198,7 +207,10 @@ class AddressBookCrudController extends CrudController
                 'method' => 'POST',
                 'minimum_input_length' => 0,
                 'include_all_form_fields' => true,
-                'tab' => 'Basic'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-4'
+                ],
             ],
             [
                 'name' => 'city',
@@ -215,20 +227,19 @@ class AddressBookCrudController extends CrudController
                 'method' => 'POST',
                 'minimum_input_length' => 0,
                 'include_all_form_fields' => true,
-                'tab' => 'Basic'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-4'
+                ],
             ],
             [
                 'name' => 'zip_code',
                 'label' => 'Zip Code',
                 'type' => 'number',
                 'tab' => 'Basic',
-            ],
-            //Recognition Tab
-            [
-                'name' => 'landmark',
-                'label' => 'Land Mark',
-                'type' => 'text',
-                'tab' => 'Recognition',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'status_id',
@@ -237,7 +248,17 @@ class AddressBookCrudController extends CrudController
                 'options' => AddressBook::statusDropdown(),
                 'default' => AddressBook::defaultStatusId(),
                 'allows_null' => false,
-                'tab' => 'Recognition'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            //Recognition Tab
+            [
+                'name' => 'landmark',
+                'label' => 'Land Mark',
+                'type' => 'text',
+                'tab' => 'Recognition',
             ],
             [
                 'name' => 'block_reason',

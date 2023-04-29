@@ -138,12 +138,18 @@ class CustomerCrudController extends CrudController
                 'name' => 'email',
                 'label' => 'Email',
                 'type' => 'email',
-                'tab' => 'Basic'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'phone',
                 'label' => 'Phone',
-                'tab' => 'Basic'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'type',
@@ -151,27 +157,51 @@ class CustomerCrudController extends CrudController
                 'type' => 'select2_from_array',
                 'options' => Customer::TYPES,
                 'allows_null' => false,
-                'tab' => 'Basic'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            [
+                'name' => 'status_id',
+                'label' => 'Status',
+                'type' => 'select2_from_array',
+                'options' => Customer::statusDropdown(),
+                'default' => Customer::defaultStatusId(),
+                'allows_null' => false,
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'allowed_login',
                 'label' => 'Customer Allowed to Login on system?',
                 'type' => 'boolean',
                 'fake' => true,
-                'tab' => 'Basic'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6 mt-md-3 mt-sm-0'
+                ],
             ],
             //Authentication Tab
             [
                 'name' => 'password',
                 'label' => 'Password',
                 'type' => 'password',
-                'tab' => 'Authentication'
+                'tab' => 'Authentication',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'password_confirmation',
                 'label' => 'Confirm Password',
                 'type' => 'password',
-                'tab' => 'Authentication'
+                'tab' => 'Authentication',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'email_verified_at',
@@ -194,15 +224,6 @@ class CustomerCrudController extends CrudController
                 'allows_null' => true,
             ],
             //Profile
-            [
-                'name' => 'status_id',
-                'label' => 'Status',
-                'type' => 'select_from_array',
-                'options' => Customer::statusDropdown(),
-                'default' => Customer::defaultStatusId(),
-                'allows_null' => false,
-                'tab' => 'Profile'
-            ],
             [
                 'name' => 'block_reason',
                 'label' => 'Suspend/Banned Reason',

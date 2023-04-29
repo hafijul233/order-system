@@ -136,22 +136,34 @@ class CompanyCrudController extends CrudController
                     'add_button_label' => 'Add Representative'
                 ],
                 'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'designation',
                 'label' => 'Designation',
                 'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'email',
                 'label' => 'Business Email',
                 'type' => 'email',
                 'tab' => 'Basic',
+                                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'phone',
                 'label' => 'Business Phone',
                 'tab' => 'Basic',
+                                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'status_id',
@@ -160,7 +172,7 @@ class CompanyCrudController extends CrudController
                 'options' => Company::statusDropdown(),
                 'default' => Company::defaultStatusId(),
                 'allows_null' => false,
-                'tab' => 'Detail'
+                'tab' => 'Basic'
             ],
             [
                 'name' => 'block_reason',

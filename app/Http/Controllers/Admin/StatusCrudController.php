@@ -132,11 +132,19 @@ class StatusCrudController extends CrudController
                 'label' => "Icon",
                 'name' => 'icon',
                 'type' => 'icon_picker',
-                'iconset' => 'fontawesome'
-            ], [
+                'iconset' => 'lineawesome',
+                //'iconset' => 'fontawesome',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            [
                 'label' => "Color",
                 'name' => 'color',
-                'type' => 'color_picker'
+                'type' => 'color_picker',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'description',

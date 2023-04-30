@@ -39,6 +39,7 @@ class Status extends Model
         Company::class => 'Company',
         Category::class => 'Category',
         Order::class => 'Order',
+        OrderItem::class => 'Order Item',
         Payment::class => 'Payment',
         Product::class => 'Product',
         Stock::class => 'Stock',

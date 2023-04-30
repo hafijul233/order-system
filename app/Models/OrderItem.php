@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,7 @@ class OrderItem extends Model
 {
     use CrudTrait;
     use HasFactory;
+    use HasStatus;
 
     /*
     |--------------------------------------------------------------------------

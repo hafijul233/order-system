@@ -93,8 +93,7 @@ class AddressBookCrudController extends CrudController
             ],
             [
                 'name' => 'name',
-                'label' => 'Title',
-                'hint' => 'Head Office, Branch Name, Unique Reference'
+                'label' => 'Title'
             ],
             [
                 'name' => 'type',
@@ -112,7 +111,7 @@ class AddressBookCrudController extends CrudController
                 }
             ],
             [
-                'name' => 'address',
+                'name' => 'street_address',
                 'label' => 'Address',
                 'type' => 'custom_html',
                 'value' => fn(AddressBook $addressBook) => $addressBook->full_address_html

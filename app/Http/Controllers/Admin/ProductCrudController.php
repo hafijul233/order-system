@@ -5,8 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
+use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
 
 /**
  * Class ProductCrudController
@@ -15,11 +21,12 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  */
 class ProductCrudController extends CrudController
 {
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use ListOperation;
+    use CreateOperation;
+    use UpdateOperation;
+    use DeleteOperation;
+    use ShowOperation;
+    use FetchOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -64,7 +71,7 @@ class ProductCrudController extends CrudController
                 'name' => 'platform',
                 'label' => 'Platform',
                 'type' => 'custom_html',
-                'value' => fn (Product $product) => $product->platform_html,
+                'value' => fn(Product $product) => $product->platform_html,
             ],
             [
                 'name' => 'price',
@@ -74,7 +81,7 @@ class ProductCrudController extends CrudController
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => fn (Product $product) => $product->status_html,
+                'value' => fn(Product $product) => $product->status_html,
             ],
             [
                 'name' => 'updated_at',
@@ -213,5 +220,11 @@ class ProductCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    protected function fetchProduct()
+    {
+        return $this->fetch(Product::class);
+
     }
 }

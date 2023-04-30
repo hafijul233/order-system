@@ -67,11 +67,11 @@ class OrderItemCrudController extends CrudController
             // 'name' => 'required|min:2',
         ]);
 
-        CRUD::field('name');
+        CRUD::field('name');//
         CRUD::field('order_id');
-        CRUD::field('price');
-        CRUD::field('product_id');
-        CRUD::field('quantity');
+        CRUD::field('price');//
+        CRUD::field('product_id');//
+        CRUD::field('quantity');//
         CRUD::field('status_id');
         CRUD::field('subtotal');
 

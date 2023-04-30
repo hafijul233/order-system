@@ -6,6 +6,7 @@ use App\Http\Requests\OrderRequest;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
@@ -35,7 +36,7 @@ class OrderCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Order::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/order');
-        CRUD::setEntityNameStrings('order', 'orders');
+        CRUD::setEntityNameStrings(setting('order_label', 'order'), \Str::plural(setting('order_label', 'order')));
     }
 
     /**
@@ -294,6 +295,81 @@ class OrderCrudController extends CrudController
                 'default' => Order::defaultStatusId(),
                 'tab' => 'Basic',
             ],
+            //ORDER ITEM
+            [
+                'name' => 'orderItems',
+                'label' => 'Items',
+                'type' => 'relationship',
+                'tab' => 'Order',
+                'subfields' => [
+                    [
+                        'name' => 'product_id',
+                        'label' => setting('item_label', 'Product'),
+                        'type' => 'select2_from_ajax',
+                        'ajax' => true,
+                        'data_source' => backpack_url('product/fetch/product'),
+                        'minimum_input_length' => 0,
+                        'method' => 'POST',
+                        'placeholder' => "Select a " . strtolower(setting('item_label', 'Product')),
+                        'attributes' => [
+                          'class' => 'form-control custom-select product-select'
+                        ],
+                        'wrapper' => [
+                            'class' => 'form-group col-md-5',
+                        ],
+                    ],
+                    [
+                        'name' => 'name',
+                        'type' => 'hidden',
+                        'label' => 'Name',
+                    ],
+                    [
+                        'name' => 'price',
+                        'type' => 'number',
+                        'label' => 'Price',
+                        'wrapper' => [
+                            'class' => 'form-group col-md-2',
+                        ],
+                        'attributes' => [
+                            'min' => '0',
+                            'step' => '0.01'
+                        ]
+                    ],
+                    [
+                        'name' => 'quantity',
+                        'type' => 'number',
+                        'wrapper' => [
+                            'class' => 'form-group col-md-1',
+                        ],
+                        'attributes' => [
+                            'min' => '0',
+                            'step' => 'any'
+                        ]
+                    ],
+                    [
+                        'name' => 'subtotal',
+                        'type' => 'number',
+                        'wrapper' => [
+                            'class' => 'form-group col-md-2',
+                        ],
+                        'attributes' => [
+                            'min' => '0',
+                            'step' => '0.01'
+                        ]
+                    ],
+                    [
+                        'name' => 'status_id',
+                        'label' => 'Status',
+                        'type' => 'select_from_array',
+                        'options' => OrderItem::statusDropdown(),
+                        'default' => Order::defaultStatusId(),
+                        'wrapper' => [
+                            'class' => 'form-group col-md-2',
+                        ],
+                    ],
+                ],
+            ],
+
             [
                 'name' => 'subtotal',
                 'label' => 'subtotal',

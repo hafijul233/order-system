@@ -42,7 +42,7 @@
         <li class="nav-item">
             <a class="nav-link" href="{{ backpack_url('order') }}">
                 <i class="nav-icon la la-file-invoice"></i>
-                Orders
+                {{ ucfirst(\Str::plural(setting('order_label', 'order'))) }}
             </a>
         </li>
         <li class="nav-item">

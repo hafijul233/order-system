@@ -99,7 +99,7 @@ class Customer extends Model implements Auditable
     */
     public function getPlatformHtmlAttribute(): string
     {
-        return match ($this->type) {
+        return match ($this->platform) {
             'android' => "<span class='text-success'><i class='la la-android'></i> " . self::PLATFORMS[$this->platform] . "</span>",
             'ios' => "<span class='text-success'><i class='la la-app-store-ios'></i> " . self::PLATFORMS[$this->platform] . "</span>",
             'website' => "<span class='text-success'><i class='la la-globe-asia'></i> " . self::PLATFORMS[$this->platform] . "</span>",

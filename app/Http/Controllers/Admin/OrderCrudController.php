@@ -170,11 +170,13 @@ class OrderCrudController extends CrudController
             [
                 'name' => 'customer_id',
                 'label' => 'Customer',
-                'type' => 'select2_from_ajax',
+                'type' => 'relationship',
                 'entity' => 'customer',
                 'tab' => 'Basic',
                 'allows_null' => false,
                 'data_source' => backpack_url('customer/fetch/customer'),
+                'minimum_input_length' => 0,
+                'placeholder' => "Select a customer",
                 'include_all_form_fields' => true,
                 'method' => 'POST',
                 'attributes' => [
@@ -183,16 +185,26 @@ class OrderCrudController extends CrudController
                 'wrapper' => [
                     'class' => 'form-group col-md-6 mb-md-0 mb-3'
                 ],
+                'inline_create' => [
+                    'entity' => 'customer',
+                    'force_select' => true,
+                    'modal_class' => 'modal-dialog modal-xl',
+                    'modal_route' => route('customer-inline-create'), // InlineCreate::getInlineCreateModal()
+                    'create_route' => route('customer-inline-create-save'), // InlineCreate::storeInlineCreate()
+                    'add_button_label' => 'Add Customer',
+                ],
             ],
             [
                 'name' => 'company_id',
                 'label' => 'Company',
-                'type' => 'select2_from_ajax',
+                'type' => 'relationship',
                 'entity' => 'company',
                 'tab' => 'Basic',
                 'ajax' => true,
                 'hint' => 'N.B: Select company for bulk order only',
                 'data_source' => backpack_url('company/fetch/company'),
+                'minimum_input_length' => 0,
+                'placeholder' => "Select a company",
                 'include_all_form_fields' => true,
                 'method' => 'POST',
                 'attributes' => [
@@ -201,20 +213,38 @@ class OrderCrudController extends CrudController
                 'wrapper' => [
                     'class' => 'form-group col-md-6 mb-md-0 mb-3'
                 ],
+                'inline_create' => [
+                    'entity' => 'company',
+                    'force_select' => true,
+                    'modal_class' => 'modal-dialog modal-xl',
+                    'modal_route' => route('company-inline-create'), // InlineCreate::getInlineCreateModal()
+                    'create_route' => route('company-inline-create-save'), // InlineCreate::storeInlineCreate()
+                    'add_button_label' => 'Add Company',
+                    'include_main_form_fields' => ['customer_id'],
+                ],
             ],
             [
                 'name' => 'address_book_id',
                 'label' => 'Address',
-                'type' => 'select2_from_ajax',
+                'type' => 'relationship',
                 'entity' => 'addressBook',
                 'attribute' => 'full_address_dropdown',
                 'data_source' => backpack_url('address-book/fetch/address-book'),
                 'minimum_input_length' => 0,
+                'placeholder' => "Select a address",
                 'ajax' => true,
                 'method' => 'POST',
-                'inline_create' => true,
                 'include_all_form_fields' => true,
                 'tab' => 'Basic',
+                'inline_create' => [
+                    'entity' => 'addressBook',
+                    'force_select' => true,
+                    'modal_class' => 'modal-dialog modal-xl',
+                    'modal_route' => route('address-book-inline-create'), // InlineCreate::getInlineCreateModal()
+                    'create_route' => route('address-book-inline-create-save'), // InlineCreate::storeInlineCreate()
+                    'add_button_label' => 'Add Address',
+                    'include_main_form_fields' => ['customer_id', 'company_id'],
+                ],
 
             ],
             [

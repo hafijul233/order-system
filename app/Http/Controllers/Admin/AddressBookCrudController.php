@@ -363,6 +363,148 @@ class AddressBookCrudController extends CrudController
         ]);
     }
 
+    protected function setupInlineCreateOperation()
+    {
+        //reset the previous fields
+        $this->crud->setOperationSetting('fields', []);
+
+        $request = request('main_form_fields', []);
+
+        $form_fields = [];
+
+        if (!empty($request)) {
+            array_walk($request, function ($field) use (&$form_fields) {
+                if ($field != null) {
+                    $form_fields[$field['name']] = $field['value'];
+                }
+            });
+        }
+
+        CRUD::addFields([
+            [
+                'name' => 'addressable',
+                'label' => 'Address To',
+                'type' => 'relationship',
+                'allows_null' => false,
+                'morphOptions' => [
+                    [Customer::class,],
+                    [Company::class,]
+                ],
+                'morphTypeField' => [
+                    'default' => (isset($form_fields['company_id']) && $form_fields['company_id'] != null) ? Company::class : Customer::class
+                ],
+                'morphIdField' => [
+                    'default' => (isset($form_fields['company_id']) && $form_fields['company_id'] != null) ? $form_fields['company_id'] : $form_fields['customer_id']
+                ]
+            ],
+            [
+                'name' => 'type',
+                'label' => 'Type',
+                'type' => 'select2_from_array',
+                'options' => AddressBook::TYPES,
+                'allows_null' => false,
+
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Title',
+                'hint' => 'N.B: Required for company entries',
+
+                'wrapper' => [
+                    'class' => 'form-group col-md-6 mb-md-0 mb-3'
+                ],
+            ],
+            [
+                'name' => 'phone',
+                'label' => 'Phone',
+
+            ],
+            [
+                'name' => 'street_address',
+                'label' => 'Street Address',
+                'type' => 'textarea',
+
+            ],
+            [
+                'name' => 'country',
+                'label' => 'Country',
+                'type' => 'select2',
+                'entity' => 'country',
+                'allows_null' => false,
+                'options' => fn($query) => $query->enabled()->get(),
+
+                'wrapper' => [
+                    'class' => 'form-group col-md-4'
+                ],
+            ],
+            [
+                'name' => 'state',
+                'label' => 'State',
+                'type' => 'relationship',
+                'entity' => 'state',
+                'ajax' => true,
+                'attribute' => "name",
+                'placeholder' => "Select a state",
+                // AJAX OPTIONALS:
+                'delay' => 500,
+                'data_source' => backpack_url("address-book/fetch/state"),
+                'dependencies' => ['country'],
+                'method' => 'POST',
+                'minimum_input_length' => 0,
+                'include_all_form_fields' => true,
+
+                'wrapper' => [
+                    'class' => 'form-group col-md-4'
+                ],
+            ],
+            [
+                'name' => 'city',
+                'label' => 'City',
+                'type' => 'relationship',
+                'entity' => 'city',
+                'ajax' => true,
+                'attribute' => "name",
+                'placeholder' => "Select a city",
+                // AJAX OPTIONALS:
+                'delay' => 500,
+                'data_source' => backpack_url("address-book/fetch/city"),
+                'dependencies' => ['country', 'state'],
+                'method' => 'POST',
+                'minimum_input_length' => 0,
+                'include_all_form_fields' => true,
+
+                'wrapper' => [
+                    'class' => 'form-group col-md-4'
+                ],
+            ],
+            [
+                'name' => 'zip_code',
+                'label' => 'Zip Code',
+                'type' => 'number',
+
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            [
+                'name' => 'status_id',
+                'label' => 'Status',
+                'type' => 'hidden',
+                'default' => AddressBook::defaultStatusId(),
+            ],
+            //Recognition Tab
+            [
+                'name' => 'landmark',
+                'label' => 'Land Mark',
+                'type' => 'text',
+            ]
+        ]);
+    }
+
+
     /**
      * return a list of states with county condition
      * @return array|JsonResponse
@@ -439,6 +581,9 @@ class AddressBookCrudController extends CrudController
         }
     }
 
+    /**
+     * @return array|\Illuminate\Database\Eloquent\Collection|\Illuminate\Pagination\LengthAwarePaginator|JsonResponse
+     */
     protected function fetchAddressBook()
     {
         $request = request('form', []);
@@ -449,14 +594,17 @@ class AddressBookCrudController extends CrudController
             $form_fields[$field['name']] = $field['value'];
         });
 
-        return $this->fetch([
-            'model' => AddressBook::class,
-            'paginate' => false,
-            'query' => function (AddressBook $addressBook) use ($form_fields) {
-                return (isset($form_fields['company_id']) && $form_fields['company_id'] != null)
-                    ? $addressBook->where(['addressable_id' => $form_fields['company_id'], 'addressable_type' => Company::class])
-                    : $addressBook->where(['addressable_id' => $form_fields['customer_id'], 'addressable_type' => Customer::class]);
-            }
-        ]);
+        if (isset($form_fields['customer_id'])) {
+            return $this->fetch([
+                'model' => AddressBook::class,
+                'paginate' => false,
+                'query' => function (AddressBook $addressBook) use ($form_fields) {
+                    return (isset($form_fields['company_id']) && $form_fields['company_id'] != null)
+                        ? $addressBook->where(['addressable_id' => $form_fields['company_id'], 'addressable_type' => Company::class])
+                        : $addressBook->where(['addressable_id' => $form_fields['customer_id'], 'addressable_type' => Customer::class]);
+                }
+            ]);
+        }
+        return [];
     }
 }

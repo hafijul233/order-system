@@ -14,7 +14,7 @@ use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
-use Illuminate\Database\Eloquent\Builder;
+use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -26,7 +26,7 @@ use Illuminate\Support\Collection;
  */
 class CompanyCrudController extends CrudController
 {
-    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation, ShowOperation, FetchOperation;
+    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation, ShowOperation, InlineCreateOperation, FetchOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -128,6 +128,7 @@ class CompanyCrudController extends CrudController
                 'label' => 'Representative',
                 'type' => 'relationship',
                 'ajax' => true,
+                'data_source' => backpack_url('customer/fetch/customer'),
                 'inline_create' => [
                     'entity' => 'customer',
                     'force_select' => true,
@@ -207,9 +208,72 @@ class CompanyCrudController extends CrudController
         $this->setupCreateOperation();
     }
 
+    protected function setupInlineCreateOperation()
+    {
+        //reset the previous fields
+        $this->crud->setOperationSetting('fields', []);
+
+        $request = request('main_form_fields', []);
+
+        $form_fields = [];
+
+        foreach ($request as $field) {
+            if ($field['name'] == 'customer_id') {
+                $form_fields[$field['name']] = $field['value'];
+                break;
+            }
+        }
+
+        CRUD::addFields([
+            [
+                'name' => 'name',
+                'label' => 'Name'
+            ],
+            [
+                'name' => 'representative',
+                'label' => 'Representative',
+                'type' => 'relationship',
+                'ajax' => true,
+                'data_source' => backpack_url('customer/fetch/customer'),
+                'default' => $form_fields['customer_id'] ?? null,
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            [
+                'name' => 'designation',
+                'label' => 'Designation',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            [
+                'name' => 'email',
+                'label' => 'Business Email',
+                'type' => 'email',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            [
+                'name' => 'phone',
+                'label' => 'Business Phone',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            [
+                'name' => 'status_id',
+                'label' => 'Status',
+                'type' => 'hidden',
+                'default' => Company::defaultStatusId()
+            ]
+        ]);
+    }
+
     /**
      * return a list of states with county condition
-     * @return LengthAwarePaginator|Collection|JsonResponse
+     * @return LengthAwarePaginator|Collection|JsonResponse|array
      * @link {app_url}/admin/company/fetch/representative
      *
      */
@@ -224,15 +288,14 @@ class CompanyCrudController extends CrudController
             }
         }
 
-        if ($representative) {
+        if (isset($representative)) {
 
             return $this->fetch([
                 'model' => Company::class,
                 'paginate' => false,
                 'query' => fn($query) => $query->where('representative_id', '=', $representative),
             ]);
-        } else {
-            return [];
         }
+        return [];
     }
 }

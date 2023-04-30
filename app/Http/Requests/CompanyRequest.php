@@ -36,6 +36,8 @@ class CompanyRequest extends FormRequest
             'status_id' => ['required', Rule::in(Company::statusesId())],
             'block_reason' => ['string', 'nullable', 'min:1', 'max:255', 'nullable'],
             'note' => ['string', 'nullable', 'min:1', 'max:255', 'nullable'],
+            'newsletter_subscribed' => ['nullable', 'boolean'],
+
         ];
     }
 }

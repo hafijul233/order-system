@@ -14,6 +14,7 @@ use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -153,7 +154,7 @@ class CompanyCrudController extends CrudController
                 'label' => 'Business Email',
                 'type' => 'email',
                 'tab' => 'Basic',
-                                'wrapper' => [
+                'wrapper' => [
                     'class' => 'form-group col-md-6'
                 ],
             ],
@@ -161,7 +162,7 @@ class CompanyCrudController extends CrudController
                 'name' => 'phone',
                 'label' => 'Business Phone',
                 'tab' => 'Basic',
-                                'wrapper' => [
+                'wrapper' => [
                     'class' => 'form-group col-md-6'
                 ],
             ],
@@ -212,20 +213,26 @@ class CompanyCrudController extends CrudController
      * @link {app_url}/admin/company/fetch/representative
      *
      */
-    public function fetchRepresentative()
+    protected function fetchCompany()
     {
-        return $this->fetch(Customer::class);
-        /*
-        return $this->fetch([
-        'model' => Customer::class,
-        'paginate' => false,
-        'query' => function (State $state) use (&$country) {
-            return $state->enabled()->where('country_id', '=', $country);
-        }]);
+        $request = request('form', []);
 
-    } else {
-        return collect();
-    }
-        */
+        foreach ($request as $field) {
+            if (isset($field['name']) && $field['name'] == 'customer_id') {
+                $representative = $field['value'];
+                break;
+            }
+        }
+
+        if ($representative) {
+
+            return $this->fetch([
+                'model' => Company::class,
+                'paginate' => false,
+                'query' => fn($query) => $query->where('representative_id', '=', $representative),
+            ]);
+        } else {
+            return [];
+        }
     }
 }

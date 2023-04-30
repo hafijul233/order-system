@@ -183,7 +183,7 @@ class CityCrudController extends CrudController
      *
      * @return array|JsonResponse
      */
-    public function fetchState()
+    protected function fetchState()
     {
         $country = null;
         $request = request('form', []);

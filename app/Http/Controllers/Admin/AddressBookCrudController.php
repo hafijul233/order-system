@@ -369,7 +369,7 @@ class AddressBookCrudController extends CrudController
      * @link {app_url}/admin/address-book/fetch/state
      *
      */
-    public function fetchState()
+    protected function fetchState()
     {
         $country = null;
         $request = request('form', []);
@@ -401,7 +401,7 @@ class AddressBookCrudController extends CrudController
      * @link {app_url}/admin/address-book/fetch/city
      *
      */
-    public function fetchCity()
+    protected function fetchCity()
     {
         $country = null;
         $state = null;
@@ -437,5 +437,26 @@ class AddressBookCrudController extends CrudController
         } else {
             return [];
         }
+    }
+
+    protected function fetchAddressBook()
+    {
+        $request = request('form', []);
+
+        $form_fields = [];
+
+        array_walk($request, function ($field) use (&$form_fields) {
+            $form_fields[$field['name']] = $field['value'];
+        });
+
+        return $this->fetch([
+            'model' => AddressBook::class,
+            'paginate' => false,
+            'query' => function (AddressBook $addressBook) use ($form_fields) {
+                return (isset($form_fields['company_id']) && $form_fields['company_id'] != null)
+                    ? $addressBook->where(['addressable_id' => $form_fields['company_id'], 'addressable_type' => Company::class])
+                    : $addressBook->where(['addressable_id' => $form_fields['customer_id'], 'addressable_type' => Customer::class]);
+            }
+        ]);
     }
 }

@@ -45,6 +45,7 @@ class AddressBook extends Model implements Auditable
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
+    protected $appends = ['full_address_dropdown'];
 
     /*
     |--------------------------------------------------------------------------

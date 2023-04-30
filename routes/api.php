@@ -17,6 +17,4 @@ use Illuminate\Support\Facades\Route;
     return $request->user();
 });*/
 
-Route::middleware(['admin'])->group(function () {
-    Route::get('orderer-detail', \App\Http\Controllers\Api\OrdererDetailController::class);
-});
+Route::get('customer-detail/{customer}', \App\Http\Controllers\Api\CustomerDetailController::class);

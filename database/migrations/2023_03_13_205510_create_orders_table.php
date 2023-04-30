@@ -16,7 +16,8 @@ return new class extends Migration
             $table->enum('platform', ['online','offline'])->default('online');
             $table->enum('delivery', ['dine','pickup', 'delivery'])->default('delivery');
             $table->text('delivery_comment')->nullable();
-            $table->morphs('orderable');
+            $table->foreignId('customer_id');
+            $table->foreignId('company_id')->nullable();
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();

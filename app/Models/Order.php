@@ -6,6 +6,7 @@ use App\Traits\HasStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -26,14 +27,19 @@ class Order extends Model implements Auditable
     |--------------------------------------------------------------------------
     */
     public const PLATFORMS = [
-        'offline' => 'Offline',
-        'online' => 'Online'
+        'android' => 'Android App',
+        'ios' => 'iOS App',
+        'website' => 'Web Site',
+        'office' => 'System',
+        'store' => 'Store',
     ];
+
     public const DELIVERIES = [
         'dine' => 'Dine',
         'pickup' => 'TakeOut',
         'delivery' => 'Home Delivery',
     ];
+
     public const PRIORITIES = [
         'lowest' => 'Lowest',
         'low' => 'Low',
@@ -61,19 +67,19 @@ class Order extends Model implements Auditable
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    public function orderable(): MorphTo
+/*    public function orderable(): MorphTo
     {
         return $this->morphTo();
+    }*/
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
     }
 
-    public function customers(): MorphToMany
+    public function company(): BelongsTo
     {
-        return $this->morphedByMany(Customer::class, 'orderable');
-    }
-
-    public function companies()
-    {
-        return $this->morphedByMany(Company::class, 'orderable');
+        return $this->belongsTo(Company::class);
     }
 
     public function addressBook()

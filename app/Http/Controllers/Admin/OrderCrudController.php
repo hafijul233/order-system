@@ -9,6 +9,7 @@ use App\Models\Order;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -164,19 +165,57 @@ class OrderCrudController extends CrudController
                 'type' => 'hidden',
                 'options' => Order::PLATFORMS,
                 'tab' => 'Basic',
-                'default' => 'offline'
+                'default' => 'office'
             ],
             [
-                'name' => 'orderable',
-                'label' => 'Ordered From',
-                'type' => 'relationship',
-                'allows_null' => false,
-                'ajax' => true,
-                'morphOptions' => [
-                    [Customer::class,],
-                    [Company::class,]
-                ],
+                'name' => 'customer_id',
+                'label' => 'Customer',
+                'type' => 'select2_from_ajax',
+                'entity' => 'customer',
                 'tab' => 'Basic',
+                'allows_null' => false,
+                'data_source' => backpack_url('customer/fetch/customer'),
+                'include_all_form_fields' => true,
+                'method' => 'POST',
+                'attributes' => [
+                    'id' => 'customer_id'
+                ],
+                'wrapper' => [
+                    'class' => 'form-group col-md-6 mb-md-0 mb-3'
+                ],
+            ],
+            [
+                'name' => 'company_id',
+                'label' => 'Company',
+                'type' => 'select2_from_ajax',
+                'entity' => 'company',
+                'tab' => 'Basic',
+                'ajax' => true,
+                'hint' => 'N.B: Select company for bulk order only',
+                'data_source' => backpack_url('company/fetch/company'),
+                'include_all_form_fields' => true,
+                'method' => 'POST',
+                'attributes' => [
+                    'id' => 'company_id'
+                ],
+                'wrapper' => [
+                    'class' => 'form-group col-md-6 mb-md-0 mb-3'
+                ],
+            ],
+            [
+                'name' => 'address_book_id',
+                'label' => 'Address',
+                'type' => 'select2_from_ajax',
+                'entity' => 'addressBook',
+                'attribute' => 'full_address_dropdown',
+                'data_source' => backpack_url('address-book/fetch/address-book'),
+                'minimum_input_length' => 0,
+                'ajax' => true,
+                'method' => 'POST',
+                'inline_create' => true,
+                'include_all_form_fields' => true,
+                'tab' => 'Basic',
+
             ],
             [
                 'name' => 'name',
@@ -224,17 +263,6 @@ class OrderCrudController extends CrudController
                 'options' => Order::statusDropdown(),
                 'default' => Order::defaultStatusId(),
                 'tab' => 'Basic',
-            ],
-            [
-                'name' => 'address_book_id',
-                'label' => 'Address',
-                'type' => 'select2',
-                'entity' => 'addressBook',
-                'attribute' => 'full_address_dropdown',
-                'ajax' => true,
-                'inline_create' => true,
-                'tab' => 'Delivery',
-
             ],
             [
                 'name' => 'subtotal',

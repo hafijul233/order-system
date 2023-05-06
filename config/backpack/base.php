@@ -52,7 +52,7 @@ return [
         //'packages/backpack/base/css/bundle.css', // has primary color electric purple (backpack default)
         //'packages/backpack/base/css/blue-bundle.css', // has primary color blue
         'packages/backpack/base/css/orange-bundle.css', // has primary color blue
-        'packages/backpack/base/css/custom.css', // has primary color blue
+        'css/custom.css', // has primary color blue
 
 
         // Here's what's inside the bundle:
@@ -139,6 +139,7 @@ return [
     'scripts' => [
         // Backstrap includes jQuery, Bootstrap, CoreUI, PNotify, Popper
         'packages/backpack/base/js/bundle.js',
+        'js/custom.js',
 
         // examples (everything inside the bundle, loaded from CDN)
         // 'https://code.jquery.com/jquery-3.4.1.min.js',

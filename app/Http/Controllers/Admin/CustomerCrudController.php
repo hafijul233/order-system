@@ -12,6 +12,7 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
 use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 
@@ -269,7 +270,7 @@ class CustomerCrudController extends CrudController
         CRUD::addColumns([
             [
                 'name' => 'id',
-                'label' => 'ID',
+                'label' => '#',
             ],
             [
                 'name' => 'name',
@@ -278,29 +279,14 @@ class CustomerCrudController extends CrudController
             [
                 'name' => 'email',
                 'label' => 'Email',
-                'type' => 'email'
+                'type' => 'custom_html',
+                'value' => fn(Customer $customer) => "<a class='text-dark' href='maiilto:{$customer->email}'>{$customer->email} " . (($customer->email_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
             ],
             [
                 'name' => 'phone',
                 'label' => 'Phone',
                 'type' => 'custom_html',
-                'value' => fn(Customer $customer) => "<a href='tel:{$customer->phone}'>{$customer->phone}</a>"
-            ],
-            [
-                'name' => 'type',
-                'label' => 'Type',
-                'type' => 'custom_html',
-                'value' => fn(Customer $customer) => $customer->type_html
-            ],
-            [
-                'name' => 'email_verified_at',
-                'label' => 'Email Verified At',
-                'type' => 'datetime',
-            ],
-            [
-                'name' => 'phone_verified_at',
-                'label' => 'Phone Verified At',
-                'type' => 'datetime',
+                'value' => fn(Customer $customer) => "<a class='text-dark' href='tel:{$customer->phone}'>{$customer->phone} " . (($customer->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
             ],
             [
                 'name' => 'status',
@@ -309,20 +295,24 @@ class CustomerCrudController extends CrudController
                 'value' => fn(Customer $customer) => $customer->status_html
             ],
             [
-                'name' => 'block_reason',
-                'label' => 'Suspend/Banned Reason',
-                'type' => 'textarea'
+                'name' => 'platform',
+                'label' => 'Platform',
+                'type' => 'custom_html',
+                'value' => fn(Customer $customer) => $customer->platform_html
             ],
             [
-                'name' => 'note',
-                'label' => 'Notes',
-                'type' => 'textarea'
+                'name' => 'created_at',
+                'type' => 'datetime',
+                'label' => 'Created'
             ],
-            [
-                'name' => 'newsletter_subscribed',
-                'label' => 'Newsletter Subscribed?',
-                'type' => 'boolean'
-            ]
+        ]);
+
+        Widget::add([
+            'type' => 'audit',
+            'section' => 'after_content',
+            'wrapper' => ['class' => 'col-md-12 px-0'],
+            'header' => "<h4 class='card-title mb-0'>Customer Audits</h4>",
+            'crud' => $this->crud,
         ]);
     }
 

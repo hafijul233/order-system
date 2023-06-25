@@ -18,3 +18,5 @@ use Illuminate\Support\Facades\Route;
 });*/
 
 Route::get('customer-detail/{customer}', \App\Http\Controllers\Api\CustomerDetailController::class);
+
+Route::get('product-detail/{product}', \App\Http\Controllers\Api\ProductDetailController::class);

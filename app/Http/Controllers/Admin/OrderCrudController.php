@@ -160,6 +160,7 @@ class OrderCrudController extends CrudController
         Config::set('backpack.base.scripts', $scripts);
 
         CRUD::addFields([
+            //Basic
             [
                 'name' => 'platform',
                 'label' => 'platform',
@@ -295,12 +296,13 @@ class OrderCrudController extends CrudController
                 'default' => Order::defaultStatusId(),
                 'tab' => 'Basic',
             ],
-            //ORDER ITEM
+            //Items
             [
                 'name' => 'orderItems',
-                'label' => 'Items',
+                'label' => ucfirst(\Str::plural(setting('item_label', 'Item'))),
                 'type' => 'relationship',
-                'tab' => 'Order',
+                'tab' => 'Item',
+                'new_item_label' => 'Add ' . ucfirst(\Str::plural(setting('item_label', 'Item'))),
                 'subfields' => [
                     [
                         'name' => 'product_id',
@@ -312,7 +314,8 @@ class OrderCrudController extends CrudController
                         'method' => 'POST',
                         'placeholder' => "Select a " . strtolower(setting('item_label', 'Product')),
                         'attributes' => [
-                          'class' => 'form-control custom-select product-select'
+                          'class' => 'form-control custom-select product-select',
+                          'onchange' => 'loadProductData(this, this.value);'
                         ],
                         'wrapper' => [
                             'class' => 'form-group col-md-5',
@@ -322,39 +325,52 @@ class OrderCrudController extends CrudController
                         'name' => 'name',
                         'type' => 'hidden',
                         'label' => 'Name',
+                        'attributes' => [
+                            'class' => 'form-control product-name'
+                        ]
                     ],
                     [
                         'name' => 'price',
                         'type' => 'number',
                         'label' => 'Price',
+                        'default' => "0.00",
                         'wrapper' => [
                             'class' => 'form-group col-md-2',
                         ],
                         'attributes' => [
                             'min' => '0',
-                            'step' => '0.01'
+                            'step' => '0.01',
+                            'class' => 'form-control product-unit-price',
+                            'onblur' => 'calculateOrderSummary()'
                         ]
                     ],
                     [
                         'name' => 'quantity',
                         'type' => 'number',
+                        'default' => "0.00",
                         'wrapper' => [
                             'class' => 'form-group col-md-1',
                         ],
                         'attributes' => [
                             'min' => '0',
-                            'step' => 'any'
+                            'step' => 'any',
+                            'class' => 'form-control product-quantity',
+                            'onblur' => 'calculateOrderSummary()'
                         ]
                     ],
                     [
                         'name' => 'subtotal',
+                        'label' => 'Bill',
                         'type' => 'number',
+                        'default' => "0.00",
                         'wrapper' => [
                             'class' => 'form-group col-md-2',
                         ],
                         'attributes' => [
                             'min' => '0',
-                            'step' => '0.01'
+                            'step' => '0.01',
+                            'readyonly' => 'readyonly',
+                            'class' => 'form-control product-subtotal'
                         ]
                     ],
                     [
@@ -372,39 +388,60 @@ class OrderCrudController extends CrudController
 
             [
                 'name' => 'subtotal',
-                'label' => 'subtotal',
+                'label' => 'Sub Total',
                 'type' => 'number',
-                'tab' => 'Order',
+                'tab' => 'Item',
+                'default' => "0.00",
+                'attributes' => [
+                    'id' => 'item-subtotal',
+                ]
             ],
             [
                 'name' => 'tax',
-                'label' => 'tax',
+                'label' => 'Sales Tax',
                 'type' => 'number',
-                'tab' => 'Order',
+                'tab' => 'Item',
+                'default' => "0.00",
+                'attributes' => [
+                    'id' => 'item-tax'
+                ]
             ],
             [
                 'name' => 'discount',
-                'label' => 'discount',
+                'label' => 'Discount',
                 'type' => 'number',
-                'tab' => 'Order',
+                'tab' => 'Item',
+                'default' => "0.00",
+                'attributes' => [
+                    'id' => 'item-discount'
+                ]
             ],
-            /*            [
-                            'name' => 'total_item',
-                            'label' => 'total_item',
-                            'type' => 'number',
-                            'tab' => 'Order',
-                        ],*/
+            [
+                'name' => 'total_item',
+                'type' => 'hidden',
+                'tab' => 'Item',
+                'default' => "0.00",
+                'attributes' => [
+                    'id' => 'item-total-item'
+                ]
+            ],
+            [
+                'name' => 'total_amount',
+                'label' => 'Total Amount',
+                'type' => 'number',
+                'tab' => 'Item',
+                'default' => "0.00",
+                'attributes' => [
+                    'id' => 'item-total-amount'
+                ]
+            ],
+
+            //Order
             [
                 'name' => 'delivery_charge',
                 'label' => 'delivery_charge',
                 'type' => 'number',
                 'tab' => 'Order',
-            ],
-            [
-                'name' => 'total_amount',
-                'label' => 'total_amount',
-                'type' => 'number',
-                'tab' => 'Order'
             ],
             [
                 'name' => 'assignee_id',

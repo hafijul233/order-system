@@ -162,7 +162,7 @@ class AddressBookCrudController extends CrudController
             [
                 'name' => 'name',
                 'label' => 'Title',
-                'hint' => 'N.B: Required for company entries',
+                'hint' => 'N.B: Required for company entries. Eg: Head quarter, branch name',
                 'tab' => 'Basic',
                 'wrapper' => [
                     'class' => 'form-group col-md-6 mb-md-0 mb-3'
@@ -381,20 +381,14 @@ class AddressBookCrudController extends CrudController
 
         CRUD::addFields([
             [
-                'name' => 'addressable',
-                'label' => 'Address To',
-                'type' => 'relationship',
-                'allows_null' => false,
-                'morphOptions' => [
-                    [Customer::class,],
-                    [Company::class,]
-                ],
-                'morphTypeField' => [
-                    'default' => (isset($form_fields['company_id']) && $form_fields['company_id'] != null) ? Company::class : Customer::class
-                ],
-                'morphIdField' => [
-                    'default' => (isset($form_fields['company_id']) && $form_fields['company_id'] != null) ? $form_fields['company_id'] : $form_fields['customer_id']
-                ]
+                'name' => 'addressable[addressable_type]',
+                'type' => 'hidden',
+                'default' => (isset($form_fields['company_id']) && $form_fields['company_id'] != null) ? Company::class : Customer::class,
+            ],
+            [
+                'name' => 'addressable[addressable_id]',
+                'type' => 'hidden',
+                'default' => (isset($form_fields['company_id']) && $form_fields['company_id'] != null) ? $form_fields['company_id'] : $form_fields['customer_id'],
             ],
             [
                 'name' => 'type',

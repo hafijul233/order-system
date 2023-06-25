@@ -66,6 +66,11 @@ class Customer extends Model implements Auditable
         });
     }
 
+    public function idLabel() 
+    {
+        return $this->name;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

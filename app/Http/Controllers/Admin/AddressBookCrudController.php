@@ -379,122 +379,151 @@ class AddressBookCrudController extends CrudController
             });
         }
 
-        CRUD::addFields([
-            [
-                'name' => 'addressable[addressable_type]',
-                'type' => 'hidden',
-                'default' => (isset($form_fields['company_id']) && $form_fields['company_id'] != null) ? Company::class : Customer::class,
-            ],
-            [
-                'name' => 'addressable[addressable_id]',
-                'type' => 'hidden',
-                'default' => (isset($form_fields['company_id']) && $form_fields['company_id'] != null) ? $form_fields['company_id'] : $form_fields['customer_id'],
-            ],
-            [
-                'name' => 'type',
-                'label' => 'Type',
-                'type' => 'select2_from_array',
-                'options' => AddressBook::TYPES,
-                'allows_null' => false,
+        if(
+            (isset($form_fields['company_id']) && $form_fields['company_id'] != null) ||
+            (isset($form_fields['customer_id']) && $form_fields['customer_id'] != null)) {
 
-                'wrapper' => [
-                    'class' => 'form-group col-md-6'
+                $model_class = (isset($form_fields['company_id']) && $form_fields['company_id'] != null) ? Company::class : Customer::class;
+
+                $model_id = (isset($form_fields['company_id']) && $form_fields['company_id'] != null) ? $form_fields['company_id'] : $form_fields['customer_id'];
+
+                $route =  ($model_class == Company::class) ? 'company.show' : 'customer.show';
+
+                $model = $model_class::findOrFail($model_id);
+
+            CRUD::addFields([
+                [
+                    'name' => 'message',
+                    'type' => 'custom_html',
+                    'fake' => true,
+                    'value' => "This address will be assigned to <strong class='text-success'>"
+                    . class_basename($model) .": <a href='" . route($route, $model->id) . "' target='_blank'>" . $model->idLabel() . "</a>.</strong>"
                 ],
-            ],
-            [
-                'name' => 'name',
-                'label' => 'Title',
-                'hint' => 'N.B: Required for company entries',
-
-                'wrapper' => [
-                    'class' => 'form-group col-md-6 mb-md-0 mb-3'
+                [
+                    'name' => 'addressable[addressable_type]',
+                    'type' => 'hidden',
+                    'value' => $model_class
                 ],
-            ],
-            [
-                'name' => 'phone',
-                'label' => 'Phone',
-
-            ],
-            [
-                'name' => 'street_address',
-                'label' => 'Street Address',
-                'type' => 'textarea',
-
-            ],
-            [
-                'name' => 'country',
-                'label' => 'Country',
-                'type' => 'select2',
-                'entity' => 'country',
-                'allows_null' => false,
-                'options' => fn($query) => $query->enabled()->get(),
-
-                'wrapper' => [
-                    'class' => 'form-group col-md-4'
+                [
+                    'name' => 'addressable[addressable_id]',
+                    'type' => 'hidden',
+                    'value' => $model_id
                 ],
-            ],
-            [
-                'name' => 'state',
-                'label' => 'State',
-                'type' => 'relationship',
-                'entity' => 'state',
-                'ajax' => true,
-                'attribute' => "name",
-                'placeholder' => "Select a state",
-                // AJAX OPTIONALS:
-                'delay' => 500,
-                'data_source' => backpack_url("address-book/fetch/state"),
-                'dependencies' => ['country'],
-                'method' => 'POST',
-                'minimum_input_length' => 0,
-                'include_all_form_fields' => true,
+                
+                [
+                    'name' => 'type',
+                    'label' => 'Type',
+                    'type' => 'select2_from_array',
+                    'options' => AddressBook::TYPES,
+                    'allows_null' => false,
 
-                'wrapper' => [
-                    'class' => 'form-group col-md-4'
+                    'wrapper' => [
+                        'class' => 'form-group col-md-6'
+                    ],
                 ],
-            ],
-            [
-                'name' => 'city',
-                'label' => 'City',
-                'type' => 'relationship',
-                'entity' => 'city',
-                'ajax' => true,
-                'attribute' => "name",
-                'placeholder' => "Select a city",
-                // AJAX OPTIONALS:
-                'delay' => 500,
-                'data_source' => backpack_url("address-book/fetch/city"),
-                'dependencies' => ['country', 'state'],
-                'method' => 'POST',
-                'minimum_input_length' => 0,
-                'include_all_form_fields' => true,
+                [
+                    'name' => 'name',
+                    'label' => 'Title',
+                    'wrapper' => [
+                        'class' => 'form-group col-md-6 mb-md-0 mb-3'
+                    ],
+                ],
+                [
+                    'name' => 'phone',
+                    'label' => 'Phone',
 
-                'wrapper' => [
-                    'class' => 'form-group col-md-4'
                 ],
-            ],
-            [
-                'name' => 'zip_code',
-                'label' => 'Zip Code',
-                'type' => 'number',
+                [
+                    'name' => 'street_address',
+                    'label' => 'Street Address',
+                    'type' => 'textarea',
 
-                'wrapper' => [
-                    'class' => 'form-group col-md-6'
                 ],
-            ],
-            [
-                'name' => 'status_id',
-                'label' => 'Status',
-                'type' => 'hidden',
-                'default' => AddressBook::defaultStatusId(),
-            ],
-            //Recognition Tab
-            [
-                'name' => 'landmark',
-                'label' => 'Land Mark',
-                'type' => 'text',
-            ]
-        ]);
+                [
+                    'name' => 'country',
+                    'label' => 'Country',
+                    'type' => 'select2',
+                    'entity' => 'country',
+                    'allows_null' => false,
+                    'options' => fn ($query) => $query->enabled()->get(),
+
+                    'wrapper' => [
+                        'class' => 'form-group col-md-6'
+                    ],
+                ],
+                [
+                    'name' => 'state',
+                    'label' => 'State',
+                    'type' => 'relationship',
+                    'entity' => 'state',
+                    'ajax' => true,
+                    'attribute' => "name",
+                    'placeholder' => "Select a state",
+                    'delay' => 500,
+                    'data_source' => backpack_url("address-book/fetch/state"),
+                    'dependencies' => ['country'],
+                    'method' => 'POST',
+                    'minimum_input_length' => 0,
+                    'include_all_form_fields' => true,
+
+                    'wrapper' => [
+                        'class' => 'form-group col-md-6'
+                    ],
+                ],
+                [
+                    'name' => 'city',
+                    'label' => 'City',
+                    'type' => 'relationship',
+                    'entity' => 'city',
+                    'ajax' => true,
+                    'attribute' => "name",
+                    'placeholder' => "Select a city",
+                    // AJAX OPTIONALS:
+                    'delay' => 500,
+                    'data_source' => backpack_url("address-book/fetch/city"),
+                    'dependencies' => ['country', 'state'],
+                    'method' => 'POST',
+                    'minimum_input_length' => 0,
+                    'include_all_form_fields' => true,
+
+                    'wrapper' => [
+                        'class' => 'form-group col-md-6'
+                    ],
+                ],
+                [
+                    'name' => 'zip_code',
+                    'label' => 'Zip Code',
+                    'type' => 'number',
+
+                    'wrapper' => [
+                        'class' => 'form-group col-md-6'
+                    ],
+                ],
+                [
+                    'name' => 'status_id',
+                    'label' => 'Status',
+                    'type' => 'hidden',
+                    'default' => AddressBook::defaultStatusId(),
+                ],
+                [
+                    'name' => 'landmark',
+                    'label' => 'Land Mark',
+                    'type' => 'text',
+                ],
+                [
+                    'name' => 'note',
+                    'label' => 'Notes',
+                    'type' => 'textarea'
+                ],
+            ]);
+        } else {
+            CRUD::addField([
+                    'name' => 'message',
+                    'type' => 'custom_html',
+                    'fake' => true,
+                    'value' => "<h3 class='text-center text-danger my-0'>Please select an customer or company before creating address.</h3>" 
+                ]);
+        }
     }
 
 

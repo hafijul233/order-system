@@ -54,6 +54,12 @@ class Company extends Model implements Auditable
             $model->syncVerifiedDate();
         });
     }
+
+    public function idLabel() 
+    {
+        return $this->name;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS

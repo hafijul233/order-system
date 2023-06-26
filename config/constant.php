@@ -15,5 +15,4 @@ return [
         'office' => 'System',
         'store' => 'Store',
     ],
-
 ];

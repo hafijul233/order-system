@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('message');
             $table->foreignId('order_id')->nullable()->constrained('orders');
             $table->foreignId('payment_option_id')->nullable()->constrained('payment_options');
-            $table->foreignId('status_id')->nullable()->constrained('statuses');
             $table->decimal('amount', 13, 4)->nullable();
             $table->decimal('due', 13, 4)->nullable();
             $table->string('installment_type')->default('full')->comment('full/partial/pending');

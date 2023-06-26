@@ -30,14 +30,6 @@ class AddressBook extends Model implements Auditable
     |--------------------------------------------------------------------------
     */
 
-    public const TYPES = [
-        'home' => 'Home',
-        'ship' => 'Delivery',
-        'bill' => 'Billing',
-        'work' => 'Work',
-        'other' => 'Other',
-    ];
-
     protected $table = 'address_books';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
@@ -74,6 +66,11 @@ class AddressBook extends Model implements Auditable
         return $this->morphedByMany(Company::class, 'addressable');
     }
 
+    public function warehouses()
+    {
+        return $this->morphedByMany(Warehouse::class, 'addressable');
+    }
+
     public function country()
     {
         return $this->belongsTo(Country::class);
@@ -102,11 +99,11 @@ class AddressBook extends Model implements Auditable
     public function getTypeHtmlAttribute(): string
     {
         return match ($this->type) {
-            'home' => "<span class='text-info'><i class='la la-home'></i> " . self::TYPES[$this->type] . "</span>",
-            'ship' => "<span class='text-info'><i class='la la-shipping-fast'></i> " . self::TYPES[$this->type] . "</span>",
-            'bill' => "<span class='text-info'><i class='la la-file-invoice-dollar'></i> " . self::TYPES[$this->type] . "</span>",
-            'work' => "<span class='text-info'><i class='la la-user-graduate'></i> " . self::TYPES[$this->type] . "</span>",
-            'other' => "<span class='text-info'><i class='la la-exclamation'></i> " . self::TYPES[$this->type] . "</span>",
+            'home' => "<span class='text-info'><i class='la la-home'></i> " . config("constant.address_type.{$this->type}") . "</span>",
+            'ship' => "<span class='text-info'><i class='la la-shipping-fast'></i> " . config("constant.address_type.{$this->type}") . "</span>",
+            'bill' => "<span class='text-info'><i class='la la-file-invoice-dollar'></i> " . config("constant.address_type.{$this->type}") . "</span>",
+            'work' => "<span class='text-info'><i class='la la-user-graduate'></i> " . config("constant.address_type.{$this->type}") . "</span>",
+            'other' => "<span class='text-info'><i class='la la-exclamation'></i> " . config("constant.address_type.{$this->type}") . "</span>",
             default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
         };
     }
@@ -117,6 +114,8 @@ class AddressBook extends Model implements Auditable
             return "<a class='text-info text-decoration-none' style='font-weight: 550 !important;' title='Customer' target='_blank' href='" . route('customer.show', $this->addressable->id) . "'><i class='la la-user-check text-info'></i> {$this->addressable->name}</a>";
         } elseif ($this->addressable instanceof Company) {
             return "<a class='text-info text-decoration-none' style='font-weight: 550 !important;' title='Company' target='_blank' href='" . route('company.show', $this->addressable->id) . "'><i class='la la-building text-success'></i> {$this->addressable->name}</a>";
+        } elseif ($this->addressable instanceof Warehouse) {
+            return "<a class='text-info text-decoration-none' style='font-weight: 550 !important;' title='Warehouse' target='_blank' href='" . route('warehouse.show', $this->addressable->id) . "'><i class='la la-boxes text-success'></i> {$this->addressable->name}</a>";
         } else {
             return '-';
         }

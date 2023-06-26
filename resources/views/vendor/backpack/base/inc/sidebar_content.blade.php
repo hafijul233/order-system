@@ -308,3 +308,5 @@
         </ul>
     </li>
 @endif
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('brand') }}"><i class="nav-icon la la-question"></i> Brands</a></li>
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('warehouse') }}"><i class="nav-icon la la-question"></i> Warehouses</a></li>

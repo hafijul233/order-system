@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\UtilityHelper;
 use App\Traits\HasStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Backpack\CRUD\app\Models\Traits\HasUploadFields;
@@ -26,14 +27,6 @@ class Order extends Model implements Auditable
     | GLOBAL VARIABLES
     |--------------------------------------------------------------------------
     */
-    public const PLATFORMS = [
-        'android' => 'Android App',
-        'ios' => 'iOS App',
-        'website' => 'Web Site',
-        'office' => 'System',
-        'store' => 'Store',
-    ];
-
     public const DELIVERIES = [
         'dine' => 'Dine',
         'pickup' => 'TakeOut',
@@ -129,11 +122,7 @@ class Order extends Model implements Auditable
     */
     public function getTypeHtmlAttribute(): string
     {
-        return match ($this->platform) {
-            'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . self::PLATFORMS[$this->platform] . "</span>",
-            'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . self::PLATFORMS[$this->platform] . "</span>",
-            default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
-        };
+        return UtilityHelper::platformIcon($this->platform);
     }
     /*
     |--------------------------------------------------------------------------

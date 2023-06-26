@@ -48,7 +48,7 @@ class CustomerDetailResource extends JsonResource
     {
         return [
             'meta' => [
-                'platforms' => Customer::PLATFORMS,
+                'platforms' => config('constant.platforms'),
                 'statuses' => Customer::statusDropdown(),
             ],
         ];

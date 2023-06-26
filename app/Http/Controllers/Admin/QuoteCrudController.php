@@ -45,7 +45,7 @@ class QuoteCrudController extends CrudController
         $this->crud->addClause('where', 'type', '=', 'quote');
         
         CRUD::addFilter(['name' => 'platform', 'type' => 'select2_multiple', 'label' => 'Platform'],
-            Order::PLATFORMS,
+            config('constant.platforms'),
             fn($value) => $this->crud->addClause('where', 'platform', '=', $value)
         );
 

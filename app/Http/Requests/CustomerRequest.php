@@ -35,7 +35,7 @@ class CustomerRequest extends FormRequest
             Rule::unique('customers', 'email')->ignore(request()->route('id')),
         ];
         $rules['phone'] = ['required', 'min:10', 'max:255', 'string', 'nullable'];
-        $rules['platform'] = ['required', Rule::in(array_keys(Customer::PLATFORMS))];
+        $rules['platform'] = ['required', Rule::in(array_keys(config('constant.platforms')))];
         $rules['status_id'] = ['required', Rule::in(Customer::statusesId())];
         $rules['email_verified_at'] = ['nullable', 'date', 'before:' . now()];
         $rules['phone_verified_at'] = ['nullable', 'date', 'before:' . now()];

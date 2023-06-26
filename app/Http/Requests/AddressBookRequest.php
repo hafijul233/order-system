@@ -31,7 +31,7 @@ class AddressBookRequest extends FormRequest
         return [
             'addressable' => ['required', 'min:1', 'array'],
             'name' => ['nullable', 'required_if:addressable.addressable_type,==,' . Company::class, 'string', 'min:2'],
-            'type' => ['required', 'string', Rule::in(array_keys(AddressBook::TYPES))],
+            'type' => ['required', 'string', Rule::in(array_keys(config('constant.address_type')))],
             'street_address' => ['nullable', 'min:3', 'max:255', 'string'],
             'city' => ['required', 'min:2', 'max:255', 'string'],
             'state' => ['required', 'min:2', 'max:255', 'string'],

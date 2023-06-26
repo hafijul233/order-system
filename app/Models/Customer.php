@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\UtilityHelper;
 use App\Traits\EmailPhoneVerifyTrait;
 use App\Traits\HasStatus;
 use App\Traits\NewsletterSyncTrait;
@@ -33,15 +34,6 @@ class Customer extends Model implements Auditable
     | GLOBAL VARIABLES
     |--------------------------------------------------------------------------
     */
-
-    public const PLATFORMS = [
-        'android' => 'Android App',
-        'ios' => 'iOS App',
-        'website' => 'Web Site',
-        'office' => 'System',
-        'store' => 'Store',
-    ];
-
 
     protected $table = 'customers';
     // protected $primaryKey = 'id';
@@ -104,14 +96,7 @@ class Customer extends Model implements Auditable
     */
     public function getPlatformHtmlAttribute(): string
     {
-        return match ($this->platform) {
-            'android' => "<span class='text-success'><i class='la la-android'></i> " . self::PLATFORMS[$this->platform] . "</span>",
-            'ios' => "<span class='text-success'><i class='la la-app-store-ios'></i> " . self::PLATFORMS[$this->platform] . "</span>",
-            'website' => "<span class='text-success'><i class='la la-globe-asia'></i> " . self::PLATFORMS[$this->platform] . "</span>",
-            'office' => "<span class='text-success'><i class='la la-building'></i> " . self::PLATFORMS[$this->platform] . "</span>",
-            'store' => "<span class='text-success'><i class='la la-store'></i> " . self::PLATFORMS[$this->platform] . "</span>",
-            default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
-        };
+        return UtilityHelper::platformIcon($this->platform);
     }
 
     /*

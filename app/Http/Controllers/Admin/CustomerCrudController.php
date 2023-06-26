@@ -46,7 +46,7 @@ class CustomerCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::addFilter(['name' => 'platform', 'type' => 'dropdown', 'label' => 'Platform'],
-            Customer::PLATFORMS,
+            config('constant.platforms'),
             fn($value) => $this->crud->addClause('where', 'platform', '=', $value)
         );
 
@@ -151,7 +151,7 @@ class CustomerCrudController extends CrudController
                 'name' => 'platform',
                 'label' => 'Platform',
                 'type' => 'select2_from_array',
-                'options' => Customer::PLATFORMS,
+                'options' => config('constant.platforms'),
                 'default' => 'office',
                 'allows_null' => false,
                 'tab' => 'Basic',

@@ -58,7 +58,7 @@ class AddressBookCrudController extends CrudController
                 'type' => 'dropdown',
                 'label' => 'Type'
             ],
-            AddressBook::TYPES,
+            config('constant.address_type'),
             function ($value) {
                 $this->crud->addClause('where', 'type', '=', $value);
             });
@@ -152,7 +152,7 @@ class AddressBookCrudController extends CrudController
                 'name' => 'type',
                 'label' => 'Type',
                 'type' => 'select2_from_array',
-                'options' => AddressBook::TYPES,
+                'options' => config('constant.address_type'),
                 'allows_null' => false,
                 'tab' => 'Basic',
                 'wrapper' => [
@@ -414,7 +414,7 @@ class AddressBookCrudController extends CrudController
                     'name' => 'type',
                     'label' => 'Type',
                     'type' => 'select2_from_array',
-                    'options' => AddressBook::TYPES,
+                    'options' => config('constant.address_type'),
                     'allows_null' => false,
 
                     'wrapper' => [

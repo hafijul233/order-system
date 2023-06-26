@@ -33,26 +33,6 @@ class Status extends Model
     // protected $hidden = [];
     // protected $dates = [];
 
-    public const MODELS = [
-        Customer::class => 'Customer',
-        AddressBook::class => 'Address Book',
-        Company::class => 'Company',
-        Category::class => 'Category',
-        Order::class => 'Order',
-        OrderItem::class => 'Order Item',
-        Payment::class => 'Payment',
-        Product::class => 'Product',
-        Stock::class => 'Stock',
-        Email::class => 'Email',
-        NewsLetter::class => 'NewsLetter',
-        Campaign::class => 'Campaign',
-        Coupon::class => 'Coupon',
-        Banner::class => 'Banner',
-        Page::class => 'Page',
-        Template::class => 'Template',
-        Task::class => 'Task',
-    ];
-
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

@@ -72,7 +72,7 @@ class StatusCrudController extends CrudController
                 'type' => 'select2',
                 'label' => 'Model'
             ],
-            Status::MODELS,
+            config('constant.status_model'),
             function ($value) {
                 $this->crud->addClause('where', 'model', '=', $value);
             });
@@ -116,7 +116,7 @@ class StatusCrudController extends CrudController
                 'name' => 'model',
                 'label' => 'Model',
                 'type' => 'select2_from_array',
-                'options' => Status::MODELS
+                'options' => config('constant.status_model')
             ],
             [
                 'name' => 'name',

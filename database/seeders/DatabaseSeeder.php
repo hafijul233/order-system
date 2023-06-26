@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             AddressBookSeeder::class,
             NewsLetterSeeder::class, 
             PaymentOptionSeeder::class,
-
+            ProductSeeder::class,
         ]);
 
         \App\Models\Tag::factory(15)->createQuietly();

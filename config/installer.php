@@ -13,7 +13,7 @@ return [
     |
     */
     'core' => [
-        'minPhpVersion' => '7.0.0',
+        'minPhpVersion' => '8.1.0',
     ],
     'final' => [
         'key' => true,
@@ -27,6 +27,7 @@ return [
             'tokenizer',
             'JSON',
             'cURL',
+            'gd'
         ],
         'apache' => [
             'mod_rewrite',
@@ -46,6 +47,7 @@ return [
         'storage/framework/'     => '775',
         'storage/logs/'          => '775',
         'bootstrap/cache/'       => '775',
+        'public/media/'          => '775',
     ],
 
     /*

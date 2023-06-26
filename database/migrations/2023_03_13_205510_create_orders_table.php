@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('reference_no');
+            $table->foreignId('reference_id');
             $table->string('platform')->default('office');
             $table->string('delivery')->nullable();
             $table->text('delivery_comment')->nullable();

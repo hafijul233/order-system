@@ -40,8 +40,14 @@
     </a>
     <ul class="nav-dropdown-items">
         <li class="nav-item">
+            <a class="nav-link" href="{{ backpack_url('quote') }}">
+                <i class="nav-icon la la-file-invoice"></i> 
+                Quotes
+            </a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="{{ backpack_url('order') }}">
-                <i class="nav-icon la la-file-invoice"></i>
+                <i class="nav-icon la la-cart-arrow-down"></i>
                 {{ ucfirst(\Str::plural(setting('order_label', 'order'))) }}
             </a>
         </li>
@@ -277,6 +283,12 @@
                 Statuses
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ backpack_url('payment-option') }}">
+                <i class="nav-icon la la-question"></i> 
+                Payment Options
+            </a>
+        </li>
     </ul>
 </li>
 
@@ -296,6 +308,3 @@
         </ul>
     </li>
 @endif
-
-
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('order-item') }}"><i class="nav-icon la la-question"></i> Order items</a></li>

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('type')->default('order');
             $table->string('reference_no');
             $table->foreignId('reference_id');
             $table->string('platform')->default('office');
@@ -36,6 +37,7 @@ return new class extends Migration
             $table->enum('priority', ['lowest','low', 'medium', 'high', 'highest'])->default('medium');
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
+            $table->text('attachments')->nullable();
             $table->timestamp('ordered_at')->nullable()->useCurrent();
             $table->timestamp('delivered_at')->nullable();
             $table->foreignId('status_id')->nullable()->constrained('statuses');

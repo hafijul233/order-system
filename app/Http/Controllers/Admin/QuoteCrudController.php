@@ -2,52 +2,48 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\OrderRequest;
-use App\Models\Company;
-use App\Models\Customer;
+use App\Http\Requests\QuoteRequest;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
-use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Class OrderCrudController
+ * Class QuoteCrudController
  * @package App\Http\Controllers\Admin
- * @property-read CrudPanel $crud
+ * @property-read \Backpack\CRUD\app\Library\CrudPanel\CrudPanel $crud
  */
-class OrderCrudController extends CrudController
+class QuoteCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\InlineCreateOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
-     *
+     * 
      * @return void
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Order::class);
-        CRUD::setRoute(config('backpack.base.route_prefix') . '/order');
-        CRUD::setEntityNameStrings(setting('order_label', 'order'), \Str::plural(setting('order_label', 'order')));
+        CRUD::setModel(Order::class);
+        CRUD::setRoute(config('backpack.base.route_prefix') . '/quote');
+        CRUD::setEntityNameStrings('quote', 'quotes');
     }
 
     /**
      * Define what happens when the List operation is loaded.
-     *
+     * 
      * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
      * @return void
      */
     protected function setupListOperation()
     {
-        $this->crud->addClause('where', 'type', '=', 'order');
-
+        $this->crud->addClause('where', 'type', '=', 'quote');
+        
         CRUD::addFilter(['name' => 'platform', 'type' => 'select2_multiple', 'label' => 'Platform'],
             Order::PLATFORMS,
             fn($value) => $this->crud->addClause('where', 'platform', '=', $value)
@@ -71,7 +67,7 @@ class OrderCrudController extends CrudController
         CRUD::addFilter([
             'name' => 'total_amount',
             'type' => 'range',
-            'label' => 'Order Total Price',
+            'label' => 'Quote Total Price',
             'label_from' => 'min',
             'label_to' => 'max'
         ],
@@ -104,9 +100,9 @@ class OrderCrudController extends CrudController
                 'name' => 'id',
                 'label' => '#',
                 'type' => 'custom_html',
-                'value' => function (Order $order) {
+                'value' => function (Order $quote) {
                     return setting('order_prefix', '#')
-                        . str_pad($order->id, (int)setting('order_number_length', 8), "0", STR_PAD_LEFT);
+                        . str_pad($quote->id, (int)setting('order_number_length', 8), "0", STR_PAD_LEFT);
                 }
             ],
             [
@@ -117,7 +113,7 @@ class OrderCrudController extends CrudController
                 'name' => 'phone',
                 'label' => 'Phone',
                 'type' => 'custom_html',
-                'value' => fn(Order $order) => "<a class='text-dark' href='tel:{$order->phone}'>{$order->phone}</a>"
+                'value' => fn(Order $quote) => "<a class='text-dark' href='tel:{$quote->phone}'>{$quote->phone}</a>"
             ],
             [
                 'name' => 'total_item',
@@ -135,25 +131,25 @@ class OrderCrudController extends CrudController
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => fn(Order $order) => $order->status_html
+                'value' => fn(Order $quote) => $quote->status_html
             ],
             [
                 'name' => 'ordered_at',
                 'type' => 'datetime',
-                'label' => 'Ordered'
+                'label' => 'Quoted'
             ],
         ]);
     }
 
     /**
      * Define what happens when the Create operation is loaded.
-     *
+     * 
      * @see https://backpackforlaravel.com/docs/crud-operation-create
      * @return void
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(OrderRequest::class);
+        CRUD::setValidation(QuoteRequest::class);
 
         $scripts = Config::get('backpack.base.scripts');
 
@@ -293,8 +289,8 @@ class OrderCrudController extends CrudController
                 'name' => 'status_id',
                 'label' => 'Status',
                 'type' => 'select2_from_array',
-                'options' => OrderItem::statusDropdown(),
-                'default' => OrderItem::defaultStatusId(),
+                'options' => Order::statusDropdown(),
+                'default' => Order::defaultStatusId(),
                 'tab' => 'Basic',
             ],
             [
@@ -333,7 +329,7 @@ class OrderCrudController extends CrudController
                           'onchange' => 'loadProductData(this, this.value);'
                         ],
                         'wrapper' => [
-                            'class' => 'form-group col-md-5',
+                            'class' => 'form-group col-md-6',
                         ],
                     ],
                     [
@@ -365,7 +361,7 @@ class OrderCrudController extends CrudController
                         'type' => 'number',
                         'default' => "0.00",
                         'wrapper' => [
-                            'class' => 'form-group col-md-1',
+                            'class' => 'form-group col-md-2',
                         ],
                         'attributes' => [
                             'min' => '0',
@@ -393,12 +389,8 @@ class OrderCrudController extends CrudController
                     [
                         'name' => 'status_id',
                         'label' => 'Status',
-                        'type' => 'select_from_array',
-                        'options' => OrderItem::statusDropdown(),
-                        'default' => Order::defaultStatusId(),
-                        'wrapper' => [
-                            'class' => 'form-group col-md-2',
-                        ],
+                        'type' => 'hidden',
+                        'default' => OrderItem::defaultStatusId(),
                     ],
                 ],
             ],
@@ -419,9 +411,9 @@ class OrderCrudController extends CrudController
             [
                 'name' => 'tax',
                 'label' => 'Sales Tax',
-                'type' => 'number',
+                'type' => 'hidden',
                 'tab' => 'Item',
-                'default' => "0.00",
+                'value' => "0.00",
                 'decimals'      => 2,
                 'attributes' => [
                     'id' => 'item-tax'
@@ -483,46 +475,6 @@ class OrderCrudController extends CrudController
                 'default' => backpack_user()->id,
                 'tab' => 'Order'
             ],
-            [
-                'name' => 'priority',
-                'label' => 'Priority',
-                'type' => 'select2_from_array',
-                'options' => Order::PRIORITIES,
-                'default' => 'medium',
-                'tab' => 'Order'
-            ],
-            [
-                'name' => 'ordered_at',
-                'label' => 'Ordered At',
-                'type' => 'datetime',
-                'tab' => 'Order',
-            ],
-            [
-                'name' => 'delivery',
-                'label' => 'Delivery Type',
-                'type' => 'select2_from_array',
-                'options' => Order::DELIVERIES,
-                'tab' => 'Delivery',
-            ],
-            [
-                'name' => 'delivery_charge',
-                'label' => 'Delivery Charge',
-                'type' => 'number',
-                'tab' => 'Delivery',
-            ],
-            [
-                'name' => 'delivery_comment',
-                'label' => 'Delivery Comment',
-                'type' => 'textarea',
-                'tab' => 'Delivery',
-            ],
-            //Delivery
-            [
-                'name' => 'delivered_at',
-                'label' => 'Delivered At',
-                'type' => 'datetime',
-                'tab' => 'Delivery',
-            ],
             //Other
             [
                 'name' => 'orderNotes',
@@ -560,7 +512,7 @@ class OrderCrudController extends CrudController
 
     /**
      * Define what happens when the Update operation is loaded.
-     *
+     * 
      * @see https://backpackforlaravel.com/docs/crud-operation-update
      * @return void
      */

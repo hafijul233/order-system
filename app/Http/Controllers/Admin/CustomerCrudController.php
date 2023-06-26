@@ -106,12 +106,6 @@ class CustomerCrudController extends CrudController
                 'value' => fn(Customer $customer) => $customer->status_html
             ],
             [
-                'name' => 'platform',
-                'label' => 'Platform',
-                'type' => 'custom_html',
-                'value' => fn(Customer $customer) => $customer->platform_html
-            ],
-            [
                 'name' => 'created_at',
                 'type' => 'datetime',
                 'label' => 'Created'

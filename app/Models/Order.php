@@ -4,11 +4,10 @@ namespace App\Models;
 
 use App\Traits\HasStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Backpack\CRUD\app\Models\Traits\HasUploadFields;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use OwenIt\Auditing\Contracts\Auditable;
 
 /**
@@ -20,6 +19,7 @@ class Order extends Model implements Auditable
     use CrudTrait;
     use HasFactory;
     use HasStatus;
+    use HasUploadFields;
 
     /*
     |--------------------------------------------------------------------------
@@ -55,23 +55,38 @@ class Order extends Model implements Auditable
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
-
+    protected $casts = [
+        'total_item' => 'float',
+        'total_amount' => 'float',
+        'subtotal' => 'float',
+        'tax' => 'float',
+        'discount' => 'float',
+        'delivery_charge' => 'float',
+    ];
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($model) {
+            if (count((array)$model->attachments)) {
+                foreach ($model->attachments as $file_path) {
+                    \Storage::disk('public')->delete($file_path);
+                }
+            }
+        });
+    }
 
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-/*    public function orderable(): MorphTo
-    {
-        return $this->morphTo();
-    }*/
-
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
@@ -95,6 +110,11 @@ class Order extends Model implements Auditable
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function orderNotes()
+    {
+        return $this->hasMany(OrderNote::class);
     }
     /*
     |--------------------------------------------------------------------------
@@ -120,4 +140,17 @@ class Order extends Model implements Auditable
     | MUTATORS
     |--------------------------------------------------------------------------
     */
+
+    public function setAttachmentsAttribute($value)
+    {
+        $attribute_name = "attachments";
+        $disk = "public";
+        $destination_path = "media/orders/" . date("Y/F/d");
+
+        if(!file_exists(public_path($destination_path))) {
+            mkdir(public_path($destination_path), 0777, true);
+        }
+        
+        $this->uploadMultipleFilesToDisk($value, $attribute_name, $disk, $destination_path);
+    }
 }

@@ -2,18 +2,14 @@
 
 namespace App\Models;
 
-use App\Traits\HasStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use OwenIt\Auditing\Contracts\Auditable;
 
-class OrderItem extends Model implements Auditable
+class PaymentOption extends Model
 {
-    use \OwenIt\Auditing\Auditable;
     use CrudTrait;
     use HasFactory;
-    use HasStatus;
 
     /*
     |--------------------------------------------------------------------------
@@ -21,18 +17,13 @@ class OrderItem extends Model implements Auditable
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'order_items';
+    protected $table = 'payment_options';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
-    protected $casts = [
-        'quantity' => 'float',
-        'price' => 'float',
-        'subtotal' => 'float',
-    ];
 
     /*
     |--------------------------------------------------------------------------
@@ -45,16 +36,10 @@ class OrderItem extends Model implements Auditable
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-    public function order()
+    public function payments() 
     {
-        return $this->belongsTo(Order::class);
+        return $this->hasMany(Payment::class);
     }
-
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
-    }
-
     /*
     |--------------------------------------------------------------------------
     | SCOPES

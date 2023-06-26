@@ -2,18 +2,16 @@
 
 namespace App\Models;
 
-use App\Traits\HasStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Backpack\CRUD\app\Models\Traits\HasUploadFields;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class OrderItem extends Model implements Auditable
+class OrderNote extends Model implements Auditable
 {
     use \OwenIt\Auditing\Auditable;
     use CrudTrait;
-    use HasFactory;
-    use HasStatus;
+    use HasUploadFields;
 
     /*
     |--------------------------------------------------------------------------
@@ -21,7 +19,7 @@ class OrderItem extends Model implements Auditable
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'order_items';
+    protected $table = 'order_notes';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -29,16 +27,26 @@ class OrderItem extends Model implements Auditable
     // protected $hidden = [];
     // protected $dates = [];
     protected $casts = [
-        'quantity' => 'float',
-        'price' => 'float',
-        'subtotal' => 'float',
+        'attachments' => 'array'
     ];
+
 
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+    public static function boot()
+    {
+        parent::boot();
+        static::deleting(function($model) {
+            if (count((array)$model->attachments)) {
+                foreach ($model->attachments as $file_path) {
+                    \Storage::disk('public')->delete($file_path);
+                }
+            }
+        });
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -49,12 +57,11 @@ class OrderItem extends Model implements Auditable
     {
         return $this->belongsTo(Order::class);
     }
-
-    public function product()
+    public function author()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(User::class, 'author_id');
     }
-
+    
     /*
     |--------------------------------------------------------------------------
     | SCOPES
@@ -72,4 +79,16 @@ class OrderItem extends Model implements Auditable
     | MUTATORS
     |--------------------------------------------------------------------------
     */
+    public function setAttachmentsAttribute($value)
+    {
+        $attribute_name = "attachments";
+        $disk = "public";
+        $destination_path = "media/ordernotes/" . date("Y/F/d");
+
+        if(!file_exists(public_path($destination_path))) {
+            mkdir(public_path($destination_path), 0777, true);
+        }
+        
+        $this->uploadMultipleFilesToDisk($value, $attribute_name, $disk, $destination_path);
+    }
 }

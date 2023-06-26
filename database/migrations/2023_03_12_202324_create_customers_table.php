@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->nullable()->unique();
             $table->string('phone')->nullable();
-            $table->enum('platform', array_keys(\App\Models\Customer::PLATFORMS))->default('office')->nullable();
+            $table->string('platform')->default('office')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
             $table->boolean('newsletter_subscribed')->default(false);

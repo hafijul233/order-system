@@ -165,9 +165,8 @@ class OrderCrudController extends CrudController
                 'name' => 'platform',
                 'label' => 'platform',
                 'type' => 'hidden',
-                'options' => Order::PLATFORMS,
                 'tab' => 'Basic',
-                'default' => 'office'
+                'value' => 'office'
             ],
             [
                 'name' => 'customer_id',
@@ -340,7 +339,7 @@ class OrderCrudController extends CrudController
                         'attributes' => [
                             'min' => '0',
                             'step' => '0.01',
-                            'class' => 'form-control product-unit-price',
+                            'class' => 'form-control product-unit-price text-right',
                             'onblur' => 'calculateOrderSummary()'
                         ]
                     ],
@@ -354,7 +353,7 @@ class OrderCrudController extends CrudController
                         'attributes' => [
                             'min' => '0',
                             'step' => 'any',
-                            'class' => 'form-control product-quantity',
+                            'class' => 'form-control product-quantity text-right',
                             'onblur' => 'calculateOrderSummary()'
                         ]
                     ],
@@ -369,8 +368,8 @@ class OrderCrudController extends CrudController
                         'attributes' => [
                             'min' => '0',
                             'step' => '0.01',
-                            'readyonly' => 'readyonly',
-                            'class' => 'form-control product-subtotal'
+                            'readonly' => 'readonly',
+                            'class' => 'form-control product-subtotal text-right'
                         ]
                     ],
                     [
@@ -394,6 +393,9 @@ class OrderCrudController extends CrudController
                 'default' => "0.00",
                 'attributes' => [
                     'id' => 'item-subtotal',
+                    'readonly' => 'readonly',
+                    'min' => '0',
+                    'step' => '1',
                 ]
             ],
             [
@@ -422,7 +424,8 @@ class OrderCrudController extends CrudController
                 'tab' => 'Item',
                 'default' => "0.00",
                 'attributes' => [
-                    'id' => 'item-total-item'
+                    'id' => 'item-total-item',
+                    'readonly' => 'readonly',
                 ]
             ],
             [

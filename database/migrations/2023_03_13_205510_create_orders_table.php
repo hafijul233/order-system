@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->enum('platform', ['online','offline'])->default('online');
-            $table->enum('delivery', ['dine','pickup', 'delivery'])->default('delivery');
+            $table->string('platform')->default('office');
+            $table->string('delivery')->default('delivery');
             $table->text('delivery_comment')->nullable();
             $table->foreignId('customer_id');
             $table->foreignId('company_id')->nullable();

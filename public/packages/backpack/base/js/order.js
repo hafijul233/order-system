@@ -25,8 +25,8 @@ function calculatePayableAmount(subTotal) {
     let eleDiscount = $("#item-discount");
     let eleTotalAmount = $("#item-total-amount");
 
-    eleSubTotal.val(parseFloat(subTotal).toFixed(2));
-    eleTotalAmount.val(parseFloat(subTotal).toFixed(2));
+    eleSubTotal.val(Math.ceil(parseFloat(subTotal)).toFixed(2));
+    eleTotalAmount.val(Math.ceil(parseFloat(subTotal)).toFixed(2));
 
 }
 
@@ -55,8 +55,6 @@ function calculateOrderSummary() {
         
         subtotal += parseFloat(productBill);
     });
-    
-    console.log(subtotal);
 
     calculatePayableAmount(subtotal);
 }

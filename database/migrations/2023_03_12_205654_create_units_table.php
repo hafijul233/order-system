@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('units', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->decimal('conversion', 18, 6)->default(1);
+            $table->decimal('conversion', 18, 3)->default(1);
             $table->foreignId('parent_id')->nullable()->default(0);
             $table->integer('lft')->nullable()->default(0);
             $table->integer('rgt')->nullable()->default(0);

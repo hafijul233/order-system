@@ -8,16 +8,15 @@ use App\Models\City;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\State;
-use Backpack\CRUD\app\Exceptions\BackpackProRequiredException;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
-
 use Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
 use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 use Illuminate\Database\Eloquent\Builder;
@@ -136,6 +135,8 @@ class AddressBookCrudController extends CrudController
     {
         CRUD::setValidation(AddressBookRequest::class);
 
+        Widget::add()->type('script')->content('js/pages/address-book.js');
+
         CRUD::addFields([
             [
                 'name' => 'addressable',
@@ -162,7 +163,7 @@ class AddressBookCrudController extends CrudController
             [
                 'name' => 'name',
                 'label' => 'Title',
-                'hint' => 'N.B: Required for company entries. Eg: Head quarter, branch name',
+                'hint' => 'Eg: branch name, warehouse code, contact person name etc',
                 'tab' => 'Basic',
                 'wrapper' => [
                     'class' => 'form-group col-md-6 mb-md-0 mb-3'

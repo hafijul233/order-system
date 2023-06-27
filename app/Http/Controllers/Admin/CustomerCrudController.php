@@ -174,6 +174,7 @@ class CustomerCrudController extends CrudController
                 'type' => 'boolean',
                 'fake' => true,
                 'tab' => 'Basic',
+                'default' => setting('customer_login', false)
             ],
             [
                 'name' => 'password',

@@ -12,6 +12,7 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
 
 /**
@@ -59,9 +60,9 @@ class ProductCrudController extends CrudController
             ],
             [
                 'name' => 'name',
-                'label' => 'Title',
+                'label' => 'Name',
                 'type' => 'closure',
-                'function' => fn(Product $product) => $product->name,
+                'function' => fn (Product $product) => $product->name,
             ],
             [
                 'name' => 'category_id',
@@ -71,7 +72,7 @@ class ProductCrudController extends CrudController
                 'name' => 'platform',
                 'label' => 'Platform',
                 'type' => 'custom_html',
-                'value' => fn(Product $product) => $product->platform_html,
+                'value' => fn (Product $product) => $product->platform_html,
             ],
             [
                 'name' => 'price',
@@ -81,7 +82,7 @@ class ProductCrudController extends CrudController
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => fn(Product $product) => $product->status_html,
+                'value' => fn (Product $product) => $product->status_html,
             ],
             [
                 'name' => 'updated_at',
@@ -100,6 +101,8 @@ class ProductCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(ProductRequest::class);
+
+        Widget::add()->type('script')->content('js/pages/product.js');
 
         CRUD::addFields([
             //Basic
@@ -124,7 +127,7 @@ class ProductCrudController extends CrudController
             ],
             [
                 'name' => 'name',
-                'label' => 'Title',
+                'label' => 'Name',
                 'type' => 'text',
                 'tab' => 'Basic'
             ],
@@ -176,15 +179,6 @@ class ProductCrudController extends CrudController
                 'tab' => 'Basic'
             ],
             [
-                'name' => 'default_quantity',
-                'label' => 'Default Quantity',
-                'type' => 'number',
-                'tab' => 'Basic',
-                'wrapper' => [
-                    'class' => 'form-group col-md-6'
-                ]
-            ],
-            [
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'select2_from_array',
@@ -195,25 +189,20 @@ class ProductCrudController extends CrudController
                 'wrapper' => [
                     'class' => 'form-group col-md-6'
                 ]
-                ],
-            //Inventory
-            [
-                'name' => 'inventory_enabled',
-                'label' => 'Inventory Enabled',
-                'type' => 'boolean',
-                'tab' => 'Inventory'
             ],
             [
-                'name' => 'weight',
-                'label' => 'Weight',
-                'type' => 'number',
-                'tab' => 'Inventory',
+                'name' => 'cover_photo',
+                'type' => 'browse',
+                'label' => 'Main Cover Photo',
+                'allows_null' => false,
+                'tab' => 'Media'
             ],
             [
-                'name' => 'reorder_level',
-                'label' => 'Reorder Level',
-                'type' => 'number',
-                'tab' => 'Inventory',
+                'name' => 'additional_photo',
+                'type' => 'browse_multiple',
+                'label' => 'Additional Cover Photo',
+                'allows_null' => false,
+                'tab' => 'Media'
             ],
             //Detail
             [
@@ -227,7 +216,58 @@ class ProductCrudController extends CrudController
                 'label' => 'Notes',
                 'type' => 'textarea',
                 'tab' => 'Detail',
-            ]
+            ],
+            //Inventory
+            [
+                'name' => 'inventory_enabled',
+                'label' => 'Inventory Enabled',
+                'type' => 'boolean',
+                'tab' => 'Inventory'
+            ],
+            [
+                'name' => 'default_quantity',
+                'label' => 'Default Quantity',
+                'type' => 'number',
+                'tab' => 'Inventory',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ]
+            ],
+            [
+                'name' => 'defaultUnit',
+                'label' => 'Default Unit',
+                'type' => 'relationship',
+                'tab' => 'Inventory',
+                'options' => function ($query) {
+                    return $query->whereNull('parent_id')->get();
+                },
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ]
+            ],
+            [
+                'name' => 'units',
+                'label' => 'Avaliable Units',
+                'type' => 'relationship',
+                'tab' => 'Inventory',
+                'entity' => 'units',
+                'attribute' => 'name',
+                'options' => function ($query) {
+                    return $query->whereNull('parent_id')->get();
+                }
+            ],
+            [
+                'name' => 'weight',
+                'label' => 'Weight',
+                'type' => 'number',
+                'tab' => 'Inventory',
+            ],
+            [
+                'name' => 'reorder_level',
+                'label' => 'Reorder Level',
+                'type' => 'number',
+                'tab' => 'Inventory',
+            ],
         ]);
 
     }

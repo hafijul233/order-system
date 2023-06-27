@@ -202,7 +202,7 @@ class CompanyCrudController extends CrudController
                 'name' => 'newsletter_subscribed',
                 'label' => 'Newsletter Subscribed?',
                 'type' => 'boolean',
-                'tab' => 'Promotion'
+                'tab' => 'Profile'
             ],
         ]);
     }

@@ -63,6 +63,16 @@ class Product extends Model
         return $this->hasMany(Stock::class);
     }
 
+    public function units()
+    {
+        return $this->belongsToMany(Unit::class);
+    }
+
+    public function defaultUnit()
+    {
+        return $this->belongsTo(Unit::class, 'default_unit_id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

@@ -57,12 +57,6 @@
         Brands
     </a>
 </li>
-<li class="nav-item">
-    <a class="nav-link" href="{{ backpack_url('unit') }}">
-        <i class="nav-icon la la-balance-scale"></i>
-        Units
-    </a>
-</li>
 
 <li class="nav-title">Sale</li>
 <li class="nav-item">
@@ -97,20 +91,24 @@
     </a>
 </li>
 <li class="nav-item">
+    <a class="nav-link" href="{{ backpack_url('unit') }}">
+        <i class="nav-icon la la-balance-scale"></i>
+        Units
+    </a>
+</li>
+<li class="nav-item">
     <a class="nav-link" href="{{ backpack_url('warehouse') }}">
         <i class="nav-icon la la-question"></i>
         Warehouses
     </a>
 </li>
 <li class="nav-title">Marketing</li>
-@if (setting('developer_mode'))
-    <li class="nav-item">
-        <a class="nav-link" href="{{ backpack_url('email') }}">
-            <i class="nav-icon la la-envelope"></i>
-            Emails
-        </a>
-    </li>
-@endif
+<li class="nav-item">
+    <a class="nav-link" href="{{ backpack_url('email') }}">
+        <i class="nav-icon la la-envelope"></i>
+        Emails
+    </a>
+</li>
 <li class="nav-item">
     <a class="nav-link" href="{{ backpack_url('newsletter') }}">
         <i class="nav-icon la la-newspaper"></i>
@@ -149,21 +147,19 @@
         Pages
     </a>
 </li>
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('elfinder') }}">
+<li class="nav-item"><a class="nav-link" href="{{ backpack_url('media') }}">
         <i class="nav-icon la la-files-o"></i>
         Media
     </a>
 </li>
 
 <li class="nav-title">Notification</li>
-@if (setting('developer_mode'))
-    <li class="nav-item">
-        <a class="nav-link" href="{{ backpack_url('event') }}">
-            <i class="nav-icon la la-calendar-day"></i>
-            Events
-        </a>
-    </li>
-@endif
+<li class="nav-item">
+    <a class="nav-link" href="{{ backpack_url('event') }}">
+        <i class="nav-icon la la-calendar-day"></i>
+        Events
+    </a>
+</li>
 <li class="nav-item">
     <a class="nav-link" href="{{ backpack_url('template') }}">
         <i class="nav-icon la la-paperclip"></i>
@@ -195,14 +191,12 @@
         Permissions
     </a>
 </li>
-@if (setting('developer_mode'))
-    <li class="nav-item">
-        <a class="nav-link" href="{{ backpack_url('audit') }}">
-            <i class="nav-icon la la-search"></i>
-            Activity Log
-        </a>
-    </li>
-@endif
+<li class="nav-item">
+    <a class="nav-link" href="{{ backpack_url('audit') }}">
+        <i class="nav-icon la la-search"></i>
+        Activity Log
+    </a>
+</li>
 <li class="nav-title">General</li>
 <li class="nav-item">
     <a class="nav-link" href="{{ backpack_url('country') }}">
@@ -261,5 +255,3 @@
         Logs
     </a>
 </li>
-
-<li class="nav-item"><a class="nav-link" href="{{ backpack_url('elfinder') }}"><i class="nav-icon la la-files-o"></i> <span>{{ trans('backpack::crud.file_manager') }}</span></a></li>

@@ -48,27 +48,32 @@ class OrderCrudController extends CrudController
     {
         $this->crud->addClause('where', 'type', '=', 'order');
 
-        CRUD::addFilter(['name' => 'platform', 'type' => 'select2_multiple', 'label' => 'Platform'],
+        CRUD::addFilter(
+            ['name' => 'platform', 'type' => 'select2_multiple', 'label' => 'Platform'],
             config('constant.platforms'),
-            fn($value) => $this->crud->addClause('where', 'platform', '=', $value)
+            fn ($value) => $this->crud->addClause('where', 'platform', '=', $value)
         );
 
-        CRUD::addFilter(['name' => 'delivery', 'type' => 'select2_multiple', 'label' => 'Delivery'],
+        CRUD::addFilter(
+            ['name' => 'delivery', 'type' => 'select2_multiple', 'label' => 'Delivery'],
             Order::DELIVERIES,
-            fn($value) => $this->crud->addClause('where', 'delivery', '=', $value)
+            fn ($value) => $this->crud->addClause('where', 'delivery', '=', $value)
         );
 
-        CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
+        CRUD::addFilter(
+            ['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
             Order::statusDropdown(),
-            fn($value) => $this->crud->addClause('whereIn', 'status_id', json_decode($value, true))
+            fn ($value) => $this->crud->addClause('whereIn', 'status_id', json_decode($value, true))
         );
 
-        CRUD::addFilter(['type' => 'text', 'name' => 'phone', 'label' => 'Phone'],
+        CRUD::addFilter(
+            ['type' => 'text', 'name' => 'phone', 'label' => 'Phone'],
             false,
-            fn($value) => $this->crud->addClause('where', 'phone', 'like', "%{$value}}")
+            fn ($value) => $this->crud->addClause('where', 'phone', 'like', "%{$value}}")
         );
 
-        CRUD::addFilter([
+        CRUD::addFilter(
+            [
             'name' => 'total_amount',
             'type' => 'range',
             'label' => 'Order Total Price',
@@ -84,7 +89,8 @@ class OrderCrudController extends CrudController
                 if ($range->to) {
                     $this->crud->addClause('where', 'total_amount', '<=', (float)$range->to);
                 }
-            });
+            }
+        );
 
         CRUD::addFilter(
             [
@@ -97,7 +103,8 @@ class OrderCrudController extends CrudController
                 $dates = json_decode($value);
                 $this->crud->addClause('where', 'created_at', '>=', $dates->from . ' 00:00:00');
                 $this->crud->addClause('where', 'created_at', '<=', $dates->to . ' 23:59:59');
-            });
+            }
+        );
 
         CRUD::addColumns([
             [
@@ -117,7 +124,7 @@ class OrderCrudController extends CrudController
                 'name' => 'phone',
                 'label' => 'Phone',
                 'type' => 'custom_html',
-                'value' => fn(Order $order) => "<a class='text-dark' href='tel:{$order->phone}'>{$order->phone}</a>"
+                'value' => fn (Order $order) => "<a class='text-dark' href='tel:{$order->phone}'>{$order->phone}</a>"
             ],
             [
                 'name' => 'total_item',
@@ -135,7 +142,7 @@ class OrderCrudController extends CrudController
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => fn(Order $order) => $order->status_html
+                'value' => fn (Order $order) => $order->status_html
             ],
             [
                 'name' => 'ordered_at',
@@ -491,34 +498,43 @@ class OrderCrudController extends CrudController
                 'name' => 'ordered_at',
                 'label' => 'Ordered At',
                 'type' => 'datetime',
+                'default' => date('Y-m-d H:i:s'),
                 'tab' => 'Order',
             ],
-            [
-                'name' => 'delivery',
-                'label' => 'Delivery Type',
-                'type' => 'select2_from_array',
-                'options' => Order::DELIVERIES,
-                'tab' => 'Delivery',
-            ],
-            [
-                'name' => 'delivery_charge',
-                'label' => 'Delivery Charge',
-                'type' => 'number',
-                'tab' => 'Delivery',
-            ],
-            [
-                'name' => 'delivery_comment',
-                'label' => 'Delivery Comment',
-                'type' => 'textarea',
-                'tab' => 'Delivery',
-            ],
-            //Delivery
-            [
-                'name' => 'delivered_at',
-                'label' => 'Delivered At',
-                'type' => 'datetime',
-                'tab' => 'Delivery',
-            ],
+        ]);
+
+        if(setting('delivery_enabled', "0") == "1") {
+            CRUD::addFields([
+                [
+                    'name' => 'delivery',
+                    'label' => 'Delivery Type',
+                    'type' => 'select2_from_array',
+                    'options' => Order::DELIVERIES,
+                    'tab' => 'Delivery',
+                ],
+                [
+                    'name' => 'delivery_charge',
+                    'label' => 'Delivery Charge',
+                    'type' => 'number',
+                    'tab' => 'Delivery',
+                ],
+                [
+                    'name' => 'delivery_comment',
+                    'label' => 'Delivery Comment',
+                    'type' => 'textarea',
+                    'tab' => 'Delivery',
+                ],
+                //Delivery
+                [
+                    'name' => 'delivered_at',
+                    'label' => 'Delivered At',
+                    'type' => 'datetime',
+                    'tab' => 'Delivery',
+                ],
+            ]);
+        }
+
+        CRUD::addFields([
             //Other
             [
                 'name' => 'orderNotes',

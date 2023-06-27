@@ -17,6 +17,7 @@ return new class extends Migration
             $table->json('name');
             $table->string('slug')->unique();
             $table->foreignId('category_id')->nullable();
+            $table->foreignId('default_unit_id')->nullable()->constrained('units');
             $table->json('short_description')->nullable();
             $table->json('description')->nullable();
             $table->string('weight')->nullable();
@@ -29,6 +30,8 @@ return new class extends Migration
             $table->boolean('inventory_enabled')->default(true);
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
+            $table->string('cover_photo')->nullable();
+            $table->text('additional_photo')->nullable();
             $table->foreignId('status_id')->nullable()->constrained('statuses');
             $table->timestamps();
             $table->softDeletes();

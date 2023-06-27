@@ -39,19 +39,11 @@ class BrandCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('created_at');
-        CRUD::column('description');
         CRUD::column('image');
         CRUD::column('name');
         CRUD::column('slug');
         CRUD::column('status_id');
         CRUD::column('updated_at');
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
-         */
     }
 
     /**
@@ -64,10 +56,10 @@ class BrandCrudController extends CrudController
     {
         CRUD::setValidation(BrandRequest::class);
 
-        CRUD::field('description');
-        CRUD::field('image');
         CRUD::field('name');
-        CRUD::field('slug');
+        CRUD::field('slug')->type('slug')->target('name');
+        CRUD::field('description');
+        CRUD::field('image')->type('browse');
         CRUD::field('status_id');
 
         /**

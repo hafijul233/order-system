@@ -94,6 +94,12 @@ class CategoryCrudController extends CrudController
                 'hint'       => 'N.B: Except English, this field is not required',
             ],
             [
+                'name' => 'photo',
+                'label' => 'Photo',
+                'type' => 'browse',
+                'mime_types' => 'image/*'
+            ],
+            [
                 'name' => 'parent',
                 'label' => 'Parent',
                 'type' => 'select2',

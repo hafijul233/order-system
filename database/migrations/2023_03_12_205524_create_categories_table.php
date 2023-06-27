@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->json('name');
             $table->string('slug');
+            $table->string('photo')->nullable();
             $table->foreignId('parent_id')->nullable()->default(0);
             $table->integer('lft')->nullable()->default(0);
             $table->integer('rgt')->nullable()->default(0);

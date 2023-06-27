@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -151,11 +152,7 @@ class QuoteCrudController extends CrudController
     {
         CRUD::setValidation(QuoteRequest::class);
 
-        $scripts = Config::get('backpack.base.scripts');
-
-        $scripts[] = 'packages/backpack/base/js/order.js';
-
-        Config::set('backpack.base.scripts', $scripts);
+        Widget::add()->type('script')->content('js/pages/order.js');
 
         CRUD::addFields([
             //Basic
@@ -464,7 +461,7 @@ class QuoteCrudController extends CrudController
                 'name' => 'note',
                 'label' => 'Customer Note',
                 'type' => 'textarea',
-                'tab' => 'Order',
+                'tab' => 'Other',
             ],
             [
                 'name' => 'assignee_id',
@@ -473,9 +470,8 @@ class QuoteCrudController extends CrudController
                 'entity' => 'assignee',
                 'attribute' => 'name',
                 'default' => backpack_user()->id,
-                'tab' => 'Order'
+                'tab' => 'Other'
             ],
-            //Other
             [
                 'name' => 'orderNotes',
                 'label' => 'Notes',

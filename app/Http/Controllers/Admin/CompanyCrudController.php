@@ -129,6 +129,7 @@ class CompanyCrudController extends CrudController
                 'type' => 'relationship',
                 'ajax' => true,
                 'data_source' => backpack_url('customer/fetch/customer'),
+                'placeholder' => 'Select a customer that represent this company',
                 'inline_create' => [
                     'entity' => 'customer',
                     'force_select' => true,
@@ -149,6 +150,9 @@ class CompanyCrudController extends CrudController
                 'wrapper' => [
                     'class' => 'form-group col-md-6'
                 ],
+                'attributes' => [
+                    'placeholder' => 'Designation of Representative',
+                ]
             ],
             [
                 'name' => 'email',
@@ -168,16 +172,6 @@ class CompanyCrudController extends CrudController
                 ],
             ],
             [
-                'name' => 'logo',
-                'label' => 'Logo',
-                'type'      => 'upload',
-                'upload'    => true,
-                'tab' => 'Basic',
-                'wrapper' => [
-                    'class' => 'form-group col-md-6'
-                ],
-            ],
-            [
                 'name' => 'status_id',
                 'label' => 'Status',
                 'type' => 'select2_from_array',
@@ -185,21 +179,24 @@ class CompanyCrudController extends CrudController
                 'default' => Company::defaultStatusId(),
                 'allows_null' => false,
                 'tab' => 'Basic',
-                'wrapper' => [
-                    'class' => 'form-group col-md-6'
-                ],
+            ],
+            [
+                'name' => 'photo',
+                'label' => 'Photo',
+                'type' => 'browse',
+                'tab' => 'Profile'
             ],
             [
                 'name' => 'block_reason',
                 'label' => 'Suspend/Banned Reason',
                 'type' => 'textarea',
-                'tab' => 'Detail'
+                'tab' => 'Profile'
             ],
             [
                 'name' => 'note',
                 'label' => 'Notes',
                 'type' => 'textarea',
-                'tab' => 'Detail'
+                'tab' => 'Profile'
             ],
             [
                 'name' => 'newsletter_subscribed',

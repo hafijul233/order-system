@@ -118,6 +118,8 @@ class CustomerCrudController extends CrudController
     {
         CRUD::setValidation(CustomerRequest::class);
 
+        Widget::add()->type('script')->content('js/pages/customer.js');
+
         CRUD::addFields([
             //Basic Tab
             [
@@ -172,16 +174,12 @@ class CustomerCrudController extends CrudController
                 'type' => 'boolean',
                 'fake' => true,
                 'tab' => 'Basic',
-                'wrapper' => [
-                    'class' => 'form-group col-md-6 mt-md-3 mt-sm-0'
-                ],
             ],
-            //Authentication Tab
             [
                 'name' => 'password',
                 'label' => 'Password',
                 'type' => 'password',
-                'tab' => 'Authentication',
+                'tab' => 'Basic',
                 'wrapper' => [
                     'class' => 'form-group col-md-6'
                 ],
@@ -190,7 +188,7 @@ class CustomerCrudController extends CrudController
                 'name' => 'password_confirmation',
                 'label' => 'Confirm Password',
                 'type' => 'password',
-                'tab' => 'Authentication',
+                'tab' => 'Basic',
                 'wrapper' => [
                     'class' => 'form-group col-md-6'
                 ],
@@ -199,28 +197,35 @@ class CustomerCrudController extends CrudController
                 'name' => 'email_verified_at',
                 'label' => 'Email Verified At',
                 'type' => 'datetime_picker',
-                'tab' => 'Authentication',
+                'tab' => 'Profile',
                 'datetime_picker_options' => [
                     'format' => 'YYYY-MM-DD HH:mm:ss',
                 ],
                 'allows_null' => true,
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'phone_verified_at',
                 'label' => 'Phone Verified At',
                 'type' => 'datetime_picker',
-                'tab' => 'Authentication',
+                'tab' => 'Profile',
                 'datetime_picker_options' => [
                     'format' => 'YYYY-MM-DD HH:mm:ss',
                 ],
                 'allows_null' => true,
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             //Profile
             [
                 'name' => 'photo',
                 'label' => 'Photo',
                 'type' => 'browse',
-                'tab' => 'Profile'
+                'tab' => 'Profile',
+                'mime_types' => 'image/*'
             ],
             [
                 'name' => 'block_reason',
@@ -238,7 +243,7 @@ class CustomerCrudController extends CrudController
                 'name' => 'newsletter_subscribed',
                 'label' => 'Newsletter Subscribed?',
                 'type' => 'boolean',
-                'tab' => 'Promotion'
+                'tab' => 'Profile'
             ],
         ]);
     }

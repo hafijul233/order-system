@@ -11,7 +11,6 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use Backpack\CRUD\app\Library\Widget;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Class OrderCrudController
@@ -156,7 +155,7 @@ class OrderCrudController extends CrudController
     {
         CRUD::setValidation(OrderRequest::class);
 
-        Widget::add()->type('script')->content('packages/backpack/base/js/order.js');
+        Widget::add()->type('script')->content('js/pages/order.js');
 
         CRUD::addFields([
             //Basic

@@ -108,7 +108,19 @@ class ProductCrudController extends CrudController
                 'label' => 'Type',
                 'type' => 'select2_from_array',
                 'options' => Product::TYPES,
-                'tab' => 'Basic'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ]
+            ],
+            [
+                'name' => 'code',
+                'label' => 'Code OR SKU',
+                'type' => 'text',
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ]
             ],
             [
                 'name' => 'name',
@@ -136,18 +148,54 @@ class ProductCrudController extends CrudController
                 'tab' => 'Basic'
             ],
             [
-                'name' => 'platform',
-                'label' => 'Platform',
-                'type' => 'select2_from_array',
-                'options' => Product::PLATFORMS,
-                'tab' => 'Basic'
+                'name' => 'cost',
+                'label' => 'Cost',
+                'type' => 'number',
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ]
             ],
             [
                 'name' => 'price',
                 'label' => 'Price',
                 'type' => 'number',
                 'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+                'attributes' => [
+                    'placeholder' => 'Selling Price per Unit'
+                ]
             ],
+            [
+                'name' => 'platform',
+                'label' => 'Platform',
+                'type' => 'hidden',
+                'default' => 'both',
+                'tab' => 'Basic'
+            ],
+            [
+                'name' => 'default_quantity',
+                'label' => 'Default Quantity',
+                'type' => 'number',
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ]
+            ],
+            [
+                'name' => 'status',
+                'label' => 'Status',
+                'type' => 'select2_from_array',
+                'tab' => 'Basic',
+                'options' => Product::statusDropdown(),
+                'default' => Product::defaultStatusId(),
+                'allows_null' => false,
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ]
+                ],
             //Inventory
             [
                 'name' => 'inventory_enabled',
@@ -162,39 +210,12 @@ class ProductCrudController extends CrudController
                 'tab' => 'Inventory',
             ],
             [
-                'name' => 'default_quantity',
-                'label' => 'Default Quantity',
-                'type' => 'number',
-                'tab' => 'Inventory',
-            ],
-            [
-                'name' => 'cost',
-                'label' => 'Cost',
-                'type' => 'number',
-                'tab' => 'Inventory',
-            ],
-            [
                 'name' => 'reorder_level',
                 'label' => 'Reorder Level',
                 'type' => 'number',
                 'tab' => 'Inventory',
             ],
             //Detail
-            [
-                'name' => 'code',
-                'label' => 'Code OR SKU',
-                'type' => 'text',
-                'tab' => 'Detail'
-            ],
-            [
-                'name' => 'status',
-                'label' => 'Status',
-                'type' => 'select2_from_array',
-                'tab' => 'Detail',
-                'options' => Product::statusDropdown(),
-                'default' => Product::defaultStatusId(),
-                'allows_null' => false
-            ],
             [
                 'name' => 'block_reason',
                 'label' => 'Suspend/Block Reason',

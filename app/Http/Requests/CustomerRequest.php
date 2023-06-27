@@ -42,10 +42,7 @@ class CustomerRequest extends FormRequest
         $rules['block_reason'] = ['nullable', 'min:3', 'max:255', 'string'];
         $rules['note'] = ['nullable', 'min:3', 'max:255', 'string'];
         $rules['newsletter_subscribed'] = ['nullable', 'boolean'];
-        $rules['password'] = ['nullable', 'confirmed', Password::default()];
-        if ($this->method() == 'POST') {
-            $rules['password'][] = 'required_if:allowed_login,==,true';
-        }
+        $rules['password'] = ['nullable', 'required_if:allowed_login,==,1', 'confirmed', Password::default()];
 
         return $rules;
     }
@@ -57,5 +54,12 @@ class CustomerRequest extends FormRequest
                 $this->offsetUnset('password');
             }
         }
+    }
+
+    public function messages() {
+        
+        return [
+           'password.required_if' => 'The password field is required if customer allowed to logged.' 
+        ];
     }
 }

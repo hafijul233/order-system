@@ -88,14 +88,17 @@ class CategoryCrudController extends CrudController
             ],
             [
                 'name' => 'slug',
+                'target'  => 'name',
                 'label' => 'Slug',
-                'type' => 'text'
+                'type' => 'slug',
+                'hint'       => 'N.B: Except English, this field is not required',
             ],
             [
                 'name' => 'parent',
                 'label' => 'Parent',
                 'type' => 'select2',
-                'entity' => 'parent'
+                'entity' => 'parent',
+                'placeholder' => 'Select a category for top-level'
             ],
         ]);
 

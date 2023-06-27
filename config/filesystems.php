@@ -43,28 +43,14 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
-        'customer' => [
+        'uploads' => [
             'driver' => 'local',
-            'root' => public_path('media/customer'),
-            'url' => env('APP_URL').'/media/customer',
+            'root' => public_path('uploads'),
+            'url' => env('APP_URL').'/uploads',
             'visibility' => 'public',
             'throw' => false,
         ],
-        'product' => [
-            'driver' => 'local',
-            'root' => public_path('media/product'),
-            'url' => env('APP_URL').'/media/product',
-            'visibility' => 'public',
-            'throw' => false,
-        ],
-        'banner' => [
-            'driver' => 'local',
-            'root' => public_path('media/banner'),
-            'url' => env('APP_URL').'/media/banner',
-            'visibility' => 'public',
-            'throw' => false,
-        ],
-
+        
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

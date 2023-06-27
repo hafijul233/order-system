@@ -10,6 +10,7 @@ use App\Models\OrderItem;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -155,11 +156,7 @@ class OrderCrudController extends CrudController
     {
         CRUD::setValidation(OrderRequest::class);
 
-        $scripts = Config::get('backpack.base.scripts');
-
-        $scripts[] = 'packages/backpack/base/js/order.js';
-
-        Config::set('backpack.base.scripts', $scripts);
+        Widget::add()->type('script')->content('packages/backpack/base/js/order.js');
 
         CRUD::addFields([
             //Basic

@@ -168,13 +168,26 @@ class CompanyCrudController extends CrudController
                 ],
             ],
             [
+                'name' => 'logo',
+                'label' => 'Logo',
+                'type'      => 'upload',
+                'upload'    => true,
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            [
                 'name' => 'status_id',
                 'label' => 'Status',
                 'type' => 'select2_from_array',
                 'options' => Company::statusDropdown(),
                 'default' => Company::defaultStatusId(),
                 'allows_null' => false,
-                'tab' => 'Basic'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'block_reason',

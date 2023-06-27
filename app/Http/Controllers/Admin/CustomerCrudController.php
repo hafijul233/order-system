@@ -65,12 +65,7 @@ class CustomerCrudController extends CrudController
             fn() => $this->crud->addClause('whereNotNull', 'phone_verified_at')
         );
 
-        CRUD::addFilter(
-            [
-                'name' => 'created_at',
-                'type' => 'date_range',
-                'label' => 'Created'
-            ],
+        CRUD::addFilter([ 'name' => 'created_at', 'type' => 'date_range', 'label' => 'Created'],
             false,
             function ($value) { // if the filter is active
                 $dates = json_decode($value);
@@ -221,6 +216,12 @@ class CustomerCrudController extends CrudController
                 'allows_null' => true,
             ],
             //Profile
+            [
+                'name' => 'photo',
+                'label' => 'Photo',
+                'type' => 'browse',
+                'tab' => 'Profile'
+            ],
             [
                 'name' => 'block_reason',
                 'label' => 'Suspend/Banned Reason',

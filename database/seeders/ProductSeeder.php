@@ -15,7 +15,12 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         Schema::disableForeignKeyConstraints();
-        Product::insert(array(
+        Product::insert($this->data());
+        Schema::enableForeignKeyConstraints();
+    }
+
+    public function data() {
+        return array(
             array('id' => '1','code' => 'EV4K2004','name' => '{"en": "Hdmi Over Coax 4k Hdr 70m"}','slug' => 'hdmi-over-coax-4k-hdr-70m','category_id' => '1','short_description' => '{"en": ""}','description' => '{"en": "HDMI OVER COAX 4K HDR 70M"}','weight' => '100','default_quantity' => '1.000','platform' => 'offline','type' => 'normal','cost' => '986.9900','price' => '986.9900','reorder_level' => '10.000','inventory_enabled' => '1','block_reason' => NULL,'note' => NULL,'status_id' => '1','created_at' => '2022-09-06 19:35:17','updated_at' => '2023-01-12 22:40:05','deleted_at' => NULL),
             array('id' => '2','code' => 'T4X','name' => '{"en": "10-210768-25 Flagship Touchscreen Remote"}','slug' => '10-210768-25-flagship-touchscreen-remote','category_id' => '1','short_description' => '{"en": ""}','description' => '{"en": "10-210768-25"}','weight' => '100','default_quantity' => '1.000','platform' => 'offline','type' => 'normal','cost' => '982.0000','price' => '982.0000','reorder_level' => '10.000','inventory_enabled' => '1','block_reason' => NULL,'note' => NULL,'status_id' => '1','created_at' => '2022-09-06 19:40:40','updated_at' => '2023-01-12 22:39:46','deleted_at' => NULL),
             array('id' => '3','code' => 'MXA82TW','name' => '{"en": "8\\" White Marine Tower Spkrs"}','slug' => '8-white-marine-tower-spkrs','category_id' => '1','short_description' => '{"en": ""}','description' => '{"en": "8\\" WHITE MARINE TOWER SPKRS"}','weight' => '100','default_quantity' => '1.000','platform' => 'offline','type' => 'normal','cost' => '959.9500','price' => '959.9500','reorder_level' => '10.000','inventory_enabled' => '1','block_reason' => NULL,'note' => NULL,'status_id' => '1','created_at' => '2022-09-06 19:36:29','updated_at' => '2023-01-12 22:39:42','deleted_at' => NULL),
@@ -116,7 +121,6 @@ class ProductSeeder extends Seeder
             array('id' => '98','code' => 'XWO-BAP1','name' => '{"en": "Ac1200 Outdoor Bridging Ap Dual-band"}','slug' => 'ac1200-outdoor-bridging-ap-dual-band','category_id' => '1','short_description' => '{"en": ""}','description' => '{"en": "AC1200 OUTDOOR BRIDGING AP"}','weight' => '100','default_quantity' => '1.000','platform' => 'offline','type' => 'normal','cost' => '750.0000','price' => '750.0000','reorder_level' => '10.000','inventory_enabled' => '1','block_reason' => NULL,'note' => NULL,'status_id' => '1','created_at' => '2022-09-06 19:35:46','updated_at' => '2023-01-12 22:39:29','deleted_at' => NULL),
             array('id' => '99','code' => 'DMHWC5700NEX','name' => '{"en": "6.8\\" Mechless/ Alexa/carplay"}','slug' => '68-mechless-alexacarplay','category_id' => '1','short_description' => '{"en": ""}','description' => '{"en": "6.8\\" Mechless/ Alexa/CarPlay"}','weight' => '100','default_quantity' => '1.000','platform' => 'offline','type' => 'normal','cost' => '750.0000','price' => '750.0000','reorder_level' => '10.000','inventory_enabled' => '1','block_reason' => NULL,'note' => NULL,'status_id' => '1','created_at' => '2022-09-06 19:39:24','updated_at' => '2023-01-12 22:40:05','deleted_at' => NULL),
             array('id' => '100','code' => 'DMHW4600NEX','name' => '{"en": "6.8\\" Mechless/ Alexa/carplay/a"}','slug' => '68-mechless-alexacarplaya','category_id' => '1','short_description' => '{"en": ""}','description' => '{"en": "6.8\\" Mechless/ Alexa/CarPlay/A"}','weight' => '100','default_quantity' => '1.000','platform' => 'offline','type' => 'normal','cost' => '750.0000','price' => '750.0000','reorder_level' => '10.000','inventory_enabled' => '1','block_reason' => NULL,'note' => NULL,'status_id' => '1','created_at' => '2022-09-06 19:39:22','updated_at' => '2023-01-12 22:39:48','deleted_at' => NULL)
-          ));
-        Schema::enableForeignKeyConstraints();
+        );
     }
 }

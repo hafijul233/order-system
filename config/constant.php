@@ -51,4 +51,9 @@ return [
         Task::class => 'Task',
         Warehouse::class => 'Warehouse'
     ],
+    'payment_type' => [
+        'cash' => 'Cash',
+        'bank' => 'Bank Account',
+        'wallet' => 'E-Wallet'
+    ]
 ];

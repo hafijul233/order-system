@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\PaymentOptionRequest;
+use App\Models\PaymentOption;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -26,7 +27,7 @@ class PaymentOptionCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\PaymentOption::class);
+        CRUD::setModel(PaymentOption::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/payment-option');
         CRUD::setEntityNameStrings('payment option', 'payment options');
     }
@@ -40,7 +41,7 @@ class PaymentOptionCrudController extends CrudController
     protected function setupListOperation()
     {
         CRUD::column('id')->label('#');
-        CRUD::column('type');
+        CRUD::column('type')->type('custom_html')->value(fn(PaymentOption $paymentOption) => $paymentOption->type_html);
         CRUD::column('name');
         CRUD::column('enabled')->type('boolean');
         CRUD::column('created_at')->type('datetime');
@@ -61,7 +62,7 @@ class PaymentOptionCrudController extends CrudController
     {
         CRUD::setValidation(PaymentOptionRequest::class);
         
-        CRUD::field('type');
+        CRUD::field('type')->type('select2_from_array')->options(config('constant.payment_type'));
         CRUD::field('name');
         CRUD::field('enabled');
 

@@ -14,24 +14,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            StatusSeeder::class,
-            RoleSeeder::class,
-            SettingSeeder::class,
-            CountrySeeder::class,
-            CategorySeeder::class,
-            UserSeeder::class,
-            CustomerSeeder::class,
-            CompanySeeder::class,
-            AddressBookSeeder::class,
-            NewsLetterSeeder::class, 
-            PaymentOptionSeeder::class,
-            ProductSeeder::class,
-        ]);
+        $this->call(SystemSeeder::class);
 
-        \App\Models\Tag::factory(15)->createQuietly();
-
-        $this->call(StateSeeder::class, false, ["19"]);
-        $this->call(CitySeeder::class, false, ["19"]);
+        $this->command->ask("Load Dummy Data", 'n');
     }
 }

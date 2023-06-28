@@ -130,12 +130,12 @@
                     </div>
                 </div>
             @else
-                <div class="alert alert-warning text-center">
+                <div class="alert alert-warning text-center mb-0">
                     No Event Recorded
                 </div>
             @endif
         @else
-            <div class="alert alert-warning text-center">
+            <div class="alert alert-warning text-center mb-0">
                 Undefined Model index or Object is not instance of <code>\OwenIt\Auditing\Contracts\Auditable</code>
             </div>
         @endif

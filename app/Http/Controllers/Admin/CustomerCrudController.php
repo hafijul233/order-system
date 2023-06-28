@@ -45,11 +45,14 @@ class CustomerCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::addFilter(['name' => 'platform', 'type' => 'dropdown', 'label' => 'Platform'],
-            config('constant.platforms'),
-            fn($value) => $this->crud->addClause('where', 'platform', '=', $value)
-        );
-
+        if(setting('frontend_enabled', '0') == '1') {
+            CRUD::addFilter(
+                ['name' => 'platform', 'type' => 'dropdown', 'label' => 'Platform'],
+                config('constant.platforms'),
+                fn ($value) => $this->crud->addClause('where', 'platform', '=', $value)
+            );
+        }
+        
         CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
             Customer::statusDropdown(),
             fn($value) => $this->crud->addClause('whereIn', 'status_id', json_decode($value, true))

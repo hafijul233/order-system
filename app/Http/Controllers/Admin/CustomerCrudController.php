@@ -148,24 +148,16 @@ class CustomerCrudController extends CrudController
                 ],
             ],
             [
-                'name' => 'platform',
-                'label' => 'Platform',
-                'type' => 'select2_from_array',
-                'options' => config('constant.platforms'),
-                'default' => 'office',
-                'allows_null' => false,
+                'name' => 'photo',
+                'label' => 'Photo',
+                'type' => 'browse',
                 'tab' => 'Basic',
-                'wrapper' => [
-                    'class' => 'form-group col-md-6'
-                ],
+                'mime_types' => 'image/*',
             ],
             [
-                'name' => 'status_id',
-                'label' => 'Status',
-                'type' => 'select2_from_array',
-                'options' => Customer::statusDropdown(),
-                'default' => Customer::defaultStatusId(),
-                'allows_null' => false,
+                'name' => 'newsletter_subscribed',
+                'label' => 'Newsletter Subscribed?',
+                'type' => 'boolean',
                 'tab' => 'Basic',
                 'wrapper' => [
                     'class' => 'form-group col-md-6'
@@ -177,7 +169,10 @@ class CustomerCrudController extends CrudController
                 'type' => 'boolean',
                 'fake' => true,
                 'tab' => 'Basic',
-                'default' => setting('customer_login', false)
+                'default' => setting('customer_login', "0"),
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'password',
@@ -225,13 +220,6 @@ class CustomerCrudController extends CrudController
             ],
             //Profile
             [
-                'name' => 'photo',
-                'label' => 'Photo',
-                'type' => 'browse',
-                'tab' => 'Profile',
-                'mime_types' => 'image/*'
-            ],
-            [
                 'name' => 'block_reason',
                 'label' => 'Suspend/Banned Reason',
                 'type' => 'textarea',
@@ -244,12 +232,45 @@ class CustomerCrudController extends CrudController
                 'tab' => 'Profile'
             ],
             [
-                'name' => 'newsletter_subscribed',
-                'label' => 'Newsletter Subscribed?',
-                'type' => 'boolean',
-                'tab' => 'Profile'
+                'name' => 'status_id',
+                'label' => 'Status',
+                'type' => 'select2_from_array',
+                'options' => Customer::statusDropdown(),
+                'default' => Customer::defaultStatusId(),
+                'allows_null' => false,
+                'tab' => 'Profile',
+                'wrapper' => [
+                    'class' => 'form-group ' . ((setting('frontend_enabled', '0') == '1') ? 'col-md-6' : 'col-md-12')
+                ],
             ],
         ]);
+
+        if(setting('frontend_enabled', '0') == '1') {
+            CRUD::addField([
+                    'name' => 'platform',
+                    'label' => 'Platform',
+                    'type' => 'select2_from_array',
+                    'options' => config('constant.platforms'),
+                    'default' => 'office',
+                    'allows_null' => false,
+                    'tab' => 'Profile',
+                    'wrapper' => [
+                        'class' => 'form-group col-md-6'
+                    ],
+                ]);
+        } else {
+            CRUD::addField([
+                'name' => 'platform',
+                'label' => 'Platform',
+                'type' => 'hidden',
+                'default' => 'office',
+                'allows_null' => false,
+                'tab' => 'Profile',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ]);
+        }
     }
 
     /**
@@ -275,6 +296,11 @@ class CustomerCrudController extends CrudController
             [
                 'name' => 'id',
                 'label' => '#',
+            ],
+            [
+                'name' => 'photo',
+                'label' => 'Photo',
+                'type' => 'image'
             ],
             [
                 'name' => 'name',

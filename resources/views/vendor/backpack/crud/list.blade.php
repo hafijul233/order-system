@@ -160,6 +160,18 @@
   <link rel="stylesheet" type="text/css" href="{{ asset('packages/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css') }}">
 
   {{-- CRUD LIST CONTENT - crud_list_styles stack --}}
+  @push('crud_list_styles')
+    <style>
+      td.show .dropdown-item {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+      }
+
+      td.show .dropdown-item:hover {
+        color: #347de3!important;
+      }
+    </style>
+  @endpush
   @stack('crud_list_styles')
 @endsection
 

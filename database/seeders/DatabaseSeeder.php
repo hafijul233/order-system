@@ -16,6 +16,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(SystemSeeder::class);
 
-        $this->command->ask("Load Dummy Data", 'n');
+        $this->call(DummySeeder::class);
     }
 }

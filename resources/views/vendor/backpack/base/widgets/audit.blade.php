@@ -103,7 +103,7 @@
                                                         <td>New</td>
                                                         <td>Old</td>
                                                     </tr>
-                                                    @foreach ($audit_changes($action->new_values, $action->old_values) ?? [] as $change_field)
+                                                    @forelse ($audit_changes($action->new_values, $action->old_values) ?? [] as $change_field)
                                                         <tr>
                                                             <th>
                                                                 {{ ucwords(str_replace(['_'], [' '], $change_field)) }}
@@ -115,7 +115,13 @@
                                                                 {{ $action->new_values[$change_field] ?? '-' }}
                                                             </td>
                                                         </tr>
-                                                    @endforeach
+                                                        @empty
+                                                        <tr>
+                                                            <th colspan="3" class="text-center">
+                                                                Fields are secret or excluded from visibility 
+                                                            </th>
+                                                        </tr>
+                                                    @endforelse
                                                 </tbody>
                                             </table>
                                         </div>

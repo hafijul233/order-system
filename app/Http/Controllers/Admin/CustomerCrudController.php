@@ -337,13 +337,15 @@ class CustomerCrudController extends CrudController
             ],
         ]);
 
-        Widget::add([
-            'type' => 'audit',
-            'section' => 'after_content',
-            'wrapper' => ['class' => 'col-md-12 px-0'],
-            'header' => "<h4 class='card-title mb-0'>Customer Audits</h4>",
-            'crud' => $this->crud,
-        ]);
+        if(setting('display_activity_log') == '1') {
+            Widget::add([
+                'type' => 'audit',
+                'section' => 'after_content',
+                'wrapper' => ['class' => 'col-md-12 px-0'],
+                'header' => "<h4 class='card-title mb-0'>Customer Audits</h4>",
+                'crud' => $this->crud,
+            ]);
+        }
     }
 
     protected function fetchCustomer()

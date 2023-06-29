@@ -13,6 +13,7 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
 use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 use Illuminate\Http\JsonResponse;
@@ -172,19 +173,10 @@ class CompanyCrudController extends CrudController
                 ],
             ],
             [
-                'name' => 'status_id',
-                'label' => 'Status',
-                'type' => 'select2_from_array',
-                'options' => Company::statusDropdown(),
-                'default' => Company::defaultStatusId(),
-                'allows_null' => false,
-                'tab' => 'Basic',
-            ],
-            [
                 'name' => 'photo',
                 'label' => 'Photo',
                 'type' => 'browse',
-                'tab' => 'Profile'
+                'tab' => 'Basic'
             ],
             [
                 'name' => 'block_reason',
@@ -203,6 +195,15 @@ class CompanyCrudController extends CrudController
                 'label' => 'Newsletter Subscribed?',
                 'type' => 'boolean',
                 'tab' => 'Profile'
+            ],
+            [
+                'name' => 'status_id',
+                'label' => 'Status',
+                'type' => 'select2_from_array',
+                'options' => Company::statusDropdown(),
+                'default' => Company::defaultStatusId(),
+                'allows_null' => false,
+                'tab' => 'Profile',
             ],
         ]);
     }
@@ -279,6 +280,60 @@ class CompanyCrudController extends CrudController
                 'default' => Company::defaultStatusId()
             ]
         ]);
+    }
+
+    /**
+     * Define what happens when the Show operation is loaded.
+     *
+     * @see  https://backpackforlaravel.com/docs/crud-operation-show-entries
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::addColumns([
+            [
+                'name' => 'id',
+                'label' => '#',
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Name',
+            ],
+            [
+                'name' => 'representative_id',
+                'label' => 'Representative',
+                'type' => 'custom_html',
+                'value' => fn(Company $company) => "<a class='text-info text-decoration-none' style='font-weight: 550 !important;' title='Customer' target='_blank' href='" . route('customer.show', $company->representative->id) . "'><i class='la la-user-check text-info'></i> {$company->representative->name}</a>",
+            ],
+            [
+                'name' => 'email',
+                'label' => 'Business Email',
+                'type' => 'custom_html',
+                'value' => fn(Company $company) => "<a class='text-dark' href='maiilto:{$company->email}'>{$company->email} " . (($company->email_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
+            ],
+            [
+                'name' => 'phone',
+                'label' => 'Business Phone',
+                'type' => 'custom_html',
+                'value' => fn(Company $company) => "<a class='text-dark' href='tel:{$company->phone}'>{$company->phone} " . (($company->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
+            ],
+            [
+                'name' => 'status_id',
+                'label' => 'Status',
+                'type' => 'custom_html',
+                'value' => fn(Company $company) => $company->status_html
+            ]
+        ]);
+
+        if(setting('display_activity_log') == '1') {
+            Widget::add([
+                'type' => 'audit',
+                'section' => 'after_content',
+                'wrapper' => ['class' => 'col-md-12 px-0'],
+                'header' => "<h5 class='card-title mb-0'>CompanyActivity Logs</h5>",
+                'crud' => $this->crud,
+            ]);
+        }
     }
 
     /**

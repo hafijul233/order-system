@@ -285,9 +285,9 @@ class CustomerCrudController extends CrudController
     }
 
     /**
-     * Define what happens when the List operation is loaded.
+     * Define what happens when the Show operation is loaded.
      *
-     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
+     * @see  https://backpackforlaravel.com/docs/crud-operation-show-entries
      * @return void
      */
     protected function setupShowOperation()
@@ -342,7 +342,7 @@ class CustomerCrudController extends CrudController
                 'type' => 'audit',
                 'section' => 'after_content',
                 'wrapper' => ['class' => 'col-md-12 px-0'],
-                'header' => "<h4 class='card-title mb-0'>Customer Audits</h4>",
+                'header' => "<h5 class='card-title mb-0'>CustomerActivity Logs</h5>",
                 'crud' => $this->crud,
             ]);
         }

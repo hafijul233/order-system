@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\BrandRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 
 /**
  * Class BrandCrudController
@@ -39,6 +40,7 @@ class BrandCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        CRUD::column('id')->label('#');
         CRUD::column('image');
         CRUD::column('name');
         CRUD::column('slug');
@@ -78,5 +80,31 @@ class BrandCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+        /**
+     * Define what happens when the Show operation is loaded.
+     * 
+     * @see  https://backpackforlaravel.com/docs/crud-operation-show-entries
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::column('id')->label('#');
+        CRUD::column('image');
+        CRUD::column('name');
+        CRUD::column('slug');
+        CRUD::column('status_id');
+        CRUD::column('updated_at');
+
+        if(setting('display_activity_log') == '1') {
+            Widget::add([
+                'type' => 'audit',
+                'section' => 'after_content',
+                'wrapper' => ['class' => 'col-md-12 px-0'],
+                'header' => "<h5 class='card-title mb-0'>BrandActivity Logs</h5>",
+                'crud' => $this->crud,
+            ]);
+        }
     }
 }

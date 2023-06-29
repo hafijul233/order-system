@@ -283,6 +283,67 @@ class ProductCrudController extends CrudController
         $this->setupCreateOperation();
     }
 
+    /**
+     * Define what happens when the Show operation is loaded.
+     *
+     * @see  https://backpackforlaravel.com/docs/crud-operation-show-entries
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::addColumns([
+            [
+                'name' => 'id',
+                'label' => '#'
+            ],
+            [
+                'name' => 'code',
+                'label' => 'Code'
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Name',
+                'type' => 'closure',
+                'function' => fn (Product $product) => $product->name,
+            ],
+            [
+                'name' => 'category_id',
+                'label' => 'Category'
+            ],
+            [
+                'name' => 'platform',
+                'label' => 'Platform',
+                'type' => 'custom_html',
+                'value' => fn (Product $product) => $product->platform_html,
+            ],
+            [
+                'name' => 'price',
+                'label' => 'Price'
+            ],
+            [
+                'name' => 'status',
+                'label' => 'Status',
+                'type' => 'custom_html',
+                'value' => fn (Product $product) => $product->status_html,
+            ],
+            [
+                'name' => 'updated_at',
+                'label' => 'Last updated',
+                'type' => 'datetime'
+            ],
+        ]);
+
+        if(setting('display_activity_log') == '1') {
+            Widget::add([
+                'type' => 'audit',
+                'section' => 'after_content',
+                'wrapper' => ['class' => 'col-md-12 px-0'],
+                'header' => "<h5 class='card-title mb-0'>" . setting('item_label', 'Product') ."Activity Logs</h5>",
+                'crud' => $this->crud,
+            ]);
+        }
+    }
+
     protected function fetchProduct()
     {
         return $this->fetch(Product::class);

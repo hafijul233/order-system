@@ -12,6 +12,7 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 
 /**
  * Class CategoryCrudController
@@ -46,6 +47,11 @@ class CategoryCrudController extends CrudController
             [
                 'name' => 'id',
                 'label' => '#',
+            ],
+            [
+                'name' => 'photo',
+                'label' => 'Photo',
+                'type' => 'image'
             ],
             [
                 'name' => 'name',
@@ -124,6 +130,57 @@ class CategoryCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    /**
+     * Define what happens when the Show operation is loaded.
+     *
+     * @see  https://backpackforlaravel.com/docs/crud-operation-show-entries
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::addColumns([
+            [
+                'name' => 'id',
+                'label' => '#',
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Name',
+                'type' => 'closure',
+                'function' => function($category) {
+                    return $category->name;
+                }
+            ],
+            [
+                'name' => 'slug',
+                'label' => 'Slug'
+            ],
+            [
+                'name' => 'parent',
+                'label' => 'Parent',
+            ],
+            [
+                'name' => 'photo',
+                'label' => 'Photo',
+                'type' => 'image'
+            ],
+            [
+                'name' => 'created_at',
+                'label' => 'Created At',
+            ],
+        ]);
+
+        if(setting('display_activity_log') == '1') {
+            Widget::add([
+                'type' => 'audit',
+                'section' => 'after_content',
+                'wrapper' => ['class' => 'col-md-12 px-0'],
+                'header' => "<h5 class='card-title mb-0'>CategoryActivity Logs</h5>",
+                'crud' => $this->crud,
+            ]);
+        }
     }
 
     /**

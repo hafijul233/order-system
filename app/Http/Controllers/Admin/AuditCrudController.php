@@ -28,7 +28,7 @@ class AuditCrudController extends CrudController
     {
         CRUD::setModel(\App\Models\Audit::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/audit');
-        CRUD::setEntityNameStrings('audit', 'audits');
+        CRUD::setEntityNameStrings('activity log', 'activity logs');
     }
 
     /**

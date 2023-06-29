@@ -69,7 +69,7 @@
                         <!-- timeline time label -->
                         <div class="time-label">
                             <span class="{{ $badge_class() }}">
-                                {{ date('d M. Y', strtotime($date)) }}
+                                {{ \Carbon\Carbon::parse($date)->format('d M, Y') }}
                             </span>
                         </div>
                         <!-- /.timeline-label -->
@@ -88,7 +88,7 @@
                                         {{ strtolower(class_basename($action->auditable_type)) }}
                                     </h3>
 
-                                    <div class="timeline-body">
+                                    <div class="timeline-body p-3 bg-white">
                                         <p>
                                             This operation is requested from <a
                                                 href="https://google.com/search?q={{ $action->ip_address }}"
@@ -96,13 +96,15 @@
                                                 class="text-info">{{ $action->user_agent }}</span>.
                                         </p>
                                         <div class="table-responsive">
-                                            <table class="table table-striped table-bordered">
-                                                <tbody>
+                                            <table class="table table-hover table-bordered mb-0">
+                                                <thead class="thead-light">
                                                     <tr class="text-center font-weight-bold">
                                                         <th>Field</th>
-                                                        <td>New</td>
-                                                        <td>Old</td>
+                                                        <th>New</th>
+                                                        <th>Old</th>
                                                     </tr>
+                                                </thead>
+                                                <tbody>
                                                     @forelse ($audit_changes($action->new_values, $action->old_values) ?? [] as $change_field)
                                                         <tr>
                                                             <th>

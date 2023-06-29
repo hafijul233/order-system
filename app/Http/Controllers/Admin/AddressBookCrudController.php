@@ -140,7 +140,7 @@ class AddressBookCrudController extends CrudController
         CRUD::addFields([
             [
                 'name' => 'addressable',
-                'label' => 'Address To',
+                'label' => 'Address Of',
                 'type' => 'relationship',
                 'allows_null' => false,
                 'tab' => 'Basic',
@@ -361,6 +361,16 @@ class AddressBookCrudController extends CrudController
             ],
 
         ]);
+
+        if(setting('display_activity_log') == '1') {
+            Widget::add([
+                'type' => 'audit',
+                'section' => 'after_content',
+                'wrapper' => ['class' => 'col-md-12 px-0'],
+                'header' => "<h5 class='card-title mb-0'>AddressActivity Logs</h5>",
+                'crud' => $this->crud,
+            ]);
+        } 
     }
 
     protected function setupInlineCreateOperation()

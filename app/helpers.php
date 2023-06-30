@@ -13,3 +13,15 @@ if (!function_exists('setting')) {
         return config("settings.{$key}", $default);
     }
 }
+
+if (!function_exists('is_installed')) {
+    /**
+     * return current application installation status
+     * 
+     * @return bool
+     */
+    function is_installed()
+    {
+        return file_exists(storage_path('installed'));
+    }
+}

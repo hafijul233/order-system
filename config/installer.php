@@ -47,7 +47,7 @@ return [
         'storage/framework/'     => '775',
         'storage/logs/'          => '775',
         'bootstrap/cache/'       => '775',
-        'public/media/'          => '775',
+        'public/uploads/'        => '775',
     ],
 
     /*

@@ -16,6 +16,7 @@ Route::group([
     ),
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
+	Route::crud(config('backpack.settings.route'), 'SettingCrudController');
     Route::crud('customer', 'CustomerCrudController');
     Route::crud('address-book', 'AddressBookCrudController');
     Route::crud('company', 'CompanyCrudController');

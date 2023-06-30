@@ -113,7 +113,7 @@ return [
 
                 'app_tabs' => [
                     'more_info' => 'Informasi Lainnya',
-                    'broadcasting_title' => 'Broadcasting, Caching, Session, &amp; Queue',
+                    'broadcasting_title' => 'Broadcasting, Caching, Session, & Queue',
                     'broadcasting_label' => 'Broadcast Driver',
                     'broadcasting_placeholder' => 'Broadcast Driver',
                     'cache_label' => 'Cache Driver',
@@ -187,7 +187,7 @@ return [
         'title' => 'Instalasi Selesai',
         'templateTitle' => 'Instalasi Selesai',
         'finished' => 'Aplikasi telah berhasil dipasang.',
-        'migration' => 'Keluaran Migration &amp; Seed Console:',
+        'migration' => 'Keluaran Migration & Seed Console:',
         'console' => 'Keluaran Application Console:',
         'log' => 'Entri Log Aplikasi:',
         'env' => 'Hasil akhir berkas .env:',

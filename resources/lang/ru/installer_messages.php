@@ -105,7 +105,7 @@ return [
 
                 'app_tabs' => [
                     'more_info' => 'Больше информации',
-                    'broadcasting_title' => 'Broadcasting, Caching, Session, &amp; Queue',
+                    'broadcasting_title' => 'Broadcasting, Caching, Session, & Queue',
                     'broadcasting_label' => 'Broadcast Driver',
                     'broadcasting_placeholder' => 'Broadcast Driver',
                     'cache_label' => 'Cache Driver',

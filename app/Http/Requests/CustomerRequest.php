@@ -30,18 +30,19 @@ class CustomerRequest extends FormRequest
     {
 
         $rules['name'] = ['required', 'min:3', 'max:255', 'string'];
-        $rules['email'] = ['min:5', 'max:255', 'email:rfs,dns', 'nullable',
-            Rule::unique('customers', 'email')->ignore(request()->route('id')),];
+        $rules['email'] = [
+            'min:5', 'max:255', 'email:rfs,dns', 'nullable', 'required_if:newsletter_subscribed,==,true',
+            Rule::unique('customers', 'email')->ignore(request()->route('id')),
+        ];
         $rules['phone'] = ['required', 'min:10', 'max:255', 'string', 'nullable'];
-        $rules['type'] = ['required', Rule::in(array_keys(Customer::TYPES))];
-        $rules['status'] = ['required', Rule::in(array_keys(Customer::STATUSES))];
+        $rules['platform'] = ['required', Rule::in(array_keys(config('constant.platforms')))];
+        $rules['status_id'] = ['required', Rule::in(Customer::statusesId())];
         $rules['email_verified_at'] = ['nullable', 'date', 'before:' . now()];
         $rules['phone_verified_at'] = ['nullable', 'date', 'before:' . now()];
         $rules['block_reason'] = ['nullable', 'min:3', 'max:255', 'string'];
         $rules['note'] = ['nullable', 'min:3', 'max:255', 'string'];
-        $rules['password'] = ($this->method() == 'POST')
-            ? ['required', 'min:5', 'max:255', 'confirmed', Password::default()]
-            : ['nullable', 'min:5', 'max:255', 'confirmed'];
+        $rules['newsletter_subscribed'] = ['nullable', 'boolean'];
+        $rules['password'] = ['nullable', 'required_if:allowed_login,==,1', 'confirmed', Password::default()];
 
         return $rules;
     }
@@ -53,5 +54,12 @@ class CustomerRequest extends FormRequest
                 $this->offsetUnset('password');
             }
         }
+    }
+
+    public function messages() {
+        
+        return [
+           'password.required_if' => 'The password field is required if customer allowed to logged.' 
+        ];
     }
 }

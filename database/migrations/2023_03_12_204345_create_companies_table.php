@@ -14,13 +14,17 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('representative')->nullable();
+            $table->foreignId('representative_id')->nullable()->constrained('customers');
             $table->string('designation')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->enum('status', array_keys(\App\Models\Company::STATUSES))->default('active')->nullable();
+            $table->string('photo')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('phone_verified_at')->nullable();
+            $table->boolean('newsletter_subscribed')->default(false);
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
+            $table->foreignId('status_id')->nullable()->constrained('statuses');
             $table->timestamps();
             $table->softDeletes();
         });

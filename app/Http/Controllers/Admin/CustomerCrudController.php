@@ -12,6 +12,9 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
+use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
+use Backpack\Pro\Http\Controllers\Operations\InlineCreateOperation;
 
 /**
  * Class CustomerCrudController
@@ -20,7 +23,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  */
 class CustomerCrudController extends CrudController
 {
-    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation, ShowOperation;
+    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation, ShowOperation, InlineCreateOperation, FetchOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -29,7 +32,7 @@ class CustomerCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Customer::class);
+        CRUD::setModel(Customer::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/customer');
         CRUD::setEntityNameStrings('customer', 'customers');
     }
@@ -42,6 +45,37 @@ class CustomerCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        if(setting('frontend_enabled', '0') == '1') {
+            CRUD::addFilter(
+                ['name' => 'platform', 'type' => 'dropdown', 'label' => 'Platform'],
+                config('constant.platforms'),
+                fn ($value) => $this->crud->addClause('where', 'platform', '=', $value)
+            );
+        }
+        
+        CRUD::addFilter(['name' => 'status', 'type' => 'select2_multiple', 'label' => 'Status'],
+            Customer::statusDropdown(),
+            fn($value) => $this->crud->addClause('whereIn', 'status_id', json_decode($value, true))
+        );
+
+        CRUD::addFilter(['type' => 'simple', 'name' => 'email_verified_at', 'label' => 'Email Verified'],
+            false,
+            fn() => $this->crud->addClause('where', 'email_verified_at', '!=', null)
+        );
+
+        CRUD::addFilter(['type' => 'simple', 'name' => 'phone_verified_at', 'label' => 'Phone Verified'],
+            false,
+            fn() => $this->crud->addClause('whereNotNull', 'phone_verified_at')
+        );
+
+        CRUD::addFilter([ 'name' => 'created_at', 'type' => 'date_range', 'label' => 'Created'],
+            false,
+            function ($value) { // if the filter is active
+                $dates = json_decode($value);
+                $this->crud->addClause('where', 'created_at', '>=', $dates->from . ' 00:00:00');
+                $this->crud->addClause('where', 'created_at', '<=', $dates->to . ' 23:59:59');
+            });
+
         CRUD::addColumns([
             [
                 'name' => 'id',
@@ -55,42 +89,25 @@ class CustomerCrudController extends CrudController
                 'name' => 'email',
                 'label' => 'Email',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return "<a class='text-dark' href='maiilto:{$customer->email}'>{$customer->email} " . (($customer->email_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>";
-                }
+                'value' => fn(Customer $customer) => "<a class='text-dark' href='maiilto:{$customer->email}'>{$customer->email} " . (($customer->email_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
             ],
             [
                 'name' => 'phone',
                 'label' => 'Phone',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return "<a class='text-dark' href='tel:{$customer->phone}'>{$customer->phone} " . (($customer->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>";
-                }
-            ],
-            [
-                'name' => 'type',
-                'label' => 'Type',
-                'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return match ($customer->type) {
-                        'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . Customer::TYPES[$customer->type] . "</span>",
-                        'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . Customer::TYPES[$customer->type] . "</span>",
-                        default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
-                    };
-                }
+                'value' => fn(Customer $customer) => "<a class='text-dark' href='tel:{$customer->phone}'>{$customer->phone} " . (($customer->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
             ],
             [
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return match ($customer->status) {
-                        'active' => "<span class='text-success'><i class='la la-check'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                        'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                        'banned' => "<span class='text-danger'><i class='la la-times'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                    };
-                }
-            ]
+                'value' => fn(Customer $customer) => $customer->status_html
+            ],
+            [
+                'name' => 'created_at',
+                'type' => 'datetime',
+                'label' => 'Created'
+            ],
         ]);
     }
 
@@ -104,6 +121,8 @@ class CustomerCrudController extends CrudController
     {
         CRUD::setValidation(CustomerRequest::class);
 
+        Widget::add()->type('script')->content('js/pages/customer.js');
+
         CRUD::addFields([
             //Basic Tab
             [
@@ -115,55 +134,91 @@ class CustomerCrudController extends CrudController
                 'name' => 'email',
                 'label' => 'Email',
                 'type' => 'email',
-                'tab' => 'Basic'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'phone',
                 'label' => 'Phone',
-                'tab' => 'Basic'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
-                'name' => 'type',
-                'label' => 'Type',
-                'type' => 'select_from_array',
-                'options' => Customer::TYPES,
-                'allows_null' => false,
-                'tab' => 'Basic'
+                'name' => 'photo',
+                'label' => 'Photo',
+                'type' => 'browse',
+                'tab' => 'Basic',
+                'mime_types' => 'image/*',
             ],
-            //Authentication Tab
+            [
+                'name' => 'newsletter_subscribed',
+                'label' => 'Newsletter Subscribed?',
+                'type' => 'boolean',
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
+            [
+                'name' => 'allowed_login',
+                'label' => 'Customer Allowed to Login on system?',
+                'type' => 'boolean',
+                'fake' => true,
+                'tab' => 'Basic',
+                'default' => setting('customer_login', "0"),
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ],
             [
                 'name' => 'password',
                 'label' => 'Password',
                 'type' => 'password',
-                'tab' => 'Authentication'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'password_confirmation',
                 'label' => 'Confirm Password',
                 'type' => 'password',
-                'tab' => 'Authentication'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'email_verified_at',
                 'label' => 'Email Verified At',
-                'type' => 'datetime',
-                'tab' => 'Authentication'
+                'type' => 'datetime_picker',
+                'tab' => 'Profile',
+                'datetime_picker_options' => [
+                    'format' => 'YYYY-MM-DD HH:mm:ss',
+                ],
+                'allows_null' => true,
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             [
                 'name' => 'phone_verified_at',
                 'label' => 'Phone Verified At',
-                'type' => 'datetime',
-                'tab' => 'Authentication'
+                'type' => 'datetime_picker',
+                'tab' => 'Profile',
+                'datetime_picker_options' => [
+                    'format' => 'YYYY-MM-DD HH:mm:ss',
+                ],
+                'allows_null' => true,
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
             ],
             //Profile
-            [
-                'name' => 'status',
-                'label' => 'Status',
-                'type' => 'select_from_array',
-                'options' => Customer::STATUSES,
-                'allows_null' => false,
-                'tab' => 'Profile'
-            ],
             [
                 'name' => 'block_reason',
                 'label' => 'Suspend/Banned Reason',
@@ -177,17 +232,45 @@ class CustomerCrudController extends CrudController
                 'tab' => 'Profile'
             ],
             [
-                'name' => 'newsletter_subscribed',
-                'label' => 'Newsletter Subscribed?',
-                'type' => 'boolean',
-                'tab' => 'Promotion'
+                'name' => 'status_id',
+                'label' => 'Status',
+                'type' => 'select2_from_array',
+                'options' => Customer::statusDropdown(),
+                'default' => Customer::defaultStatusId(),
+                'allows_null' => false,
+                'tab' => 'Profile',
+                'wrapper' => [
+                    'class' => 'form-group ' . ((setting('frontend_enabled', '0') == '1') ? 'col-md-6' : 'col-md-12')
+                ],
             ],
         ]);
-        /**
-         * Fields can be defined using the fluent syntax or array syntax:
-         * - CRUD::field('price')->type('number');
-         * - CRUD::addField(['name' => 'price', 'type' => 'number']));
-         */
+
+        if(setting('frontend_enabled', '0') == '1') {
+            CRUD::addField([
+                    'name' => 'platform',
+                    'label' => 'Platform',
+                    'type' => 'select2_from_array',
+                    'options' => config('constant.platforms'),
+                    'default' => 'office',
+                    'allows_null' => false,
+                    'tab' => 'Profile',
+                    'wrapper' => [
+                        'class' => 'form-group col-md-6'
+                    ],
+                ]);
+        } else {
+            CRUD::addField([
+                'name' => 'platform',
+                'label' => 'Platform',
+                'type' => 'hidden',
+                'default' => 'office',
+                'allows_null' => false,
+                'tab' => 'Profile',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ],
+            ]);
+        }
     }
 
     /**
@@ -202,9 +285,9 @@ class CustomerCrudController extends CrudController
     }
 
     /**
-     * Define what happens when the List operation is loaded.
+     * Define what happens when the Show operation is loaded.
      *
-     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
+     * @see  https://backpackforlaravel.com/docs/crud-operation-show-entries
      * @return void
      */
     protected function setupShowOperation()
@@ -212,7 +295,12 @@ class CustomerCrudController extends CrudController
         CRUD::addColumns([
             [
                 'name' => 'id',
-                'label' => 'ID',
+                'label' => '#',
+            ],
+            [
+                'name' => 'photo',
+                'label' => 'Photo',
+                'type' => 'image'
             ],
             [
                 'name' => 'name',
@@ -221,65 +309,47 @@ class CustomerCrudController extends CrudController
             [
                 'name' => 'email',
                 'label' => 'Email',
-                'type' => 'email'
+                'type' => 'custom_html',
+                'value' => fn(Customer $customer) => "<a class='text-dark' href='maiilto:{$customer->email}'>{$customer->email} " . (($customer->email_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
             ],
             [
                 'name' => 'phone',
                 'label' => 'Phone',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return "<a href='tel:{$customer->phone}'>{$customer->phone}</a>";
-                }
-            ],
-            [
-                'name' => 'type',
-                'label' => 'Type',
-                'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return match ($customer->type) {
-                        'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . Customer::TYPES[$customer->type] . "</span>",
-                        'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . Customer::TYPES[$customer->type] . "</span>",
-                        default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
-                    };
-                }
-            ],
-            [
-                'name' => 'email_verified_at',
-                'label' => 'Email Verified At',
-                'type' => 'datetime',
-            ],
-            [
-                'name' => 'phone_verified_at',
-                'label' => 'Phone Verified At',
-                'type' => 'datetime',
+                'value' => fn(Customer $customer) => "<a class='text-dark' href='tel:{$customer->phone}'>{$customer->phone} " . (($customer->phone_verified_at != null) ? "<i class='la la-check text-success font-weight-bold'></i>" : '') . "</a>"
             ],
             [
                 'name' => 'status',
                 'label' => 'Status',
                 'type' => 'custom_html',
-                'value' => function ($customer) {
-                    return match ($customer->status) {
-                        'active' => "<span class='text-success'><i class='la la-check'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                        'suspended' => "<span class='text-warning'><i class='la la-warning'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                        'banned' => "<span class='text-danger'><i class='la la-times'></i> " . Customer::STATUSES[$customer->status] . "</span>",
-                    };
-                }
+                'value' => fn(Customer $customer) => $customer->status_html
             ],
             [
-                'name' => 'block_reason',
-                'label' => 'Suspend/Banned Reason',
-                'type' => 'textarea'
+                'name' => 'platform',
+                'label' => 'Platform',
+                'type' => 'custom_html',
+                'value' => fn(Customer $customer) => $customer->platform_html
             ],
             [
-                'name' => 'note',
-                'label' => 'Notes',
-                'type' => 'textarea'
+                'name' => 'created_at',
+                'type' => 'datetime',
+                'label' => 'Created'
             ],
-            [
-                'name' => 'newsletter_subscribed',
-                'label' => 'Newsletter Subscribed?',
-                'type' => 'boolean'
-            ]
         ]);
+
+        if(setting('display_activity_log') == '1') {
+            Widget::add([
+                'type' => 'audit',
+                'section' => 'after_content',
+                'wrapper' => ['class' => 'col-md-12 px-0'],
+                'header' => "<h5 class='card-title mb-0'>CustomerActivity Logs</h5>",
+                'crud' => $this->crud,
+            ]);
+        }
+    }
+
+    protected function fetchCustomer()
+    {
+        return $this->fetch(Customer::class);
     }
 }

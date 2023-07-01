@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('event_id')->constrained('events');
+            $table->foreignId('template_id')->constrained('templates');
+            $table->string('channel')->comment('notification, email, sms');
+            $table->morphs('notifiable');
+            $table->boolean('enabled')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

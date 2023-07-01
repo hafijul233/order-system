@@ -12,7 +12,7 @@ return [
     */
 
     // Date & Datetime Format Syntax: https://carbon.nesbot.com/docs/#api-localization
-    'default_date_format'     => 'D MMM YYYY',
+    'default_date_format' => 'D MMM YYYY',
     'default_datetime_format' => 'D MMM YYYY, HH:mm',
 
     // Direction, according to language
@@ -24,7 +24,7 @@ return [
     // ----
 
     // Project name. Shown in the window title.
-    'project_name' => 'Food Ordering System',
+    'project_name' => env('APP_NAME', 'Order System'),
 
     // When clicking on the admin panel's top-left logo/name,
     // where should the user be redirected?
@@ -52,6 +52,7 @@ return [
         //'packages/backpack/base/css/bundle.css', // has primary color electric purple (backpack default)
         //'packages/backpack/base/css/blue-bundle.css', // has primary color blue
         'packages/backpack/base/css/orange-bundle.css', // has primary color blue
+        'css/custom.css', // has primary color blue
 
 
         // Here's what's inside the bundle:
@@ -62,6 +63,7 @@ return [
         // Load the fonts separately (so that you can replace them at will):
         'packages/source-sans-pro/source-sans-pro.css',
         'packages/line-awesome/css/line-awesome.min.css',
+        'packages/bootstrap-iconpicker/icon-fonts/font-awesome-5.12.0-1/css/all.min.css',
 
         // Example (the fonts above, loaded from CDN instead)
         // 'https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome-font-awesome.min.css',
@@ -87,7 +89,7 @@ return [
     // ------
 
     // Menu logo. You can replace this with an <img> tag if you have a logo.
-    'project_logo'   => '<b>' . env('APP_NAME', 'BackPack') . '</b>',
+    'project_logo' => '<b>' . env('APP_NAME', 'BackPack') . '</b>',
 
     // Show / hide breadcrumbs on admin panel pages.
     'breadcrumbs' => true,
@@ -137,6 +139,7 @@ return [
     'scripts' => [
         // Backstrap includes jQuery, Bootstrap, CoreUI, PNotify, Popper
         'packages/backpack/base/js/bundle.js',
+        'js/custom.js',
 
         // examples (everything inside the bundle, loaded from CDN)
         // 'https://code.jquery.com/jquery-3.4.1.min.js',
@@ -198,7 +201,7 @@ return [
 
     // The web middleware (group) used in all base & CRUD routes
     // If you've modified your "web" middleware group (ex: removed sessions), you can use a different
-    // route group, that has all the the middleware listed below in the comments.
+    // route group, that has all the middleware listed below in the comments.
     'web_middleware' => 'web',
     // Or you can comment the above, and uncomment the complete list below.
     // 'web_middleware' => [
@@ -210,7 +213,7 @@ return [
     // ],
 
     // Set this to false if you would like to use your own AuthController and PasswordController
-    // (you then need to setup your auth routes manually in your routes.php file)
+    // (you then need to set up your auth routes manually in your routes.php file)
     // Warning: if you disable this, the password recovery routes (below) will be disabled too!
     'setup_auth_routes' => true,
 
@@ -279,7 +282,7 @@ return [
     // Username column for authentication
     // The Backpack default is the same as the Laravel default (email)
     // If you need to switch to username, you also need to create that column in your db
-    'authentication_column'      => 'email',
+    'authentication_column' => 'email',
     'authentication_column_name' => 'Email',
 
     // Backpack assumes that your "database email column" for operations like Login and Register is called "email".

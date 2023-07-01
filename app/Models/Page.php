@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\Sluggable;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Page extends Model
+class Page extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use CrudTrait;
     use HasFactory;
-
+use Sluggable;
     /*
     |--------------------------------------------------------------------------
     | GLOBAL VARIABLES

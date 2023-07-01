@@ -13,11 +13,21 @@ return new class extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('product_id')->constrained('products');
+            $table->string('batch');
+            $table->date('manufacture_date');
+            $table->date('expiry_date');
+            $table->decimal('quantity', 18, 3)->default(1);
+            $table->foreignId('unit_id')->nullable()->constrained('units');
+            $table->foreignId('status_id')->nullable()->constrained('statuses');
+            $table->text('note')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
     /**
+     *
      * Reverse the migrations.
      */
     public function down(): void

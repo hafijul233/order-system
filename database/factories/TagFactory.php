@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Tag>
@@ -17,9 +18,12 @@ class TagFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            'name' => fake()->company(),
-            'type' => fake()->word()
+        $tag = [
+            'name' => fake()->word(),
+            'type' => 'Product',
         ];
+        $tag['slug'] = Str::slug($tag['name']);
+
+        return $tag;
     }
 }

@@ -3,13 +3,19 @@
 namespace App\Models;
 
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Newsletter extends Model
+/**
+ * @method static Builder email(string $email)
+ */
+class Newsletter extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use CrudTrait;
     use HasFactory;
 
@@ -33,6 +39,27 @@ class Newsletter extends Model
     |--------------------------------------------------------------------------
     */
 
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::creating(function ($model) {
+            if ($model->newsletterable_id == null) {
+                $model->newsletterable_type = null;
+                $model->getDirty();
+            }
+        });
+
+        static::updating(function ($model) {
+            if ($model->newsletterable_id == null) {
+                $model->newsletterable_type = null;
+                $model->getDirty();
+            }
+        });
+    }
+
+
     /*
     |--------------------------------------------------------------------------
     | RELATIONS
@@ -42,10 +69,12 @@ class Newsletter extends Model
     {
         return $this->morphTo();
     }
+
     public function customers(): MorphToMany
     {
         return $this->morphedByMany(Customer::class, 'newsletterable');
     }
+
     public function companies()
     {
         return $this->morphedByMany(Company::class, 'newsletterable');
@@ -56,6 +85,10 @@ class Newsletter extends Model
     |--------------------------------------------------------------------------
     */
 
+    public function scopeEmail(Builder $builder, string $email): Builder
+    {
+        return  $builder->where('email', '=', $email);
+    }
     /*
     |--------------------------------------------------------------------------
     | ACCESSORS

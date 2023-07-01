@@ -12,10 +12,12 @@ Route::group([
     'prefix'     => config('backpack.base.route_prefix', 'admin'),
     'middleware' => array_merge(
         (array) config('backpack.base.web_middleware', 'web'),
-        (array) config('backpack.base.middleware_key', 'admin')
+        (array) config('backpack.base.middleware_key', 'admin'),
+        ['installed']
     ),
     'namespace'  => 'App\Http\Controllers\Admin',
 ], function () { // custom admin routes
+	Route::crud(config('backpack.settings.route'), 'SettingCrudController');
     Route::crud('customer', 'CustomerCrudController');
     Route::crud('address-book', 'AddressBookCrudController');
     Route::crud('company', 'CompanyCrudController');
@@ -39,4 +41,14 @@ Route::group([
     Route::crud('banner', 'BannerCrudController');
     Route::crud('widget', 'WidgetCrudController');
     Route::crud('page', 'PageCrudController');
+    Route::crud('notification', 'NotificationCrudController');
+    Route::crud('audit', 'AuditCrudController');
+    Route::crud('attribute', 'AttributeCrudController');
+    Route::crud('modifier', 'ModifierCrudController');
+    Route::crud('unit', 'UnitCrudController');
+    Route::crud('status', 'StatusCrudController');
+    Route::crud('quote', 'QuoteCrudController');
+    Route::crud('payment-option', 'PaymentOptionCrudController');
+    Route::crud('brand', 'BrandCrudController');
+    Route::crud('warehouse', 'WarehouseCrudController');
 }); // this should be the absolute last line of this file

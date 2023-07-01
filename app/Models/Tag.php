@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Sluggable;
 use ArrayAccess;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -9,18 +10,20 @@ use Illuminate\Database\Eloquent\Collection as DbCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\EloquentSortable\Sortable;
 use Spatie\EloquentSortable\SortableTrait;
-use Spatie\Tags\HasSlug;
 use Spatie\Translatable\HasTranslations;
 
-class Tag extends Model implements Sortable
+class Tag extends Model implements Sortable, Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use CrudTrait;
     use HasFactory;
     use SortableTrait;
     use HasTranslations;
-    use HasSlug;
+    use Sluggable;
+
 
     /*
     |--------------------------------------------------------------------------
@@ -35,7 +38,7 @@ class Tag extends Model implements Sortable
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
-    public array $translatable = ['name', 'slug'];
+    public array $translatable = ['name'];
     /*
     |--------------------------------------------------------------------------
     | FUNCTIONS

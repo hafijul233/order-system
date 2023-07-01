@@ -49,6 +49,10 @@ class TagCrudController extends CrudController
             [
                 'name' => 'name',
                 'label' => 'Name',
+                'type' => 'closure',
+                'function' => function($tag) {
+                    return $tag->name;
+                }
             ],
             [
                 'name' => 'slug',

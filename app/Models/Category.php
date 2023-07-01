@@ -2,20 +2,24 @@
 
 namespace App\Models;
 
+use App\Traits\Sluggable;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\Tags\HasSlug;
 use Spatie\Translatable\HasTranslations;
 
-class Category extends Model
+class Category extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use CrudTrait;
     use HasFactory;
     use HasTranslations;
-    use HasSlug;
+    use Sluggable;
+
 
     /*
     |--------------------------------------------------------------------------
@@ -30,7 +34,7 @@ class Category extends Model
     // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
-    public array $translatable = ['name', 'slug'];
+    public array $translatable = ['name'];
 
     /*
     |--------------------------------------------------------------------------
@@ -47,10 +51,12 @@ class Category extends Model
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
+
     public function children(): HasMany
     {
         return $this->hasMany(self::class, 'parent_id');
     }
+
     public function siblings(): HasMany
     {
         return $this->hasMany(self::class, 'depth', 'depth');
@@ -67,7 +73,10 @@ class Category extends Model
     | ACCESSORS
     |--------------------------------------------------------------------------
     */
-
+    public function getLabelAttribute()
+    {
+        return $this->name;
+    }
     /*
     |--------------------------------------------------------------------------
     | MUTATORS

@@ -20,12 +20,15 @@ class NewsletterFactory extends Factory
      */
     public function definition(): array
     {
-        return [
-            'newsletterable_type' => fake()->randomElement([Customer::class, Company::class]),
-            'newsletterable_id' => fake()->numberBetween(1, 15),
-            'email' => fake()->unique()->safeEmail(),
-            'attempted' => fake()->numberBetween(1, 100),
-            'subscribed' => true
-        ];
+        $profile['newsletterable_type'] = fake()->randomElement([Customer::class, Company::class]);
+        $profile['newsletterable_id'] = ($profile['newsletterable_type'] == Customer::class)
+            ? fake()->numberBetween(1, 50)
+            : fake()->numberBetween(51, 100);
+
+        $profile['email'] = fake()->unique()->safeEmail();
+        $profile['attempted'] = fake()->numberBetween(1, 100);
+        $profile['subscribed'] = fake()->randomElement([true, false]);
+
+        return $profile;
     }
 }

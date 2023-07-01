@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('slug')->nullable();
+            $table->longText('content')->nullable();
+            $table->string('type')->default('static');
+            $table->json('restriction')->nullable();
+            $table->foreignId('status_id')->nullable()->constrained('statuses');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

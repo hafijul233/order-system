@@ -12,17 +12,19 @@ return new class extends Migration {
     {
         Schema::create('address_books', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable();
             $table->morphs('addressable');
-            $table->enum('type', array_keys(\App\Models\AddressBook::TYPES))->default('home');
+            $table->string('type')->default('home');
             $table->text('street_address')->nullable();
             $table->string('landmark')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
+            $table->foreignId('city_id')->nullable();
+            $table->foreignId('state_id')->nullable();
+            $table->foreignId('country_id')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('phone')->nullable();
-            $table->enum('status', array_keys(\App\Models\AddressBook::STATUSES))->default('active')->nullable();
             $table->text('block_reason')->nullable();
             $table->text('note')->nullable();
+            $table->foreignId('status_id')->nullable()->constrained('statuses');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\HasStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Stock extends Model
+class Stock extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use CrudTrait;
     use HasFactory;
+    use HasStatus;
 
     /*
     |--------------------------------------------------------------------------
@@ -36,7 +40,14 @@ class Stock extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

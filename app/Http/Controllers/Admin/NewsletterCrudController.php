@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\NewsletterRequest;
 use App\Models\Company;
 use App\Models\Customer;
+use App\Models\Newsletter;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -93,22 +94,17 @@ class NewsletterCrudController extends CrudController
     {
         CRUD::setValidation(NewsletterRequest::class);
 
-        $newsletterable = [];
-
-        Customer::all()->each(function ($customer) use (&$newsletterable) {
-            $newsletterable[Customer::class . ':' . $customer->id] = $customer->name;
-        });
-
-        Company::all()->each(function ($company) use (&$newsletterable) {
-            $newsletterable[Company::class . ':' . $company->id] = $company->name;
-        });
 
         CRUD::addFields([
             [
                 'name' => 'newsletterable',
-                'label' => 'Subscriber',
-                'type' => 'select_from_array',
-                'options' => $newsletterable
+                'label' => 'Subscribed To',
+                'type' => 'relationship',
+                'allows_null' => true,
+                'morphOptions' => [
+                    [Customer::class,],
+                    [Company::class,]
+                ]
             ],
             [
                 'name' => 'email',
@@ -118,14 +114,14 @@ class NewsletterCrudController extends CrudController
             [
                 'name' => 'attempted',
                 'label' => 'Attempted',
-                'type' => 'number',
+                'type' => 'hidden',
                 'default' => 1
             ],
             [
                 'name' => 'subscribed',
                 'label' => 'Subscribed?',
-                'type' => 'boolean',
-                'checked' => true
+                'type' => 'checkbox',
+                'value' => 1
             ],
         ]);
     }

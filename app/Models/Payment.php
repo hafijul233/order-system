@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\HasStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Payment extends Model
+class Payment extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use CrudTrait;
     use HasFactory;
+    use HasStatus;
 
     /*
     |--------------------------------------------------------------------------
@@ -36,7 +40,16 @@ class Payment extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
 
+    public function paymentOption()
+    {
+        return $this->belongsTo(PaymentOption::class);
+    }
+    
     /*
     |--------------------------------------------------------------------------
     | SCOPES

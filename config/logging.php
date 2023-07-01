@@ -69,6 +69,12 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'days' => 14,
         ],
+        'query' => [
+            'driver' => 'daily',
+            'path' => storage_path('queries/query.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+        ],
 
         'slack' => [
             'driver' => 'slack',

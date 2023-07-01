@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CategoryRequest;
-use App\Models\Category;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -13,6 +12,7 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\CRUD\app\Library\Widget;
 
 /**
  * Class CategoryCrudController
@@ -49,20 +49,25 @@ class CategoryCrudController extends CrudController
                 'label' => '#',
             ],
             [
+                'name' => 'photo',
+                'label' => 'Photo',
+                'type' => 'image'
+            ],
+            [
                 'name' => 'name',
                 'label' => 'Name',
+                'type' => 'closure',
+                'function' => function($category) {
+                    return $category->name;
+                }
             ],
             [
                 'name' => 'slug',
-                'label' => 'Slug',
+                'label' => 'Slug'
             ],
             [
                 'name' => 'parent',
                 'label' => 'Parent',
-            ],
-            [
-                'name' => 'depth',
-                'label' => 'Depth',
             ],
             [
                 'name' => 'created_at',
@@ -81,8 +86,6 @@ class CategoryCrudController extends CrudController
     {
         CRUD::setValidation(CategoryRequest::class);
 
-        $categories = Category::all()->pluck('name', 'id')->toArray();
-
         CRUD::addFields([
             [
                 'name' => 'name',
@@ -90,10 +93,24 @@ class CategoryCrudController extends CrudController
                 'type' => 'text'
             ],
             [
-                'name' => 'parent_id',
+                'name' => 'slug',
+                'target'  => 'name',
+                'label' => 'Slug',
+                'type' => 'slug',
+                'hint'       => 'N.B: Except English, this field is not required',
+            ],
+            [
+                'name' => 'photo',
+                'label' => 'Photo',
+                'type' => 'browse',
+                'mime_types' => 'image/*'
+            ],
+            [
+                'name' => 'parent',
                 'label' => 'Parent',
-                'type' => 'select_from_array',
-                'options' => $categories
+                'type' => 'select2',
+                'entity' => 'parent',
+                'placeholder' => 'Select a category for top-level'
             ],
         ]);
 
@@ -116,6 +133,57 @@ class CategoryCrudController extends CrudController
     }
 
     /**
+     * Define what happens when the Show operation is loaded.
+     *
+     * @see  https://backpackforlaravel.com/docs/crud-operation-show-entries
+     * @return void
+     */
+    protected function setupShowOperation()
+    {
+        CRUD::addColumns([
+            [
+                'name' => 'id',
+                'label' => '#',
+            ],
+            [
+                'name' => 'name',
+                'label' => 'Name',
+                'type' => 'closure',
+                'function' => function($category) {
+                    return $category->name;
+                }
+            ],
+            [
+                'name' => 'slug',
+                'label' => 'Slug'
+            ],
+            [
+                'name' => 'parent',
+                'label' => 'Parent',
+            ],
+            [
+                'name' => 'photo',
+                'label' => 'Photo',
+                'type' => 'image'
+            ],
+            [
+                'name' => 'created_at',
+                'label' => 'Created At',
+            ],
+        ]);
+
+        if(setting('display_activity_log') == '1') {
+            Widget::add([
+                'type' => 'audit',
+                'section' => 'after_content',
+                'wrapper' => ['class' => 'col-md-12 px-0'],
+                'header' => "<h5 class='card-title mb-0'>CategoryActivity Logs</h5>",
+                'crud' => $this->crud,
+            ]);
+        }
+    }
+
+    /**
      * Define what happens when the Reorder operation is loaded.
      *
      * @see https://backpackforlaravel.com/docs/crud-operation-update
@@ -123,10 +191,7 @@ class CategoryCrudController extends CrudController
      */
     protected function setupReorderOperation()
     {
-        // define which model attribute will be shown on draggable elements
         $this->crud->set('reorder.label', 'name');
-        // define how deep the admin is allowed to nest the items
-        // for infinite levels, set it to 0
-        $this->crud->set('reorder.max_level', 5);
+        $this->crud->set('reorder.max_level', 3);
     }
 }

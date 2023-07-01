@@ -36,7 +36,7 @@ class ProductCrudController extends CrudController
      */
     public function setup()
     {
-        CRUD::setModel(\App\Models\Product::class);
+        CRUD::setModel(Product::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/product');
         CRUD::setEntityNameStrings(setting('item_label', 'product'), \Str::plural(setting('item_label', 'product')));
     }
@@ -103,47 +103,46 @@ class ProductCrudController extends CrudController
         CRUD::setValidation(ProductRequest::class);
 
         Widget::add()->type('script')->content('js/pages/product.js');
-
+dd(Product::statusDropdown());
         CRUD::addFields([
             //Basic
             [
                 'name' => 'type',
                 'label' => 'Type',
-                'type' => 'select2_from_array',
-                'options' => Product::TYPES,
+                'type' => 'hidden',
+                'value' => 'bundle',
+                // 'type' => 'select2_from_array',
+                // 'options' => Product::TYPES,
                 'tab' => 'Basic',
-                'wrapper' => [
-                    'class' => 'form-group col-md-6'
-                ]
-            ],
-            [
-                'name' => 'code',
-                'label' => 'Code OR SKU',
-                'type' => 'text',
-                'tab' => 'Basic',
-                'wrapper' => [
-                    'class' => 'form-group col-md-6'
-                ]
+                // 'wrapper' => [
+                //     'class' => 'form-group col-md-6'
+                // ]
             ],
             [
                 'name' => 'name',
                 'label' => 'Name',
                 'type' => 'text',
-                'tab' => 'Basic'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ]
             ],
             [
                 'name' => 'category',
                 'label' => 'Category',
                 'type' => 'select2',
                 'entity' => 'category',
-                'tab' => 'Basic'
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ]
             ],
-            [
-                'name' => 'short_description',
-                'label' => 'Short Description',
-                'type' => 'textarea',
-                'tab' => 'Basic'
-            ],
+            // [
+            //     'name' => 'short_description',
+            //     'label' => 'Short Description',
+            //     'type' => 'textarea',
+            //     'tab' => 'Basic'
+            // ],
             [
                 'name' => 'description',
                 'label' => 'Description',
@@ -179,7 +178,16 @@ class ProductCrudController extends CrudController
                 'tab' => 'Basic'
             ],
             [
-                'name' => 'status',
+                'name' => 'code',
+                'label' => 'Code OR SKU',
+                'type' => 'text',
+                'tab' => 'Basic',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6'
+                ]
+            ],
+            [
+                'name' => 'status_id',
                 'label' => 'Status',
                 'type' => 'select2_from_array',
                 'tab' => 'Basic',
@@ -252,6 +260,16 @@ class ProductCrudController extends CrudController
                         'include_all_form_fields' => true,
                     ]
                 ],
+            ],
+            //Bundle Products
+            [
+                'name' => 'products',
+                'label' => ucfirst(setting('item_label', 'product')),
+                'type' => 'product',
+                'tab' => 'Item',
+                'multiple' => true,
+                'entity' => 'products',
+                'new_item_label' => 'Add ' . ucfirst(\Str::plural(setting('item_label', 'product'))),
             ],
             //Detail
             [

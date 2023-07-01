@@ -12,6 +12,9 @@ use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * @property-read string $platform_html
+ * @property string $platform
+ * @property string $name
+ * @property string $status_html
  */
 class Product extends Model implements Auditable
 {
@@ -27,11 +30,6 @@ class Product extends Model implements Auditable
     | GLOBAL VARIABLES
     |--------------------------------------------------------------------------
     */
-    public const PLATFORMS = [
-        'online' => 'Online',
-        'offline' => 'Offline',
-        'both' => 'Both'
-    ];
 
     public const TYPES = ['normal' => 'Normal', 'bundle' => 'Bundle/Combo'];
 
@@ -77,10 +75,26 @@ class Product extends Model implements Auditable
 
     public function attributes()
     {
-        return $this->belongsToMany(Attribute::class)
+        return $this->belongsToMany(Attribute::class, 'product_attribute')
         ->withPivot('value', 'unit_id')
         ->withTimestamps();
     }
+    /**
+     * return the parent model of this product
+     */
+    public function parent()
+    {
+        return $this->belongsTo(Product::class, 'parent_id');
+    }
+
+    /**
+     * return a collection to items included in bundle type product
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'parent_id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES
@@ -95,9 +109,9 @@ class Product extends Model implements Auditable
     public function getPlatformHtmlAttribute()
     {
         return match ($this->platform) {
-            'online' => "<span class='text-success'><i class='la la-globe-asia'></i> " . self::PLATFORMS[$this->platform] . "</span>",
-            'offline' => "<span class='text-black-50'><i class='la la-building'></i> " . self::PLATFORMS[$this->platform] . "</span>",
-            'both' => "<span class='text-black-50'><i class='la la-mail-bulk'></i> " . self::PLATFORMS[$this->platform] . "</span>",
+            'wev' => "<span class='text-success'><i class='la la-globe-asia'></i> " . config("constant.product_visibility.{$this->platform}") . "</span>",
+            'store' => "<span class='text-black-50'><i class='la la-building'></i> " . config("constant.product_visibility.{$this->platform}") . "</span>",
+            'both' => "<span class='text-black-50'><i class='la la-mail-bulk'></i> " . config("constant.product_visibility.{$this->platform}") . "</span>",
             default => "<span class='text-warning'><i class='la la-warning'></i>N/A</span>"
         };
 }

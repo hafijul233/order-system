@@ -43,9 +43,9 @@ trait HasStatus
      *
      * @return Collection
      */
-    private static function statuses(): Collection
+    private static function statuses()
     {
-        return Status::enabled()->model(__CLASS__)->get();
+        return Status::enabled()->model(__CLASS__)->toSql();
     }
 
     /**
@@ -56,6 +56,8 @@ trait HasStatus
      */
     public static function statusDropdown(): array
     {
+        dd(self::statuses());
+
         return self::statuses()->pluck('name', 'id')->toArray();
     }
 

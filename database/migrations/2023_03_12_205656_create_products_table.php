@@ -33,6 +33,10 @@ return new class extends Migration
             $table->string('cover_photo')->nullable();
             $table->text('additional_photo')->nullable();
             $table->foreignId('status_id')->nullable()->constrained('statuses');
+            $table->foreignId('parent_id')->nullable();
+            $table->integer('lft')->nullable()->default(0);
+            $table->integer('rgt')->nullable()->default(0);
+            $table->integer('depth')->nullable()->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

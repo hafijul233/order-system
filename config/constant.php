@@ -1,14 +1,24 @@
 <?php
 
 use App\Models\AddressBook;
-use App\Models\Banner;
 use App\Models\Brand;
-use App\Models\Campaign;
 use App\Models\Category;
 use App\Models\Company;
-use App\Models\Coupon;
 use App\Models\Customer;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\OrderNote;
+use App\Models\Payment;
+use App\Models\Product;
+use App\Models\Stock;
+use App\Models\Email;
+use App\Models\NewsLetter;
+use App\Models\Campaign;
+use App\Models\Coupon;
+use App\Models\Banner;
+use App\Models\Page;
+use App\Models\Template;
+use App\Models\Task;
 use App\Models\Warehouse;
 
 return [
@@ -28,12 +38,9 @@ return [
     ],
     'status_model' => [
         AddressBook::class => 'Address Book',
-        Banner::class => 'Banner',
         Brand::class => 'Brand',
-        Campaign::class => 'Campaign',
         Category::class => 'Category',
         Company::class => 'Company',
-        Coupon::class => 'Coupon',
         Customer::class => 'Customer',
         Order::class => 'Order',
         OrderItem::class => 'Order Item',
@@ -65,5 +72,10 @@ return [
         '_http_referrer',
         '_current_tab',
         '_save_action'
+    ],
+    'product_visibility' => [
+        'web' => 'Online',
+        'store' => 'Offline',
+        'both' => 'Both'
     ]
 ];

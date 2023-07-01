@@ -167,16 +167,16 @@ class UnitCrudController extends CrudController
 
     protected function fetchUnit()
     {
-        $request = request('form', []);
+        // $request = request('form', []);
 
-        $form_fields = [];
+        // $form_fields = [];
 
-        array_walk($request, function ($field) use (&$form_fields) {
-            if(!in_array($field['name'], config('constant.form_excluded_fields')))
-            $form_fields[$field['name']] = $field['value'];
-        });
+        // array_walk($request, function ($field) use (&$form_fields) {
+        //     if(!in_array($field['name'], config('constant.form_excluded_fields')))
+        //     $form_fields[$field['name']] = $field['value'];
+        // });
         
-        dd($form_fields);
+        // dd($form_fields);
 
         return $this->fetch(Unit::class);
     }

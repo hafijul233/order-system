@@ -150,3 +150,7 @@ input[type=number] {
 .dark-mode .timeline > div > .timeline-item > .time {
     color: #ced4da;
 }
+
+form .select2.select2-container {
+    border-radius: 0.25rem !important;
+}

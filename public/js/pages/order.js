@@ -1,6 +1,5 @@
 function loadCustomer(id) {
     $.get(APP_URL + `/api/customer-detail/${id}`, function (response) {
-        console.log(response);
 
         let name = $('#orderable_name');
         name.val('');
@@ -39,20 +38,20 @@ function calculateOrderSummary() {
 
     var subtotal = 0;
 
-    $(products).each(function(index, eleProductRow) {
-        
+    $(products).each(function (index, eleProductRow) {
+
         eleProductRow = $(eleProductRow);
-    
+
         let eleProductSubTotal = eleProductRow.find(".product-subtotal");
 
         let productUnitPrice = parseFloat(eleProductRow.find('.product-unit-price').val());
-        
+
         let productQty = parseFloat(eleProductRow.find('.product-quantity').val());
-        
+
         let productBill = (productUnitPrice * productQty).toFixed(2);
-        
+
         eleProductSubTotal.val(productBill);
-        
+
         subtotal += parseFloat(productBill);
     });
 
@@ -60,43 +59,39 @@ function calculateOrderSummary() {
 }
 
 function loadProductData(element, id) {
-    
+
     const productRow = $(element).parent().parent();
 
     let eleProductName = productRow.find(".product-name");
-    
+
     let eleProductUnitPrice = productRow.find('.product-unit-price');
-    
+
     let eleProductDefaultQty = productRow.find('.product-quantity');
 
     $.get(APP_URL + `/api/product-detail/${id}`, function (response) {
-        
+
         const productData = response.data;
-        
+
         eleProductName.val(productData.name);
-        
+
         eleProductUnitPrice.val(parseFloat(productData.price).toFixed(2));
-        
+
         eleProductDefaultQty.val(productData.default_quantity ?? 1.00);
-        
+
         calculateOrderSummary();
     });
 }
 
 {
-    $(document).ready(() => {
-        $("select[name*='customer_id']").change(() => {
+    crud.field('customer_id').onChange(function (field) {
+        
+        $("select[name*='company_id']").empty().trigger('change');
+        
+        if (field.value != '') 
+            loadCustomer(field.va);
+        
+    }).change();
 
-            $("select[name*='company_id']").empty().trigger('change');
-
-            let customer_id = $("select[name*='customer_id']").val();
-            if (customer_id) {
-                loadCustomer(customer_id);
-            }
-        });
-
-        $(".add-repeatable-element-button").addClass("font-weight-bold btn-block p-2 mt-3");
-    });
-
+    $(".add-repeatable-element-button").addClass("font-weight-bold btn-block p-2 mt-3");
 }
 (window.jQuery);

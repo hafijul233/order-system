@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id');
             $table->foreignId('attribute_id');
-            $table->string('value')->nullable();
+            $table->text('value')->nullable();
+            $table->foreignId('unit_id')->constrained('units');
             $table->timestamps();
         });
     }

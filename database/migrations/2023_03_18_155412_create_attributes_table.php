@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('status_id')->nullable()->constrained('statuses');
+            $table->string('type');
+            $table->foreignId('unit_id')->constrained('units');
+            $table->boolean('enabled')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

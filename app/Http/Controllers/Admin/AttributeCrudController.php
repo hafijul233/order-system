@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\AttributeRequest;
+use App\Models\Attribute;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
 
 /**
  * Class AttributeCrudController
@@ -18,6 +20,7 @@ class AttributeCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use FetchOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -39,13 +42,24 @@ class AttributeCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        
-
-        /**
-         * Columns can be defined using the fluent syntax or array syntax:
-         * - CRUD::column('price')->type('number');
-         * - CRUD::addColumn(['name' => 'price', 'type' => 'number']); 
-         */
+        CRUD::addColumns([
+            [
+                'name' => 'name',
+                'label' => 'Name',
+                'type' => 'text'
+            ],
+            [
+                'name' => 'type',
+                'label' => 'Type',
+                'type' => 'select_from_array',
+                'options' => config('constant.attribute_type')
+            ],
+            [
+                'name' => 'enabled',
+                'label' => 'Enabled',
+                'type' => 'boolean'
+            ],
+        ]);
     }
 
     /**
@@ -59,7 +73,35 @@ class AttributeCrudController extends CrudController
         CRUD::setValidation(AttributeRequest::class);
 
         
-
+        CRUD::addFields([
+            [
+                'name' => 'name',
+                'label' => 'Name',
+                'type' => 'text'
+            ],
+            [
+                'name' => 'type',
+                'label' => 'Type',
+                'type' => 'select2_from_array',
+                'default' => 'text',
+                'options' => config('constant.attribute_type')
+            ],
+            [
+                'name' => 'unit',
+                'label' => 'Minimum Unit',
+                'type' => 'relationship',
+                'entity' => 'unit',
+                'attribute' => 'name',
+                'options' => function ($query) {
+                    return $query->whereNull('parent_id')->get();
+                }
+            ],
+            [
+                'name' => 'enabled',
+                'label' => 'Enabled',
+                'type' => 'boolean'
+            ],
+        ]);
         /**
          * Fields can be defined using the fluent syntax or array syntax:
          * - CRUD::field('price')->type('number');
@@ -76,5 +118,15 @@ class AttributeCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    protected function fetchAttribute()
+    {
+        return $this->fetch([
+            'model' => Attribute::class,
+            'query' => function($model) {
+                return $model->where('enabled', '=', true);
+            }
+        ]);
     }
 }

@@ -75,6 +75,12 @@ class Product extends Model implements Auditable
         return $this->belongsTo(Unit::class, 'default_unit_id');
     }
 
+    public function attributes()
+    {
+        return $this->belongsToMany(Attribute::class)
+        ->withPivot('value', 'unit_id')
+        ->withTimestamps();
+    }
     /*
     |--------------------------------------------------------------------------
     | SCOPES

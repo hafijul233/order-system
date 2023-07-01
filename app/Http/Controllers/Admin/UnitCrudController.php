@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\UnitRequest;
+use App\Models\Unit;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
@@ -12,6 +13,7 @@ use Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 use Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanel;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Backpack\Pro\Http\Controllers\Operations\FetchOperation;
 
 /**
  * Class UnitCrudController
@@ -20,7 +22,7 @@ use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
  */
 class UnitCrudController extends CrudController
 {
-    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation, ShowOperation, ReorderOperation;
+    use ListOperation, CreateOperation, UpdateOperation, DeleteOperation, ShowOperation, ReorderOperation, FetchOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -161,5 +163,21 @@ class UnitCrudController extends CrudController
             return "-";
 
         return "{$unit->name} > " . $this->unitParent($unit->parent, $unit->name);
+    }
+
+    protected function fetchUnit()
+    {
+        $request = request('form', []);
+
+        $form_fields = [];
+
+        array_walk($request, function ($field) use (&$form_fields) {
+            if(!in_array($field['name'], config('constant.form_excluded_fields')))
+            $form_fields[$field['name']] = $field['value'];
+        });
+        
+        dd($form_fields);
+
+        return $this->fetch(Unit::class);
     }
 }

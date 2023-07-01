@@ -55,5 +55,15 @@ return [
         'cash' => 'Cash',
         'bank' => 'Bank Account',
         'wallet' => 'E-Wallet'
+    ],
+    'attribute_type' => [
+        'text' => 'Text',
+        'number' => 'Number',
+    ],
+    'form_excluded_fields' => [
+        '_token',
+        '_http_referrer',
+        '_current_tab',
+        '_save_action'
     ]
 ];

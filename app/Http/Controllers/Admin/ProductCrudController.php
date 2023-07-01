@@ -190,6 +190,7 @@ class ProductCrudController extends CrudController
                     'class' => 'form-group col-md-6'
                 ]
             ],
+            //Media
             [
                 'name' => 'cover_photo',
                 'type' => 'browse',
@@ -203,6 +204,54 @@ class ProductCrudController extends CrudController
                 'label' => 'Additional Cover Photo',
                 'allows_null' => false,
                 'tab' => 'Media'
+            ],
+            //Attribute
+            [
+                'name' => 'attributes',
+                'label' => 'Attributes',
+                'type' => 'relationship',
+                'tab' => 'Attribute',
+                'entity' => 'attributes',
+                'new_item_label' => 'Add Attribute',
+                'pivotSelect' => [
+                    'name' => 'attribute_id',
+                    'label' => 'Attribute',
+                    'type' => 'select2_from_ajax',
+                    'ajax' => true,
+                    'data_source' => backpack_url('attribute/fetch/attribute'),
+                    'minimum_input_length' => 0,
+                    'method' => 'POST',
+                    'placeholder' => "Select an attribute",
+                    'allows_null' => false,
+                    'wrapper' => [
+                        'class' => 'form-group col-md-6',
+                    ],
+                ],
+                'subfields' => [
+                    [
+                        'name' => 'value',
+                        'type' => 'text',
+                        'label' => 'Value',
+                        'wrapper' => [
+                            'class' => 'form-group col-md-3',
+                        ],
+                    ],
+                    [
+                        'name' => 'unit_id',
+                        'label' => 'Unit',
+                        'type' => 'select2_from_ajax',
+                        'ajax' => true,
+                        'data_source' => backpack_url('unit/fetch/unit'),
+                        'minimum_input_length' => 0,
+                        'method' => 'POST',
+                        'placeholder' => "Select an unit",
+                        'wrapper' => [
+                            'class' => 'form-group col-md-3',
+                        ],
+                        'dependencies' => ['attributes'],
+                        'include_all_form_fields' => true,
+                    ]
+                ],
             ],
             //Detail
             [

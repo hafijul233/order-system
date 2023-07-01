@@ -1,3 +1,3 @@
 {
-
+alert("Test");
 }(window.jQuery);

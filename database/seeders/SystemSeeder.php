@@ -17,6 +17,8 @@ class SystemSeeder extends Seeder
             RoleSeeder::class,
             SettingSeeder::class,
             CountrySeeder::class,
+            UnitSeeder::class,
+            AttributeSeeder::class,
         ]);
         
         $this->call(StateSeeder::class, false, ["19"]);

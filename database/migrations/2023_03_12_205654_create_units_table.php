@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->decimal('conversion', 18, 3)->default(1);
-            $table->foreignId('parent_id')->nullable()->default(0);
+            $table->foreignId('parent_id')->nullable()->unique();
             $table->integer('lft')->nullable()->default(0);
             $table->integer('rgt')->nullable()->default(0);
             $table->integer('depth')->nullable()->default(0);
